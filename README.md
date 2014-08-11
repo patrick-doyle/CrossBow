@@ -1,13 +1,13 @@
 TwistVolley
 ===========
 
-Extension to the Volley library adding an easy to use wrapper around volley that sets 
+Extension to the Volley library adding an easy to use wrapper around Volley that sets 
 up the RequestQueue and Image cache for the ImageLoader.
 
 Also provides an easy Picasso https://square.github.io/picasso/ inspired image loading
 system based on the ImageLoader.
 
-TwistVolley does not modify the voley library in any way so If you already use Volley then integrating this into your project should be easy.
+TwistVolley does not modify the Volley library in any way so If you already use Volley then integrating this into your project should be easy.
 
 Http Requests
 ------
