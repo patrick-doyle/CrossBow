@@ -145,6 +145,7 @@ public class App extends Application implements TwistVolleyApplication {
     }
 }
 ```
+TwistVolley will automatically pick up on the new Stack and start using it when the app starts.
 
 If you only want to replace one or two components of the VolleyStack you can extend the DefaultVolleyStack and implement the custom components you want to.
 
@@ -162,3 +163,4 @@ public class CustomVolleyStack extends DefaultVolleyStack {
     }
 }
 ```
+If you are extending the DefaultVolleyStack do not hold a reference to Context. Use the getContext() method instead.
