@@ -88,15 +88,77 @@ If you need custom image loading/handing then you can use the standard Volley Im
 Getting a refernece to the ImageLoader uses the same method as the RequestQueue.
 ```
 ImageLoader imageLoader = TwistVolley.from(this).getImageLoader();
-    imageLoader.get("https://i.imgur.com/5mObncZ.jpg", new ImageLoader.ImageListener() {
-        @Override
-        public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-            
-        }
 
-        @Override
-        public void onErrorResponse(VolleyError error) {
+imageLoader.get("https://i.imgur.com/5mObncZ.jpg", new ImageLoader.ImageListener() {
+    @Override
+    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+        
+    }
 
-        }
-    });
+    @Override
+    public void onErrorResponse(VolleyError error) {
+
+    }
+});
+```
+
+Using Custom Volley Component 
+------
+
+If you want to change the way Volley works internally by using a custom Volley component such as the Network, HttpStack, ImageCache, ImageLoader, HttpCache or RequestQueue this easy to do with the VolleyComponents interface and your application class.
+
+1. Create an application class and register it in the Manifest.
+
+```
+public class App extends Application {
+
+}
+```
+
+```
+<application
+    android:allowBackup="true"
+    android:icon="@drawable/ic_launcher"
+    android:label="@string/app_name"
+    android:name=".App"
+    android:theme="@style/AppTheme" >
+    <activity
+        android:name=".MyActivity"
+        android:label="@string/app_name" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+</application>
+```
+
+2. Implement the TwistVolleyApplication interface in the Application class and have it return a VolleyStack.
+
+```
+public class App extends Application implements TwistVolleyApplication {
+    
+    @Override
+    public VolleyStack getStack() {
+        return null;
+    }
+}
+```
+
+If you only want to replace one or two components of the VolleyStack you can extend the DefaultVolleyStack and implement the custom components you want to.
+
+```
+public class CustomVolleyStack extends DefaultVolleyStack {
+    
+    public CustomVolleyStack(Context context) {
+        super(context);
+    }
+
+    @Override
+    public HttpStack getHttpStack() {
+        CustomHttpStack stack = new CustomHttpStack();
+        return stack;
+    }
+}
 ```
