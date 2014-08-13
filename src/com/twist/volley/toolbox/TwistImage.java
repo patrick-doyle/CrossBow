@@ -1,8 +1,11 @@
 package com.twist.volley.toolbox;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
@@ -112,6 +115,16 @@ public class TwistImage {
         return this;
     }
 
+    public void into(View root, @IdRes int imageViewId) {
+        ImageView imageView = (ImageView) root.findViewById(imageViewId);
+        into(imageView);
+    }
+
+    public void into(Activity activty, @IdRes int imageViewId) {
+        ImageView imageView = (ImageView) activty.findViewById(imageViewId);
+        into(imageView);
+    }
+
     /**
      * The ImageView to load the image into
      *
@@ -136,6 +149,7 @@ public class TwistImage {
             imageProperties = new ImageProperties();
         }
 
+        Log.i("TE", "Size = "+propertiesMap.size());
         imageProperties.url = url;
         imageProperties.fade = fade;
         imageProperties.defaultRes = defaultRes;

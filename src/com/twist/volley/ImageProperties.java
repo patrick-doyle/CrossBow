@@ -87,6 +87,10 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
 
     @Override
     public boolean onPreDraw() {
+
+        if(imageView.get() == null) {
+            return true;
+        }
         imageView.get().getViewTreeObserver().removeOnPreDrawListener(this);
 
         imageView.get().setImageBitmap(null);
