@@ -1,7 +1,5 @@
 package com.twist.volley;
 
-import android.content.Context;
-import android.util.Log;
 import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;

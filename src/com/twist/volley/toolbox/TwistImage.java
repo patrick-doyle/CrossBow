@@ -4,19 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.twist.volley.ImageProperties;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
 import java.util.WeakHashMap;
 
 /**
@@ -149,7 +142,6 @@ public class TwistImage {
             imageProperties = new ImageProperties();
         }
 
-        Log.i("TE", "Size = "+propertiesMap.size());
         imageProperties.url = url;
         imageProperties.fade = fade;
         imageProperties.defaultRes = defaultRes;
