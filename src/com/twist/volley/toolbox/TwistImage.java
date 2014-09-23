@@ -50,6 +50,7 @@ public class TwistImage {
     private int errorRes;
     private int fade;
     private ImageView.ScaleType scaleType;
+    private ImageView.ScaleType preScaleType;
     private WeakHashMap<ImageView, ImageProperties> propertiesMap = new WeakHashMap<ImageView, ImageProperties>();
 
     private TwistImage(Context context) {
@@ -101,6 +102,16 @@ public class TwistImage {
      */
     public TwistImage centerCrop() {
         return scale(ImageView.ScaleType.CENTER_CROP);
+    }
+
+    /**
+     * Sets the scale type for the default/placeholder image.
+     *
+     * @param scaleType scaletype to set.
+     */
+    public TwistImage defaultScale(ImageView.ScaleType scaleType) {
+        this.preScaleType = scaleType;
+        return this;
     }
 
     /**
@@ -159,6 +170,7 @@ public class TwistImage {
         imageProperties.defaultRes = defaultRes;
         imageProperties.errorRes = errorRes;
         imageProperties.scaleType = scaleType;
+        imageProperties.preScaleType = preScaleType;
         imageProperties.setImageLoader(imageLoader);
         imageProperties.setImageView(imageView);
 
@@ -173,5 +185,6 @@ public class TwistImage {
         errorRes = 0;
         url = null;
         scaleType = null;
+        preScaleType = null;
     }
 }

@@ -38,6 +38,8 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
 
     public ImageView.ScaleType scaleType;
 
+    public ImageView.ScaleType preScaleType;
+
     public WeakReference<ImageView> imageView;
 
     private ImageLoader.ImageContainer imageContainer;
@@ -58,6 +60,7 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
         imageView = null;
         imageLoader = null;
         scaleType = null;
+        preScaleType = null;
     }
 
     public void cancelRequest() {
@@ -82,7 +85,6 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
                 alphaAnimation.setDuration(fade);
                 imageView.startAnimation(alphaAnimation);
             }
-
         }
     }
 
@@ -106,6 +108,10 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
         imageView.get().setImageBitmap(null);
         if(defaultRes != 0) {
             imageView.get().setImageResource(defaultRes);
+        }
+
+        if(preScaleType != null) {
+            imageView.get().setScaleType(preScaleType);
         }
 
         imageContainer = imageLoader.get(url, this, imageView.get().getWidth(), imageView.get().getHeight());
