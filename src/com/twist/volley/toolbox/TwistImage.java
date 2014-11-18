@@ -179,6 +179,16 @@ public class TwistImage {
         cleanUpConfig();
     }
 
+    /**
+     * Cancels the request for the ImageView
+     */
+    public void cancel(ImageView imageView) {
+        if(propertiesMap.containsKey(imageView)) {
+            propertiesMap.get(imageView).cancelRequest();
+            propertiesMap.remove(imageView);
+        }
+    }
+
     private void cleanUpConfig() {
         fade = 0;
         defaultRes = 0;
