@@ -28,8 +28,8 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 
 /**
- * A request for retrieving a {@link JSONObject} response body at a given URL, allowing for an
- * optional {@link JSONObject} to be passed in as part of the request body.
+ * A request for retrieving a {@link org.json.JSONObject} response body at a given URL, allowing for an
+ * optional {@link org.json.JSONObject} to be passed in as part of the request body.
  */
 public class JsonObjectRequest extends JsonRequest<JSONObject> {
 
@@ -37,7 +37,7 @@ public class JsonObjectRequest extends JsonRequest<JSONObject> {
      * Creates a new request.
      * @param method the HTTP method to use
      * @param url URL to fetch the JSON from
-     * @param jsonRequest A {@link JSONObject} to post with the request. Null is allowed and
+     * @param jsonRequest A {@link org.json.JSONObject} to post with the request. Null is allowed and
      *   indicates no parameters will be posted along with request.
      * @param listener Listener to receive the JSON response
      * @param errorListener Error listener, or null to ignore errors.
@@ -52,7 +52,7 @@ public class JsonObjectRequest extends JsonRequest<JSONObject> {
      * Constructor which defaults to <code>GET</code> if <code>jsonRequest</code> is
      * <code>null</code>, <code>POST</code> otherwise.
      *
-     * @see #JsonObjectRequest(int, String, JSONObject, Listener, ErrorListener)
+     * @see #JsonObjectRequest(int, String, org.json.JSONObject, com.android.volley.Response.Listener, com.android.volley.Response.ErrorListener)
      */
     public JsonObjectRequest(String url, JSONObject jsonRequest, Listener<JSONObject> listener,
             ErrorListener errorListener) {

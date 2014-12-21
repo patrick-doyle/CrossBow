@@ -46,7 +46,7 @@ public abstract class JsonRequest<T> extends Request<T> {
      * Deprecated constructor for a JsonRequest which defaults to GET unless {@link #getPostBody()}
      * or {@link #getPostParams()} is overridden (which defaults to POST).
      *
-     * @deprecated Use {@link #JsonRequest(int, String, String, Listener, ErrorListener)}.
+     * @deprecated Use {@link #JsonRequest(int, String, String, com.android.volley.Response.Listener, com.android.volley.Response.ErrorListener)}.
      */
     public JsonRequest(String url, String requestBody, Listener<T> listener,
             ErrorListener errorListener) {

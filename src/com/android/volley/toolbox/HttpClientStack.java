@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * An HttpStack that performs request over an {@link HttpClient}.
+ * An HttpStack that performs request over an {@link org.apache.http.client.HttpClient}.
  */
 public class HttpClientStack implements HttpStack {
     protected final HttpClient mClient;

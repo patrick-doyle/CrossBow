@@ -33,7 +33,7 @@ public class StringRequest extends Request<String> {
     /**
      * Creates a new request with the given method.
      *
-     * @param method the request {@link Method} to use
+     * @param method the request {@link com.android.volley.Request.Method} to use
      * @param url URL to fetch the string at
      * @param listener Listener to receive the String response
      * @param errorListener Error listener, or null to ignore errors
