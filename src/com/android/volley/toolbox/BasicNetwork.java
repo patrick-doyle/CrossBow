@@ -19,6 +19,7 @@ package com.android.volley.toolbox;
 import android.os.SystemClock;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Cache;
 import com.android.volley.Cache.Entry;
 import com.android.volley.Network;
 import com.android.volley.NetworkError;
@@ -201,7 +202,7 @@ public class BasicNetwork implements Network {
         request.addMarker(String.format("%s-retry [timeout=%s]", logPrefix, oldTimeout));
     }
 
-    private void addCacheHeaders(Map<String, String> headers, Entry entry) {
+    private void addCacheHeaders(Map<String, String> headers, Cache.Entry entry) {
         // If there's no cache entry, we're done.
         if (entry == null) {
             return;

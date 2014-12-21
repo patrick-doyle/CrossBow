@@ -378,7 +378,7 @@ public class DiskBasedCache implements Cache {
         /**
          * Reads the header off of an InputStream and returns a CacheHeader object.
          * @param is The InputStream to read from.
-         * @throws java.io.IOException
+         * @throws IOException
          */
         public static CacheHeader readHeader(InputStream is) throws IOException {
             CacheHeader entry = new CacheHeader();
@@ -470,7 +470,7 @@ public class DiskBasedCache implements Cache {
      */
 
     /**
-     * Simple wrapper around {@link java.io.InputStream#read()} that throws EOFException
+     * Simple wrapper around {@link InputStream#read()} that throws EOFException
      * instead of returning -1.
      */
     private static int read(InputStream is) throws IOException {
