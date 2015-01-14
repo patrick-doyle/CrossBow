@@ -54,7 +54,7 @@ public class DefaultVolleyStack extends VolleyStack {
 
         //Queue setUp
         requestQueue = getRequestQueue();
-        imageLoader = new ImageLoader(requestQueue, getImageCache());
+        imageLoader = new TwistImageLoader(requestQueue, getImageCache());
     }
 
     @Override
@@ -70,8 +70,8 @@ public class DefaultVolleyStack extends VolleyStack {
     }
 
     @Override
-    public ImageLoader.ImageCache getImageCache() {
-        return new ImageMemCache(memCacheSize);
+    public TwistImageCache getImageCache() {
+        return new TwistImageCache(memCacheSize);
     }
 
     @Override
