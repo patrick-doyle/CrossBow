@@ -36,16 +36,12 @@ import java.util.Set;
 public class TwistImageCache implements ImageLoader.ImageCache {
 
     private LruCache<String, Bitmap> imageCache;
-    private final int size;
-    private final float recycleLimit;
-    Set<SoftReference<Bitmap>> unusedBitmaps =  Collections.synchronizedSet(new HashSet<SoftReference<Bitmap>>());
+    private Set<SoftReference<Bitmap>> unusedBitmaps =  Collections.synchronizedSet(new HashSet<SoftReference<Bitmap>>(100));
 
     /**
      * @param size - number of byes to use for the cache;
      */
     protected TwistImageCache(int size) {
-        this.size = size;
-        recycleLimit = (float) size * 0.75f;
         imageCache = new LruCache<String, Bitmap>(size){
             @Override
             protected int sizeOf(String key, Bitmap value) {
@@ -59,7 +55,7 @@ public class TwistImageCache implements ImageLoader.ImageCache {
 
             @Override
             protected void entryRemoved(boolean evicted, String key, Bitmap oldValue, Bitmap newValue) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && bitmapCanBeReused(oldValue)) {
                     unusedBitmaps.add(new SoftReference<>(oldValue));
                 }
             }
@@ -76,7 +72,7 @@ public class TwistImageCache implements ImageLoader.ImageCache {
         imageCache.put(url, bitmap);
     }
 
-    public synchronized Bitmap getBitmapToFill(BitmapFactory.Options options, int height, int width) {
+    public synchronized Bitmap getBitmapToFill(BitmapFactory.Options options) {
         for(SoftReference<Bitmap> bitmapSoftReference : unusedBitmaps) {
             if(bitmapSoftReference.get() != null) {
                 Bitmap bitmap = bitmapSoftReference.get();
@@ -89,19 +85,29 @@ public class TwistImageCache implements ImageLoader.ImageCache {
         return null;
     }
 
+    public synchronized void storeForReUse(Bitmap bitmap) {
+        if(bitmapCanBeReused(bitmap)) {
+            unusedBitmaps.add(new SoftReference<Bitmap>(bitmap));
+        }
+    }
+
+    private static boolean bitmapCanBeReused(Bitmap bitmap) {
+        return bitmap != null && !bitmap.isRecycled() && bitmap.isMutable();
+    }
+
     private static boolean canUseForInBitmap(Bitmap candidate, BitmapFactory.Options targetOptions) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 
             if(targetOptions.inSampleSize == 0) {
-                int width = targetOptions.outWidth;
-                int height = targetOptions.outHeight;
-                int byteCount = width * height * getBytesPerPixel(candidate.getConfig());
+                final int width = targetOptions.outWidth;
+                final int height = targetOptions.outHeight;
+                final int byteCount = width * height * getBytesPerPixel(candidate.getConfig());
                 return byteCount <= candidate.getAllocationByteCount();
             }
-            int width = targetOptions.outWidth / targetOptions.inSampleSize;
-            int height = targetOptions.outHeight / targetOptions.inSampleSize;
-            int byteCount = width * height * getBytesPerPixel(candidate.getConfig());
+            final int  width = targetOptions.outWidth / targetOptions.inSampleSize;
+            final int height = targetOptions.outHeight / targetOptions.inSampleSize;
+            final int byteCount = width * height * getBytesPerPixel(candidate.getConfig());
             return byteCount <= candidate.getAllocationByteCount();
         }
 

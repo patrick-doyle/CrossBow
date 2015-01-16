@@ -78,28 +78,47 @@ public class RecycleImageRequest extends ImageRequest {
             int desiredHeight = getResizedDimension(mMaxHeight, mMaxWidth,actualHeight, actualWidth);
 
             // Decode to the nearest power of two scaling factor.
-            decodeOptions.inJustDecodeBounds = false;
-            decodeOptions.inMutable = true;
 
-            // Try to get a bitmap to decode into
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                Bitmap recycled = twistImageCache.getBitmapToFill(decodeOptions, desiredHeight, desiredWidth);
-                if(recycled != null) {
-                    Log.i("TE", "Using recycledBitmap");
-                    decodeOptions.inBitmap = recycled;
-                }
-            }
-
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1) {
                 decodeOptions.inPreferQualityOverSpeed = true;
             }
+
+            decodeOptions.inJustDecodeBounds = false;
             decodeOptions.inSampleSize = findBestSampleSize(actualWidth, actualHeight, desiredWidth, desiredHeight);
-            Bitmap tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
+
+            Bitmap tempBitmap;
+            // Try to get a bitmap to decode into
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+
+                decodeOptions.inMutable = true;
+                decodeOptions.outHeight = desiredHeight > actualHeight ? desiredHeight : actualHeight;
+                decodeOptions.outWidth = desiredWidth > actualWidth ? desiredWidth : actualWidth;
+
+                Bitmap recycled = twistImageCache.getBitmapToFill(decodeOptions);
+                if(recycled != null) {
+                    decodeOptions.inBitmap = recycled;
+                }
+
+                try {
+                    tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
+                    addMarker("Reused Bitmap Allocation for decoding");
+                }
+                catch (IllegalArgumentException e) {
+                    decodeOptions.inBitmap = null;
+                    tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
+                }
+            }
+            else {
+                tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
+            }
 
             // If necessary, scale down to the maximal acceptable size.
             if (tempBitmap != null && (tempBitmap.getWidth() > desiredWidth ||tempBitmap.getHeight() > desiredHeight)) {
                 bitmap = Bitmap.createScaledBitmap(tempBitmap, desiredWidth, desiredHeight, true);
-                tempBitmap.recycle();
+                if(!tempBitmap.equals(bitmap)) {
+                    //Only store if the bitmaps are not equal and the temp bitmap is ready to be reused
+                    twistImageCache.storeForReUse(bitmap);
+                }
             } else {
                 bitmap = tempBitmap;
             }
