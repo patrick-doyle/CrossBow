@@ -48,6 +48,9 @@ public class RecycleImageRequest extends ImageRequest {
     protected Response<Bitmap> parseNetworkResponse(NetworkResponse response) {
         synchronized (decodeLock) {
             try {
+                if(isCanceled()) {
+                    return Response.success(null, HttpHeaderParser.parseCacheHeaders(response));
+                }
                 return doParse(response);
             } catch (OutOfMemoryError e) {
                 VolleyLog.e("Caught OOM for %d byte image, url=%s", response.data.length, getUrl());
