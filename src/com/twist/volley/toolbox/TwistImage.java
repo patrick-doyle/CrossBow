@@ -51,10 +51,12 @@ public class TwistImage {
     private int fade;
     private ImageView.ScaleType scaleType;
     private ImageView.ScaleType preScaleType;
+    private TwistVolley volley;
     private WeakHashMap<ImageView, ImageProperties> propertiesMap = new WeakHashMap<ImageView, ImageProperties>();
 
     private TwistImage(Context context) {
-        imageLoader = TwistVolley.from(context).getImageLoader();
+        volley = new TwistVolley(context);
+        imageLoader = volley.getImageLoader();
     }
 
     /**
