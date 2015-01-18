@@ -104,7 +104,7 @@ public class RecycleImageRequest extends ImageRequest {
 
                 try {
                     tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
-                    addMarker("Reused Bitmap Allocation for decoding");
+                    addMarker("bitmap-reuse");
                 }
                 catch (IllegalArgumentException e) {
                     decodeOptions.inBitmap = null;
@@ -115,15 +115,23 @@ public class RecycleImageRequest extends ImageRequest {
                 tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
             }
 
-            // If necessary, scale down to the maximal acceptable size.
-            if (tempBitmap != null && (tempBitmap.getWidth() > desiredWidth ||tempBitmap.getHeight() > desiredHeight)) {
-                bitmap = Bitmap.createScaledBitmap(tempBitmap, desiredWidth, desiredHeight, true);
-                if(!tempBitmap.equals(bitmap)) {
-                    //Only store if the bitmaps are not equal and the temp bitmap is ready to be reused
-                    twistImageCache.storeForReUse(bitmap);
+            // If the bitmap is 50% Area larger, scale down to the maximal acceptable size.
+            if (tempBitmap != null) {
+                float tempArea = tempBitmap.getWidth() * tempBitmap.getHeight();
+                float desiredArea = desiredWidth * desiredHeight;
+                float ratio = tempArea / desiredArea;
+                addMarker("bitmap-scale-ratio-" + ratio);
+                //TODO ? ratio of 2 needs testing, maybe 1.5 - 1.7
+                if (ratio >= 2) {
+                    bitmap = Bitmap.createScaledBitmap(tempBitmap, desiredWidth, desiredHeight, true);
+                    if (!tempBitmap.equals(bitmap)) {
+                        //Only store if the bitmaps are not equal and the temp bitmap is ready to be reused
+                        twistImageCache.storeForReUse(bitmap);
+                    }
                 }
-            } else {
-                bitmap = tempBitmap;
+                else {
+                    bitmap = tempBitmap;
+                }
             }
         }
 
