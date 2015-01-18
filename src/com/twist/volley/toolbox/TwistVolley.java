@@ -1,65 +1,113 @@
 package com.twist.volley.toolbox;
 
 import android.content.Context;
+import android.os.Build;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
-import com.twist.volley.TwistVolleyApplication;
 import com.twist.volley.VolleyStack;
 
-/*
- * Copyright (C) 2014 Patrick Doyle
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+
+/**
+ * Created by Patrick on 11/01/14.
  */
 public class TwistVolley {
 
-    private static TwistVolley twistVolley;
-    private VolleyStack volleyStack;
+    private Context context;
+    private static VolleyStack volleyStack;
 
-    public static TwistVolley from(Context context) {
+    private static RequestQueue requestQueue;
+    private static ImageLoader imageLoader;
+    private static ImageLoader.ImageCache imageCache;
 
-        if(twistVolley == null) {
-            twistVolley = new TwistVolley(context);
+    public TwistVolley(Context context) {
+        this.context = context.getApplicationContext();
+        if(volleyStack == null) {
+            volleyStack = onCreateVolleyStack();
         }
-        return twistVolley;
+        buildFromStack(volleyStack);
     }
 
-    private TwistVolley (Context context) {
-        try {
-            TwistVolleyApplication application = (TwistVolleyApplication) context.getApplicationContext();
-            this.volleyStack = application.getStack();
+    protected final Context getContext() {
+        return context.getApplicationContext();
+    }
+
+    protected VolleyStack onCreateVolleyStack() {
+        return new DefaultVolleyStack(getContext());
+    }
+
+    private void buildFromStack(VolleyStack volleyStack) {
+        if(requestQueue == null) {
+            requestQueue = volleyStack.createRequestQueue();
         }
-        catch (ClassCastException e) {
-            this.volleyStack = new DefaultVolleyStack(context);
+
+        if(imageCache == null) {
+            imageCache = volleyStack.createImageCache();
+        }
+
+        if(imageLoader == null) {
+            imageLoader = volleyStack.createImageLoader(requestQueue, imageCache);
         }
     }
 
-    public final void addRequest(Request request) {
-        volleyStack.getRequestQueue().add(request);
+    public final RequestQueue getRequestQueue(){
+        return requestQueue;
     }
 
-    public final RequestQueue getRequestQueue() {
-        return volleyStack.getRequestQueue();
+    /**
+     * Adds a request to the shared queue
+     */
+    public final <T> void addToQueue(Request<T> request) {
+        requestQueue.add(request);
     }
 
+    /**
+     * Stop the shared queue
+     */
+    public final void stopQueue() {
+       requestQueue.stop();
+    }
+
+    /**
+     * Start the shared queue
+     */
+    public final void startQueue() {
+        requestQueue.start();
+    }
+
+    /**
+     * Gets the shared image loader instance
+     */
     public final ImageLoader getImageLoader() {
-        return volleyStack.getImageLoader();
+        return imageLoader;
     }
 
-    public final ImageLoader.ImageCache getImageCache() {
-        return volleyStack.getImageCache();
+    /**
+     * Gets the {@link com.android.volley.toolbox.ImageLoader.ImageCache} used in the image loader.
+     */
+    public final ImageLoader.ImageCache getImageCache(){
+        return imageCache;
     }
 
+    /**
+     * Test if the app is running on something newer than HoneyComb (API >= 11)
+     */
+    public static boolean isHoneyCombOrNewer(){
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB);
+    }
+
+    /**
+     * Cancels all requests in the queue.
+     * <p>Throws Runtime exception if the application object does not extend RWVolleyApplication</p>
+     *
+     */
+    public void cancelAll() {
+        requestQueue.cancelAll(new RequestQueue.RequestFilter() {
+            @Override
+            public boolean apply(Request<?> request) {
+                return true;
+            }
+        });
+    }
 }
