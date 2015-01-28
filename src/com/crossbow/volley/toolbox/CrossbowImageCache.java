@@ -1,4 +1,4 @@
-package com.twist.volley.toolbox;
+package com.crossbow.volley.toolbox;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -6,13 +6,9 @@ import android.os.Build;
 
 import com.android.volley.toolbox.ImageLoader;
 
-import java.lang.ref.SoftReference;
-import java.util.ArrayList;
+import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -33,15 +29,15 @@ import java.util.Set;
  * Image cache used for the Image loader. This will also get the least recently used
  * bitmap and try use that to decode new bitmaps in the image request.
  */
-public class TwistImageCache implements ImageLoader.ImageCache {
+public class CrossbowImageCache implements ImageLoader.ImageCache {
 
     private LruCache<String, Bitmap> imageCache;
-    private Set<SoftReference<Bitmap>> unusedBitmaps =  Collections.synchronizedSet(new HashSet<SoftReference<Bitmap>>(100));
+    private Set<WeakReference<Bitmap>> unusedBitmaps =  Collections.synchronizedSet(new HashSet<WeakReference<Bitmap>>(100));
 
     /**
      * @param size - number of byes to use for the cache;
      */
-    protected TwistImageCache(int size) {
+    protected CrossbowImageCache(int size) {
         imageCache = new LruCache<String, Bitmap>(size){
             @Override
             protected int sizeOf(String key, Bitmap value) {
@@ -50,13 +46,6 @@ public class TwistImageCache implements ImageLoader.ImageCache {
                 }
                 else {
                     return value.getRowBytes() * value.getHeight();
-                }
-            }
-
-            @Override
-            protected void entryRemoved(boolean evicted, String key, Bitmap oldValue, Bitmap newValue) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && bitmapCanBeReused(oldValue)) {
-                    unusedBitmaps.add(new SoftReference<>(oldValue));
                 }
             }
         };
@@ -73,7 +62,7 @@ public class TwistImageCache implements ImageLoader.ImageCache {
     }
 
     public synchronized Bitmap getBitmapToFill(BitmapFactory.Options options) {
-        for(SoftReference<Bitmap> bitmapSoftReference : unusedBitmaps) {
+        for(WeakReference<Bitmap> bitmapSoftReference : unusedBitmaps) {
             if(bitmapSoftReference.get() != null) {
                 Bitmap bitmap = bitmapSoftReference.get();
                 if(bitmap.isMutable() && canUseForInBitmap(bitmap, options)) {
@@ -87,7 +76,7 @@ public class TwistImageCache implements ImageLoader.ImageCache {
 
     public synchronized void storeForReUse(Bitmap bitmap) {
         if(bitmapCanBeReused(bitmap)) {
-            unusedBitmaps.add(new SoftReference<Bitmap>(bitmap));
+            unusedBitmaps.add(new WeakReference<Bitmap>(bitmap));
         }
     }
 

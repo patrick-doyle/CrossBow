@@ -1,4 +1,4 @@
-package com.twist.volley.toolbox;
+package com.crossbow.volley.toolbox;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -15,7 +15,7 @@ import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
-import com.twist.volley.VolleyStack;
+import com.crossbow.volley.VolleyStack;
 
 import java.io.File;
 
@@ -29,7 +29,7 @@ public class DefaultVolleyStack extends VolleyStack {
 
     public DefaultVolleyStack(Context context) {
         super(context);
-        this.cacheDir = getContext().getCacheDir() + File.separator + "Volley";
+        this.cacheDir = getContext().getCacheDir() + File.separator + "CrossbowCache";
 
         //Memory cache setup
         ActivityManager am = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
@@ -46,8 +46,8 @@ public class DefaultVolleyStack extends VolleyStack {
 
     @Override
     public @NonNull ImageLoader createImageLoader(RequestQueue requestQueue, ImageLoader.ImageCache imageCache) {
-        if(imageCache instanceof TwistImageCache) {
-            return new TwistImageLoader(requestQueue, (TwistImageCache) imageCache);
+        if(imageCache instanceof CrossbowImageCache) {
+            return new CrossbowImageLoader(requestQueue, (CrossbowImageCache) imageCache);
         }
         else {
             return new ImageLoader(requestQueue, imageCache);
@@ -56,7 +56,7 @@ public class DefaultVolleyStack extends VolleyStack {
 
     @Override
     public @NonNull ImageLoader.ImageCache createImageCache() {
-        return new TwistImageCache(memCacheSize);
+        return new CrossbowImageCache(memCacheSize);
     }
 
     protected Cache getHttpCache() {

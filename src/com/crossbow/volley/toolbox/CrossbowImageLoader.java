@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.twist.volley.toolbox;
+package com.crossbow.volley.toolbox;
 
 import android.graphics.Bitmap;
 
@@ -23,11 +23,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageRequest;
 
-public class TwistImageLoader extends ImageLoader {
+public class CrossbowImageLoader extends ImageLoader {
 
-    private final TwistImageCache imageCache;
+    private final CrossbowImageCache imageCache;
 
     /**
      * Constructs a new ImageLoader.
@@ -35,7 +34,7 @@ public class TwistImageLoader extends ImageLoader {
      * @param queue      The RequestQueue to use for making image requests.
      * @param imageCache The cache to use as an L1 cache.
      */
-    public TwistImageLoader(RequestQueue queue, TwistImageCache imageCache) {
+    public CrossbowImageLoader(RequestQueue queue, CrossbowImageCache imageCache) {
         super(queue, imageCache);
         this.imageCache = imageCache;
     }

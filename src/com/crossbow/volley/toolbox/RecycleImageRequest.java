@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.twist.volley.toolbox;
+package com.crossbow.volley.toolbox;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.util.Log;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -30,15 +29,15 @@ import com.android.volley.toolbox.ImageRequest;
 
 public class RecycleImageRequest extends ImageRequest {
 
-    private final TwistImageCache twistImageCache;
+    private final CrossbowImageCache crossbowImageCache;
     private final int mMaxWidth;
     private final int mMaxHeight;
     private final Bitmap.Config mDecodeConfig;
     private final static Object decodeLock = new Object();
 
-    public RecycleImageRequest(TwistImageCache twistImageCache, String url, Response.Listener<Bitmap> listener, int maxWidth, int maxHeight, Bitmap.Config decodeConfig, Response.ErrorListener errorListener) {
+    public RecycleImageRequest(CrossbowImageCache crossbowImageCache, String url, Response.Listener<Bitmap> listener, int maxWidth, int maxHeight, Bitmap.Config decodeConfig, Response.ErrorListener errorListener) {
         super(url, listener, maxWidth, maxHeight, decodeConfig, errorListener);
-        this.twistImageCache = twistImageCache;
+        this.crossbowImageCache = crossbowImageCache;
         this.mMaxWidth = maxWidth;
         this.mMaxHeight = maxHeight;
         this.mDecodeConfig = decodeConfig;
@@ -97,14 +96,16 @@ public class RecycleImageRequest extends ImageRequest {
                 decodeOptions.outHeight = desiredHeight > actualHeight ? desiredHeight : actualHeight;
                 decodeOptions.outWidth = desiredWidth > actualWidth ? desiredWidth : actualWidth;
 
-                Bitmap recycled = twistImageCache.getBitmapToFill(decodeOptions);
+                Bitmap recycled = crossbowImageCache.getBitmapToFill(decodeOptions);
                 if(recycled != null) {
                     decodeOptions.inBitmap = recycled;
                 }
 
                 try {
                     tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
-                    addMarker("bitmap-reuse");
+                    if(decodeOptions.inBitmap != null) {
+                        addMarker("bitmap-reuse");
+                    }
                 }
                 catch (IllegalArgumentException e) {
                     decodeOptions.inBitmap = null;
@@ -117,17 +118,11 @@ public class RecycleImageRequest extends ImageRequest {
 
             // If the bitmap is 50% Area larger, scale down to the maximal acceptable size.
             if (tempBitmap != null) {
-                float tempArea = tempBitmap.getWidth() * tempBitmap.getHeight();
-                float desiredArea = desiredWidth * desiredHeight;
-                float ratio = tempArea / desiredArea;
-                addMarker("bitmap-scale-ratio-" + ratio);
-                //TODO ? ratio of 2 needs testing, maybe 1.5 - 1.7
-                if (ratio >= 2) {
-                    bitmap = Bitmap.createScaledBitmap(tempBitmap, desiredWidth, desiredHeight, true);
-                    if (!tempBitmap.equals(bitmap)) {
-                        //Only store if the bitmaps are not equal and the temp bitmap is ready to be reused
-                        twistImageCache.storeForReUse(bitmap);
-                    }
+                bitmap = Bitmap.createScaledBitmap(tempBitmap, desiredWidth, desiredHeight, true);
+                if (!tempBitmap.equals(bitmap)) {
+                    //Only store if the bitmaps are not equal and the temp bitmap is ready to be reused
+                    crossbowImageCache.storeForReUse(tempBitmap);
+                    addMarker("temp-bitmap-recycle");
                 }
                 else {
                     bitmap = tempBitmap;

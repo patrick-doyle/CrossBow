@@ -1,4 +1,4 @@
-package com.twist.volley.toolbox;
+package com.crossbow.volley.toolbox;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.twist.volley.ImageProperties;
+import com.crossbow.volley.ImageProperties;
 
 import java.util.WeakHashMap;
 
@@ -27,9 +27,9 @@ import java.util.WeakHashMap;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class TwistImage {
+public class CrossbowImage {
 
-    private static TwistImage twistImage;
+    private static CrossbowImage crossbowImage;
 
     /**
      * Get an instance of TwistImage
@@ -37,11 +37,11 @@ public class TwistImage {
      * @param context
      * @return
      */
-    public static TwistImage from(Context context) {
-        if(twistImage == null) {
-            twistImage = new TwistImage(context);
+    public static CrossbowImage from(Context context) {
+        if(crossbowImage == null) {
+            crossbowImage = new CrossbowImage(context);
         }
-        return twistImage;
+        return crossbowImage;
     }
 
     private ImageLoader imageLoader;
@@ -51,12 +51,12 @@ public class TwistImage {
     private int fade;
     private ImageView.ScaleType scaleType;
     private ImageView.ScaleType preScaleType;
-    private TwistVolley volley;
+    private Crossbow crossbow;
     private WeakHashMap<ImageView, ImageProperties> propertiesMap = new WeakHashMap<ImageView, ImageProperties>();
 
-    private TwistImage(Context context) {
-        volley = new TwistVolley(context);
-        imageLoader = volley.getImageLoader();
+    private CrossbowImage(Context context) {
+        crossbow = Crossbow.get(context);
+        imageLoader = crossbow.getImageLoader();
     }
 
     /**
@@ -64,7 +64,7 @@ public class TwistImage {
      *
      * @param url the url for the image
      */
-    public TwistImage url(String url) {
+    public CrossbowImage url(String url) {
         this.url = url;
         return this;
     }
@@ -74,7 +74,7 @@ public class TwistImage {
      *
      * @param duration the duration to fade
      */
-    public TwistImage fade(int duration) {
+    public CrossbowImage fade(int duration) {
         this.fade = duration;
         return this;
     }
@@ -84,7 +84,7 @@ public class TwistImage {
      *
      * @param errorRes the drawable res to use
      */
-    public TwistImage error(@DrawableRes int errorRes) {
+    public CrossbowImage error(@DrawableRes int errorRes) {
         this.errorRes = errorRes;
         return this;
     }
@@ -94,7 +94,7 @@ public class TwistImage {
      *
      * @param defaultRes the drawable res to use
      */
-    public TwistImage defaultRes(@DrawableRes int defaultRes) {
+    public CrossbowImage defaultRes(@DrawableRes int defaultRes) {
         this.defaultRes = defaultRes;
         return this;
     }
@@ -102,7 +102,7 @@ public class TwistImage {
     /**
      * Sets the image scaletype to center crop when the image loads
      */
-    public TwistImage centerCrop() {
+    public CrossbowImage centerCrop() {
         return scale(ImageView.ScaleType.CENTER_CROP);
     }
 
@@ -111,7 +111,7 @@ public class TwistImage {
      *
      * @param scaleType scaletype to set.
      */
-    public TwistImage defaultScale(ImageView.ScaleType scaleType) {
+    public CrossbowImage defaultScale(ImageView.ScaleType scaleType) {
         this.preScaleType = scaleType;
         return this;
     }
@@ -119,7 +119,7 @@ public class TwistImage {
     /**
      * Sets the image scaletype to fit center when the image loads
      */
-    public TwistImage fit() {
+    public CrossbowImage fit() {
         return scale(ImageView.ScaleType.FIT_CENTER);
     }
 
@@ -128,7 +128,7 @@ public class TwistImage {
      *
      * @param scaleType th scaletype to set.
      */
-    public TwistImage scale(ImageView.ScaleType scaleType) {
+    public CrossbowImage scale(ImageView.ScaleType scaleType) {
         this.scaleType = scaleType;
         return this;
     }
