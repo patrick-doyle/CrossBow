@@ -2,6 +2,7 @@ package com.crossbow.volley.toolbox;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.view.View;
@@ -30,6 +31,7 @@ import java.util.WeakHashMap;
 public class CrossbowImage {
 
     private static CrossbowImage crossbowImage;
+    private Listener listener;
 
     /**
      * Get an instance of TwistImage
@@ -50,6 +52,7 @@ public class CrossbowImage {
     private int errorRes;
     private int fade;
     private boolean dontClear;
+    private boolean dontScale;
     private ImageView.ScaleType scaleType;
     private ImageView.ScaleType preScaleType;
     private Crossbow crossbow;
@@ -118,10 +121,27 @@ public class CrossbowImage {
     }
 
     /**
+     * Prevent the Imagefrom getting scaled at all. <b>Will cause the image to load the full size image into the cache</b>
+     *
+     */
+    public CrossbowImage dontScale() {
+        this.dontScale = true;
+        return this;
+    }
+
+    /**
      * Sets the image scaletype to fit center when the image loads
      */
     public CrossbowImage fit() {
         return scale(ImageView.ScaleType.FIT_CENTER);
+    }
+
+    /**
+     * Sets the image scaletype to fit center when the image loads
+     */
+    public CrossbowImage listen(Listener listener) {
+        this.listener = listener;
+        return this;
     }
 
     /**
@@ -186,6 +206,8 @@ public class CrossbowImage {
         imageProperties.scaleType = scaleType;
         imageProperties.dontClear = dontClear;
         imageProperties.preScaleType = preScaleType;
+        imageProperties.dontScale = dontScale;
+        imageProperties.listener = listener;
         imageProperties.setImageLoader(imageLoader);
         imageProperties.setImageView(imageView);
 
@@ -211,5 +233,12 @@ public class CrossbowImage {
         url = null;
         scaleType = null;
         preScaleType = null;
+        dontClear = false;
+        dontScale = false;
+        listener = null;
+    }
+
+    public interface Listener {
+        public void onLoad(boolean success, Bitmap bitmap, ImageView imageView);
     }
 }

@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.crossbow.volley.toolbox.CrossbowImage;
 
 import java.lang.ref.WeakReference;
 
@@ -43,9 +44,13 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
 
     public ImageView.ScaleType preScaleType;
 
+    public boolean dontScale;
+
     public WeakReference<ImageView> imageView;
 
     private ImageLoader.ImageContainer imageContainer;
+
+    public CrossbowImage.Listener listener;
 
     public void setImageLoader(ImageLoader imageLoader) {
         this.imageLoader = imageLoader;
@@ -65,6 +70,8 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
         scaleType = null;
         preScaleType = null;
         dontClear = false;
+        dontScale = false;
+        listener = null;
     }
 
     public void cancelRequest() {
@@ -89,6 +96,10 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
                 alphaAnimation.setDuration(fade);
                 imageView.startAnimation(alphaAnimation);
             }
+
+            if(listener != null) {
+                listener.onLoad(true, response.getBitmap(), imageView);
+            }
         }
     }
 
@@ -98,6 +109,10 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
         ImageView imageView = this.imageView.get();
         if(imageView != null && errorRes != 0) {
             imageView.setImageResource(errorRes);
+        }
+
+        if(listener != null) {
+            listener.onLoad(false, null, imageView);
         }
     }
 
@@ -110,7 +125,7 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
         imageView.get().getViewTreeObserver().removeOnPreDrawListener(this);
 
         if(TextUtils.isEmpty(url)) {
-            onErrorResponse(new VolleyError());
+            onErrorResponse(new VolleyError("Url Is empty"));
             return true;
         }
 
@@ -126,7 +141,12 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
             imageView.get().setScaleType(preScaleType);
         }
 
-        imageContainer = imageLoader.get(url, this, imageView.get().getWidth(), imageView.get().getHeight());
+        if(dontScale) {
+            imageContainer = imageLoader.get(url, this);
+        }
+        else {
+            imageContainer = imageLoader.get(url, this, imageView.get().getWidth(), imageView.get().getHeight());
+        }
         return true;
     }
 }
