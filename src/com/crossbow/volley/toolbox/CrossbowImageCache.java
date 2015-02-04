@@ -61,22 +61,27 @@ public class CrossbowImageCache implements ImageLoader.ImageCache {
         imageCache.put(url, bitmap);
     }
 
-    public synchronized Bitmap getBitmapToFill(BitmapFactory.Options options) {
-        for(WeakReference<Bitmap> bitmapSoftReference : unusedBitmaps) {
-            if(bitmapSoftReference.get() != null) {
-                Bitmap bitmap = bitmapSoftReference.get();
-                if(bitmap.isMutable() && canUseForInBitmap(bitmap, options)) {
-                    unusedBitmaps.remove(bitmapSoftReference);
-                    return bitmap;
+    public Bitmap getBitmapToFill(BitmapFactory.Options options) {
+        synchronized (imageCache) {
+            for(WeakReference<Bitmap> bitmapSoftReference : unusedBitmaps) {
+                if(bitmapSoftReference.get() != null) {
+                    Bitmap bitmap = bitmapSoftReference.get();
+                    if(bitmap.isMutable() && canUseForInBitmap(bitmap, options)) {
+                        unusedBitmaps.remove(bitmapSoftReference);
+                        return bitmap;
+                    }
                 }
             }
         }
+
         return null;
     }
 
-    public synchronized void storeForReUse(Bitmap bitmap) {
-        if(bitmapCanBeReused(bitmap)) {
-            unusedBitmaps.add(new WeakReference<Bitmap>(bitmap));
+    public  void storeForReUse(Bitmap bitmap) {
+        synchronized(imageCache) {
+            if(bitmapCanBeReused(bitmap)) {
+                unusedBitmaps.add(new WeakReference<Bitmap>(bitmap));
+            }
         }
     }
 
