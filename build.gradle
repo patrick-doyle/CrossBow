@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:1.0.1'
     }
 }
 
@@ -15,7 +15,7 @@ android {
 
     sourceSets {
         defaultConfig {
-            testApplicationId 'com.twist.volley.tests'
+            testApplicationId 'com.crossbow.volley.tests'
         }
 
         main {

@@ -49,6 +49,7 @@ public class CrossbowImage {
     private int defaultRes;
     private int errorRes;
     private int fade;
+    private boolean dontClear;
     private ImageView.ScaleType scaleType;
     private ImageView.ScaleType preScaleType;
     private Crossbow crossbow;
@@ -133,6 +134,11 @@ public class CrossbowImage {
         return this;
     }
 
+    public CrossbowImage dontClear() {
+        this.dontClear = true;
+        return this;
+    }
+
     public void into(View root, @IdRes int imageViewId) {
         ImageView imageView = (ImageView) root.findViewById(imageViewId);
         into(imageView);
@@ -143,13 +149,19 @@ public class CrossbowImage {
         into(imageView);
     }
 
+    public void cancelLoad(ImageView imageView) {
+        if(propertiesMap.containsKey(imageView)) {
+            propertiesMap.get(imageView).cancelRequest();
+        }
+    }
+
     /**
      * The ImageView to load the image into
      *
      * @param imageView The ImageView to use
      */
     public void into(ImageView imageView) {
-        if(url == null || imageView == null) {
+        if(imageView == null) {
             cleanUpConfig();
             return;
         }
@@ -172,6 +184,7 @@ public class CrossbowImage {
         imageProperties.defaultRes = defaultRes;
         imageProperties.errorRes = errorRes;
         imageProperties.scaleType = scaleType;
+        imageProperties.dontClear = dontClear;
         imageProperties.preScaleType = preScaleType;
         imageProperties.setImageLoader(imageLoader);
         imageProperties.setImageView(imageView);

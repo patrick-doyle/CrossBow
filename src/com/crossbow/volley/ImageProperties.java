@@ -1,5 +1,6 @@
 package com.crossbow.volley;
 
+import android.text.TextUtils;
 import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
@@ -36,6 +37,8 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
 
     public int errorRes = 0;
 
+    public boolean dontClear;
+
     public ImageView.ScaleType scaleType;
 
     public ImageView.ScaleType preScaleType;
@@ -61,6 +64,7 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
         imageLoader = null;
         scaleType = null;
         preScaleType = null;
+        dontClear = false;
     }
 
     public void cancelRequest() {
@@ -105,7 +109,14 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
         }
         imageView.get().getViewTreeObserver().removeOnPreDrawListener(this);
 
-        imageView.get().setImageBitmap(null);
+        if(TextUtils.isEmpty(url)) {
+            onErrorResponse(new VolleyError());
+        }
+
+        if(!dontClear) {
+            imageView.get().setImageBitmap(null);
+        }
+
         if(defaultRes != 0) {
             imageView.get().setImageResource(defaultRes);
         }
