@@ -111,6 +111,7 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
 
         if(TextUtils.isEmpty(url)) {
             onErrorResponse(new VolleyError());
+            return true;
         }
 
         if(!dontClear) {
