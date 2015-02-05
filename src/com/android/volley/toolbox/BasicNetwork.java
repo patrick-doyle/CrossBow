@@ -239,7 +239,15 @@ public class BasicNetwork implements Network {
                 bytes.write(buffer, 0, count);
             }
             return bytes.toByteArray();
-        } finally {
+        }
+        catch (OutOfMemoryError er) {
+            // This can happen if there was an exception above that left the entity in
+            // an invalid state.
+            VolleyLog.e("RW Out of memory occured when calling consumingContent");
+            return bytes.toByteArray();
+        }
+
+        finally {
             try {
                 // Close the InputStream and release the resources by "consuming the content".
                 entity.consumeContent();
@@ -248,6 +256,7 @@ public class BasicNetwork implements Network {
                 // an invalid state.
                 VolleyLog.v("Error occured when calling consumingContent");
             }
+
             mPool.returnBuf(buffer);
             bytes.close();
         }
