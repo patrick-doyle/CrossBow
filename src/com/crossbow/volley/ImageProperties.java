@@ -91,7 +91,7 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
                 imageView.setScaleType(scaleType);
             }
 
-            if(fade != 0) {
+            if(fade != 0 && !isImmediate) {
                 AlphaAnimation alphaAnimation = new AlphaAnimation(0,1);
                 alphaAnimation.setDuration(fade);
                 imageView.startAnimation(alphaAnimation);
