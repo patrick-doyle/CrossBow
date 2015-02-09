@@ -80,7 +80,6 @@ public class RecycleImageRequest extends ImageRequest {
             int desiredHeight = getResizedDimension(mMaxHeight, mMaxWidth,actualHeight, actualWidth);
 
             // Decode to the nearest power of two scaling factor.
-
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1) {
                 decodeOptions.inPreferQualityOverSpeed = true;
             }
@@ -89,45 +88,22 @@ public class RecycleImageRequest extends ImageRequest {
             decodeOptions.inSampleSize = findBestSampleSize(actualWidth, actualHeight, desiredWidth, desiredHeight);
 
             Bitmap tempBitmap;
-            // Try to get a bitmap to decode into
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 
-                decodeOptions.inMutable = true;
-                decodeOptions.outHeight = desiredHeight > actualHeight ? desiredHeight : actualHeight;
-                decodeOptions.outWidth = desiredWidth > actualWidth ? desiredWidth : actualWidth;
+            decodeOptions.outHeight = desiredHeight > actualHeight ? desiredHeight : actualHeight;
+            decodeOptions.outWidth = desiredWidth > actualWidth ? desiredWidth : actualWidth;
+            tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
 
-                Bitmap recycled = crossbowImageCache.getBitmapToFill(decodeOptions);
-                if(recycled != null) {
-                    decodeOptions.inBitmap = recycled;
-                }
-
-                try {
-                    tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
-                    if(decodeOptions.inBitmap != null) {
-                        addMarker("bitmap-reuse");
-                    }
-                }
-                catch (IllegalArgumentException e) {
-                    decodeOptions.inBitmap = null;
-                    tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
+            // If the bitmap is 50% Area larger, scale down to the maximal acceptable size.
+            if (tempBitmap != null && tempBitmap.getHeight() > desiredHeight && tempBitmap.getWidth() > desiredWidth) {
+                bitmap = Bitmap.createScaledBitmap(tempBitmap, desiredWidth, desiredHeight, true);
+                if(!tempBitmap.equals(bitmap)) {
+                    tempBitmap.recycle();
                 }
             }
             else {
-                tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
+                bitmap = tempBitmap;
             }
 
-            // If the bitmap is 50% Area larger, scale down to the maximal acceptable size.
-            if (tempBitmap != null) {
-                bitmap = Bitmap.createScaledBitmap(tempBitmap, desiredWidth, desiredHeight, true);
-                if (!tempBitmap.equals(bitmap)) {
-                    //Only store if the bitmaps are not equal and the temp bitmap is ready to be reused
-                    crossbowImageCache.storeForReUse(tempBitmap);
-                    addMarker("temp-bitmap-recycle");
-                }
-                else {
-                    bitmap = tempBitmap;
-                }
-            }
         }
 
         if (bitmap == null) {
