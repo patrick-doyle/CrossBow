@@ -32,6 +32,10 @@ android {
         androidTest.setRoot('tests')
         androidTest.java.srcDirs = ['tests/src']
     }
+    
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
