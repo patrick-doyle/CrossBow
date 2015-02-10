@@ -3,12 +3,15 @@ package com.crossbow.volley.toolbox;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.support.v4.graphics.BitmapCompat;
 
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 
 import java.lang.ref.WeakReference;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -31,8 +34,17 @@ import java.util.Set;
  */
 public class CrossbowImageCache implements ImageLoader.ImageCache {
 
+    private static final int UNUSED_BITMAP_COUNT = 50;
     private LruCache<String, Bitmap> imageCache;
-    private Set<WeakReference<Bitmap>> unusedBitmaps =  Collections.synchronizedSet(new HashSet<WeakReference<Bitmap>>(100));
+    private Set<WeakReference<Bitmap>> unusedBitmaps = Collections.newSetFromMap(new LinkedHashMap<WeakReference<Bitmap>, Boolean>(UNUSED_BITMAP_COUNT){
+        protected boolean removeEldestEntry(Map.Entry<WeakReference<Bitmap>, Boolean> eldest) {
+            boolean shouldRemove = size() > UNUSED_BITMAP_COUNT;
+            if(shouldRemove) {
+                VolleyLog.d("pruning unused size = " + size());
+            }
+            return shouldRemove;
+        }
+    });
 
     /**
      * @param size - number of byes to use for the cache;
@@ -97,12 +109,12 @@ public class CrossbowImageCache implements ImageLoader.ImageCache {
                 final int width = targetOptions.outWidth;
                 final int height = targetOptions.outHeight;
                 final int byteCount = width * height * getBytesPerPixel(candidate.getConfig());
-                return byteCount <= candidate.getAllocationByteCount();
+                return byteCount <= BitmapCompat.getAllocationByteCount(candidate);
             }
             final int  width = targetOptions.outWidth / targetOptions.inSampleSize;
             final int height = targetOptions.outHeight / targetOptions.inSampleSize;
             final int byteCount = width * height * getBytesPerPixel(candidate.getConfig());
-            return byteCount <= candidate.getAllocationByteCount();
+            return byteCount <= BitmapCompat.getAllocationByteCount(candidate);
         }
 
         return candidate.getWidth() == targetOptions.outWidth && candidate.getHeight() == targetOptions.outHeight && targetOptions.inSampleSize == 1;
