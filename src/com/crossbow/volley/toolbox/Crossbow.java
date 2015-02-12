@@ -2,6 +2,8 @@ package com.crossbow.volley.toolbox;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.Nullable;
+import android.widget.AbsListView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -184,5 +186,42 @@ public class Crossbow {
                 return true;
             }
         });
+    }
+
+    /**
+     * Listen to a list which will stop the request queue to prevent loading when the list is flung
+     * @param absListView the ListView to listen to
+     * @param onScrollListener optional scrollListener to pass the scroll events to
+     */
+    public void listenToList(AbsListView absListView, @Nullable final AbsListView.OnScrollListener onScrollListener) {
+        absListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if(scrollState == SCROLL_STATE_FLING) {
+                    stopQueue();
+                }
+                else {
+                    startQueue();
+                }
+                if(onScrollListener != null) {
+                    onScrollListener.onScrollStateChanged(view, scrollState);
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if(onScrollListener != null) {
+                    onScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+                }
+            }
+        });
+    }
+
+    /**
+     * Listen to a list which will stop the request queue to prevent loading when the list is flung
+     * @param absListView the ListView to listen to
+     */
+    public void listenToList(AbsListView absListView) {
+        listenToList(absListView, null);
     }
 }
