@@ -132,6 +132,10 @@ public class Crossbow {
         return requestQueue;
     }
 
+    public void cancelAll(Object tag){
+        requestQueue.cancelAll(tag);
+    }
+
     /**
      * Adds a request to the shared queue
      */
