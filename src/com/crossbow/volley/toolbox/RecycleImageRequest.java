@@ -27,6 +27,9 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.ImageRequest;
 
+import java.util.IllegalFormatException;
+import java.util.Locale;
+
 public class RecycleImageRequest extends ImageRequest {
 
     private final CrossbowImageCache crossbowImageCache;
@@ -62,6 +65,7 @@ public class RecycleImageRequest extends ImageRequest {
      * The real guts of parseNetworkResponse. Broken out for readability.
      */
     private Response<Bitmap> doParse(NetworkResponse response) {
+
         byte[] data = response.data;
         BitmapFactory.Options decodeOptions = new BitmapFactory.Options();
         Bitmap bitmap = null;
@@ -78,6 +82,12 @@ public class RecycleImageRequest extends ImageRequest {
             // Then compute the dimensions we would ideally like to decode to.
             int desiredWidth = getResizedDimension(mMaxWidth, mMaxHeight,actualWidth, actualHeight);
             int desiredHeight = getResizedDimension(mMaxHeight, mMaxWidth,actualHeight, actualWidth);
+            
+            if(desiredHeight <= 0 || desiredWidth <= 0) {
+                addMarker("invalid image size");
+                IllegalArgumentException exception = new IllegalArgumentException(String.format(Locale.ENGLISH, "Invalid image size, desiredHeight = %s, desiredHeight = %s", desiredHeight, desiredWidth));
+                return Response.error(new ParseError(exception));
+            }
 
             // Decode to the nearest power of two scaling factor.
 
