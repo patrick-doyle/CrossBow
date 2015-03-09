@@ -18,6 +18,7 @@ package com.android.volley;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -203,7 +204,7 @@ public class RequestQueue {
         cancelAll(new RequestFilter() {
             @Override
             public boolean apply(Request<?> request) {
-                return request.getTag() == tag;
+                return tag.equals(request.getTag());
             }
         });
     }

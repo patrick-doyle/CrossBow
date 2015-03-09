@@ -110,6 +110,10 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
         if(imageView != null && errorRes != 0) {
             imageView.setImageResource(errorRes);
         }
+        else if (imageView != null) {
+            imageView.setImageBitmap(null);
+        }
+
 
         if(listener != null) {
             listener.onLoad(false, null, imageView);
