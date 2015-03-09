@@ -99,6 +99,7 @@ public class RecycleImageRequest extends ImageRequest {
             decodeOptions.inSampleSize = findBestSampleSize(actualWidth, actualHeight, desiredWidth, desiredHeight);
 
             Bitmap tempBitmap;
+
             // Try to get a bitmap to decode into
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 
@@ -126,17 +127,25 @@ public class RecycleImageRequest extends ImageRequest {
                 tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
             }
 
-            // If the bitmap is 50% Area larger, scale down to the maximal acceptable size.
-            if (tempBitmap != null) {
+            // If the bitmap is larger, scale down to the maximal acceptable size.
+            if (tempBitmap != null && (tempBitmap.getWidth() > desiredWidth || tempBitmap.getHeight() > desiredHeight)) {
+
                 bitmap = Bitmap.createScaledBitmap(tempBitmap, desiredWidth, desiredHeight, true);
+                //Only store if the bitmaps are not equal and the temp bitmap is ready to be reused
                 if (!tempBitmap.equals(bitmap)) {
-                    //Only store if the bitmaps are not equal and the temp bitmap is ready to be reused
-                    crossbowImageCache.storeForReUse(tempBitmap);
-                    addMarker("temp-bitmap-recycle");
+                    //bitmaps can only be reallocated on newer than honeycomb,
+                    //older platforms need to recycle to prevent extra native heap allocations
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        crossbowImageCache.storeForReUse(tempBitmap);
+                        addMarker("temp-bitmap-recycle");
+                    }
+                    else {
+                        tempBitmap.recycle();
+                    }
                 }
-                else {
-                    bitmap = tempBitmap;
-                }
+            }
+            else {
+                bitmap = tempBitmap;
             }
         }
 
