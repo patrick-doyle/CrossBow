@@ -119,10 +119,11 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
     @Override
     public boolean onPreDraw() {
 
-        if(imageView.get() == null) {
+        ImageView view = imageView.get();
+        if(view == null) {
             return true;
         }
-        imageView.get().getViewTreeObserver().removeOnPreDrawListener(this);
+        view.getViewTreeObserver().removeOnPreDrawListener(this);
 
         if(TextUtils.isEmpty(url)) {
             onErrorResponse(new VolleyError("Url Is empty"));
@@ -130,22 +131,22 @@ public class ImageProperties implements ViewTreeObserver.OnPreDrawListener, Imag
         }
 
         if(!dontClear) {
-            imageView.get().setImageBitmap(null);
+            view.setImageBitmap(null);
         }
 
         if(defaultRes != 0) {
-            imageView.get().setImageResource(defaultRes);
+            view.setImageResource(defaultRes);
         }
 
         if(preScaleType != null) {
-            imageView.get().setScaleType(preScaleType);
+            view.setScaleType(preScaleType);
         }
 
         if(dontScale) {
             imageContainer = imageLoader.get(url, this);
         }
         else {
-            imageContainer = imageLoader.get(url, this, imageView.get().getWidth(), imageView.get().getHeight());
+            imageContainer = imageLoader.get(url, this, view.getWidth(), view.getHeight());
         }
         return true;
     }
