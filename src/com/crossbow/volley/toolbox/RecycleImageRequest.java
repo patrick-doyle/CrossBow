@@ -17,8 +17,6 @@
 package com.crossbow.volley.toolbox;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -26,9 +24,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.ImageRequest;
-
-import java.util.IllegalFormatException;
-import java.util.Locale;
 
 public class RecycleImageRequest extends ImageRequest {
 
@@ -50,145 +45,22 @@ public class RecycleImageRequest extends ImageRequest {
     protected Response<Bitmap> parseNetworkResponse(NetworkResponse response) {
         synchronized (decodeLock) {
             try {
-                if(isCanceled()) {
+                if (isCanceled()) {
                     return Response.success(null, HttpHeaderParser.parseCacheHeaders(response));
                 }
-                return doParse(response);
-            } catch (OutOfMemoryError e) {
+                Bitmap parsed = ImageDecoder.parseImage(response.data, mDecodeConfig, crossbowImageCache, mMaxWidth, mMaxHeight);
+                if (parsed != null) {
+                    return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response));
+                }
+                else {
+                    return Response.error(new ParseError());
+                }
+
+            }
+            catch (OutOfMemoryError | ParseError e) {
                 VolleyLog.e("Caught OOM for %d byte image, url=%s", response.data.length, getUrl());
                 return Response.error(new ParseError(e));
             }
         }
-    }
-
-    /**
-     * The real guts of parseNetworkResponse. Broken out for readability.
-     */
-    private Response<Bitmap> doParse(NetworkResponse response) {
-
-        byte[] data = response.data;
-        BitmapFactory.Options decodeOptions = new BitmapFactory.Options();
-        Bitmap bitmap = null;
-        if (mMaxWidth == 0 && mMaxHeight == 0) {
-            decodeOptions.inPreferredConfig = mDecodeConfig;
-            bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
-        } else {
-            // If we have to resize this image, first get the natural bounds.
-            decodeOptions.inJustDecodeBounds = true;
-            BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
-            int actualWidth = decodeOptions.outWidth;
-            int actualHeight = decodeOptions.outHeight;
-
-            // Then compute the dimensions we would ideally like to decode to.
-            int desiredWidth = getResizedDimension(mMaxWidth, mMaxHeight,actualWidth, actualHeight);
-            int desiredHeight = getResizedDimension(mMaxHeight, mMaxWidth,actualHeight, actualWidth);
-            
-            if(desiredHeight <= 0 || desiredWidth <= 0) {
-                addMarker("invalid image size");
-                IllegalArgumentException exception = new IllegalArgumentException(String.format(Locale.ENGLISH, "Invalid image size, desiredHeight = %s, desiredHeight = %s", desiredHeight, desiredWidth));
-                return Response.error(new ParseError(exception));
-            }
-
-            // Decode to the nearest power of two scaling factor.
-
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1) {
-                decodeOptions.inPreferQualityOverSpeed = true;
-            }
-
-            decodeOptions.inJustDecodeBounds = false;
-            decodeOptions.inSampleSize = findBestSampleSize(actualWidth, actualHeight, desiredWidth, desiredHeight);
-
-            Bitmap tempBitmap;
-
-            // Try to get a bitmap to decode into
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-
-                decodeOptions.inMutable = true;
-                decodeOptions.outHeight = desiredHeight > actualHeight ? desiredHeight : actualHeight;
-                decodeOptions.outWidth = desiredWidth > actualWidth ? desiredWidth : actualWidth;
-
-                Bitmap recycled = crossbowImageCache.getBitmapToFill(decodeOptions);
-                if(recycled != null) {
-                    decodeOptions.inBitmap = recycled;
-                }
-
-                try {
-                    tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
-                    if(decodeOptions.inBitmap != null) {
-                        addMarker("bitmap-reuse");
-                    }
-                }
-                catch (IllegalArgumentException e) {
-                    decodeOptions.inBitmap = null;
-                    tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
-                }
-            }
-            else {
-                tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
-            }
-
-            // If the bitmap is larger, scale down to the maximal acceptable size.
-            if (tempBitmap != null && (tempBitmap.getWidth() > desiredWidth || tempBitmap.getHeight() > desiredHeight)) {
-
-                bitmap = Bitmap.createScaledBitmap(tempBitmap, desiredWidth, desiredHeight, true);
-                //Only store if the bitmaps are not equal and the temp bitmap is ready to be reused
-                if (!tempBitmap.equals(bitmap)) {
-                    //bitmaps can only be reallocated on newer than honeycomb,
-                    //older platforms need to recycle to prevent extra native heap allocations
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                        crossbowImageCache.storeForReUse(tempBitmap);
-                        addMarker("temp-bitmap-recycle");
-                    }
-                    else {
-                        tempBitmap.recycle();
-                    }
-                }
-            }
-            else {
-                bitmap = tempBitmap;
-            }
-        }
-
-        if (bitmap == null) {
-            return Response.error(new ParseError(response));
-        } else {
-            return Response.success(bitmap, HttpHeaderParser.parseCacheHeaders(response));
-        }
-    }
-
-    private static int getResizedDimension(int maxPrimary, int maxSecondary, int actualPrimary,int actualSecondary) {
-        // If no dominant value at all, just return the actual.
-        if (maxPrimary == 0 && maxSecondary == 0) {
-            return actualPrimary;
-        }
-
-        // If primary is unspecified, scale primary to match secondary's scaling ratio.
-        if (maxPrimary == 0) {
-            double ratio = (double) maxSecondary / (double) actualSecondary;
-            return (int) (actualPrimary * ratio);
-        }
-
-        if (maxSecondary == 0) {
-            return maxPrimary;
-        }
-
-        double ratio = (double) actualSecondary / (double) actualPrimary;
-        int resized = maxPrimary;
-        if (resized * ratio > maxSecondary) {
-            resized = (int) (maxSecondary / ratio);
-        }
-        return resized;
-    }
-
-    private static int findBestSampleSize(int actualWidth, int actualHeight, int desiredWidth, int desiredHeight) {
-        double wr = (double) actualWidth / desiredWidth;
-        double hr = (double) actualHeight / desiredHeight;
-        double ratio = Math.min(wr, hr);
-        float n = 1.0f;
-        while ((n * 2) <= ratio) {
-            n *= 2;
-        }
-
-        return (int) n;
     }
 }
