@@ -7,41 +7,77 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.android.volley.ParseError;
-import com.android.volley.Response;
-import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.VolleyLog;
+import com.crossbow.volley.BitmapPool;
 
-import java.text.ParseException;
 import java.util.Locale;
 
 /**
- * Created by Patrick on 18/03/15.
+ * Copyright (C) 18/03/15 Patrick
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 public class ImageDecoder {
 
+    /**
+     * Shared lock to prevent multiple images getting decoded at once and trowing an OOM error.
+     */
     private final static Object decodeLock = new Object();
 
+    /**
+     * @see #parseImage(byte[], Bitmap.Config, int, int)
+     */
     public static Bitmap parseImage(@NonNull byte[] data) throws ParseError {
-        return parseImage(data, null, null, 0, 0);
+        return parseImage(data, null, 0, 0);
     }
 
+    /**
+     * @see #parseImage(byte[], Bitmap.Config, int, int)
+     */
     public static Bitmap parseImage(@NonNull byte[] data, int maxWidth, int maxHeight) throws ParseError {
-        return parseImage(data, null, null, maxWidth, maxHeight);
+        return parseImage(data, null, maxWidth, maxHeight);
     }
 
+    /**
+     * Decode a byte array into a bitmap, this will try its best to reuse old bitmaps allocations and will scale the image to the max height or width passed in.
+     *
+     * @param data image to be decoded
+     * @param config Bitmap config for decode into, Defaults to RGB_565 if null is passed.
+     * @param maxWidth maxWidth to decode to.
+     * @param maxHeight maxHeight to decode to.
+     * @return decoded bitmap or null if an error occured without a parse error.
+     * @throws ParseError
+     */
     public static Bitmap parseImage(@NonNull byte[] data, @Nullable Bitmap.Config config, int maxWidth, int maxHeight) throws ParseError {
-        return parseImage(data, config, null, maxWidth, maxHeight);
-    }
 
-    public static Bitmap parseImage(@NonNull byte[] data, @Nullable Bitmap.Config config, @Nullable CrossbowImageCache crossbowImageCache, int maxWidth, int maxHeight) throws ParseError {
-
-        //Decode images one at a time, prevents OOMs
+        //Decode images one at a time, helps prevent OOMs
         synchronized (decodeLock) {
+
+            BitmapPool bitmapPool = BitmapPool.get();
+
             BitmapFactory.Options decodeOptions = new BitmapFactory.Options();
             Bitmap bitmap = null;
+
+            if(config == null) {
+                config = Bitmap.Config.RGB_565;
+            }
+
+            //If there is no limit on image size, do a plain decode
             if (maxWidth == 0 && maxHeight == 0) {
                 decodeOptions.inPreferredConfig = config;
                 bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
-            } else {
+            }
+            else {
                 // If we have to resize this image, first get the natural bounds.
                 decodeOptions.inJustDecodeBounds = true;
                 BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
@@ -57,60 +93,67 @@ public class ImageDecoder {
                     throw new ParseError(exception);
                 }
 
-                // Decode to the nearest power of two scaling factor.
-
+                // Use inPreferQualityOverSpeed where possible
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1) {
                     decodeOptions.inPreferQualityOverSpeed = true;
                 }
 
+                // Decode to the nearest power of two scaling factor.
                 decodeOptions.inJustDecodeBounds = false;
                 decodeOptions.inSampleSize = findBestSampleSize(actualWidth, actualHeight, desiredWidth, desiredHeight);
 
                 Bitmap tempBitmap;
 
-                // Try to get a bitmap to decode into
+                // Try to get a bitmap to reallocate
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 
                     decodeOptions.inMutable = true;
+
+                    //not used in the decoding process,
+                    //used for pool to figure out what the min size the bitmap needs to be
                     decodeOptions.outHeight = desiredHeight > actualHeight ? desiredHeight : actualHeight;
                     decodeOptions.outWidth = desiredWidth > actualWidth ? desiredWidth : actualWidth;
 
                     Bitmap recycled = null;
 
-                    if(crossbowImageCache != null) {
-                        recycled = crossbowImageCache.getBitmapToFill(decodeOptions);
-                    }
+                    //Try to get a bitmap to reuse the allocation
+                    recycled = bitmapPool.getBitmapToFill(decodeOptions);
 
                     if(recycled != null) {
                         decodeOptions.inBitmap = recycled;
                     }
 
                     try {
+                        //try to decode into the old bitmap allocation
                         tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
+                        if(decodeOptions.inBitmap != null) {
+                            VolleyLog.d("Bitmap reuse");
+                        }
                     }
                     catch (IllegalArgumentException e) {
+                        //If decode fails, then create a new bitmap allocation
                         decodeOptions.inBitmap = null;
                         tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
                     }
                 }
                 else {
+                    //Older platforms than HONEYCOMB cant reuse old allocations
                     tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
                 }
 
-                // If the bitmap is larger, scale down to the maximal acceptable size.
+                //If the bitmap is larger, scale down to the maximal acceptable size.
                 if (tempBitmap != null && (tempBitmap.getWidth() > desiredWidth || tempBitmap.getHeight() > desiredHeight)) {
 
                     bitmap = Bitmap.createScaledBitmap(tempBitmap, desiredWidth, desiredHeight, true);
-                    //Only store if the bitmaps are not equal and the temp bitmap is ready to be reused
+
+                    //Only store if the bitmaps are not equal and the temp bitmap is ready to be reused/recycled
                     if (!tempBitmap.equals(bitmap)) {
                         //bitmaps can only be reallocated on newer than honeycomb,
-                        //older platforms need to recycle to prevent extra native heap allocations
                         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                            if(crossbowImageCache != null) {
-                                crossbowImageCache.storeForReUse(tempBitmap);
-                            }
+                            bitmapPool.storeForReUse(tempBitmap);
                         }
                         else {
+                            //older platforms need to recycle to prevent extra native heap allocations
                             tempBitmap.recycle();
                         }
                     }

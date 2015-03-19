@@ -27,15 +27,13 @@ import com.android.volley.toolbox.ImageRequest;
 
 public class RecycleImageRequest extends ImageRequest {
 
-    private final CrossbowImageCache crossbowImageCache;
     private final int mMaxWidth;
     private final int mMaxHeight;
     private final Bitmap.Config mDecodeConfig;
     private final static Object decodeLock = new Object();
 
-    public RecycleImageRequest(CrossbowImageCache crossbowImageCache, String url, Response.Listener<Bitmap> listener, int maxWidth, int maxHeight, Bitmap.Config decodeConfig, Response.ErrorListener errorListener) {
+    public RecycleImageRequest(String url, Response.Listener<Bitmap> listener, int maxWidth, int maxHeight, Bitmap.Config decodeConfig, Response.ErrorListener errorListener) {
         super(url, listener, maxWidth, maxHeight, decodeConfig, errorListener);
-        this.crossbowImageCache = crossbowImageCache;
         this.mMaxWidth = maxWidth;
         this.mMaxHeight = maxHeight;
         this.mDecodeConfig = decodeConfig;
@@ -48,7 +46,8 @@ public class RecycleImageRequest extends ImageRequest {
                 if (isCanceled()) {
                     return Response.success(null, HttpHeaderParser.parseCacheHeaders(response));
                 }
-                Bitmap parsed = ImageDecoder.parseImage(response.data, mDecodeConfig, crossbowImageCache, mMaxWidth, mMaxHeight);
+                Bitmap parsed = ImageDecoder.parseImage(response.data, mDecodeConfig, mMaxWidth, mMaxHeight);
+
                 if (parsed != null) {
                     return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response));
                 }
@@ -57,8 +56,12 @@ public class RecycleImageRequest extends ImageRequest {
                 }
 
             }
-            catch (OutOfMemoryError | ParseError e) {
+            catch (OutOfMemoryError e) {
                 VolleyLog.e("Caught OOM for %d byte image, url=%s", response.data.length, getUrl());
+                return Response.error(new ParseError(e));
+            }
+            catch (ParseError e) {
+                VolleyLog.e("ParseError for image decode", response.data.length, getUrl());
                 return Response.error(new ParseError(e));
             }
         }

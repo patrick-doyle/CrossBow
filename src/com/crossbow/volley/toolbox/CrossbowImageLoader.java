@@ -26,22 +26,19 @@ import com.android.volley.toolbox.ImageLoader;
 
 public class CrossbowImageLoader extends ImageLoader {
 
-    private final CrossbowImageCache imageCache;
-
     /**
      * Constructs a new ImageLoader.
      *
      * @param queue      The RequestQueue to use for making image requests.
      * @param imageCache The cache to use as an L1 cache.
      */
-    public CrossbowImageLoader(RequestQueue queue, CrossbowImageCache imageCache) {
+    public CrossbowImageLoader(RequestQueue queue, ImageCache imageCache) {
         super(queue, imageCache);
-        this.imageCache = imageCache;
     }
 
     @Override
     protected Request<Bitmap> makeImageRequest(String requestUrl, int maxWidth, int maxHeight, final String cacheKey) {
-        return new RecycleImageRequest(imageCache, requestUrl, new Response.Listener<Bitmap>() {
+        return new RecycleImageRequest(requestUrl, new Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap response) {
                 onGetImageSuccess(cacheKey, response);

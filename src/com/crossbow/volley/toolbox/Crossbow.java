@@ -3,6 +3,7 @@ package com.crossbow.volley.toolbox;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.AbsListView;
 
 import com.android.volley.Request;
@@ -85,25 +86,11 @@ public class Crossbow {
             Object[] parameters = {context};
             volleyStack = (VolleyStack) constructor.newInstance(parameters);
             br.close();
+            Log.i("Crossbow", "Using Custom Volley Stack - " + volleyStack.getClass().getName());
             return volleyStack;
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        catch (InstantiationException e) {
-            e.printStackTrace();
-        }
-        catch (IllegalAccessException e) {
-            e.printStackTrace();
+        catch (IOException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+            Log.i("Crossbow", "Using default Volley Stack");
         }
 
         return new DefaultVolleyStack(context);
