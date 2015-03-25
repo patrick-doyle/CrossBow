@@ -9,8 +9,10 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.crossbow.volley.ImageProperties;
+import com.crossbow.volley.ImageLoad;
 
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.WeakHashMap;
 
 /*
@@ -31,36 +33,41 @@ import java.util.WeakHashMap;
 public class CrossbowImage {
 
     private static CrossbowImage crossbowImage;
-    private Listener listener;
 
     /**
-     * Get an instance of TwistImage
+     * Get the instance of CrossbowImage,
+     * this will also create an new internal ImageLoad to to store the load params
      *
-     * @param context
-     * @return
+     * @param context An application context
+     * @return the current instance of the CrossbowImage
      */
     public static CrossbowImage from(Context context) {
         if(crossbowImage == null) {
-            crossbowImage = new CrossbowImage(context);
+            crossbowImage = new CrossbowImage(context.getApplicationContext());
         }
+        crossbowImage.newLoad();
         return crossbowImage;
     }
 
     private ImageLoader imageLoader;
-    private String url;
-    private int defaultRes;
-    private int errorRes;
-    private int fade;
-    private boolean dontClear;
-    private boolean dontScale;
-    private ImageView.ScaleType scaleType;
-    private ImageView.ScaleType preScaleType;
     private Crossbow crossbow;
-    private WeakHashMap<ImageView, ImageProperties> propertiesMap = new WeakHashMap<ImageView, ImageProperties>();
+    private WeakHashMap<ImageView, ImageLoad> loadMap = new WeakHashMap<ImageView, ImageLoad>();
+    private Deque<ImageLoad.Builder> builderScrap = new LinkedList<>();
+    private ImageLoad.Builder builder;
 
     private CrossbowImage(Context context) {
         crossbow = Crossbow.get(context);
         imageLoader = crossbow.getImageLoader();
+    }
+
+    private void newLoad() {
+        if(!builderScrap.isEmpty()) {
+            builder = builderScrap.pop();
+            builder.reset(imageLoader);
+        }
+        else {
+            builder = new ImageLoad.Builder(imageLoader);
+        }
     }
 
     /**
@@ -69,7 +76,7 @@ public class CrossbowImage {
      * @param url the url for the image
      */
     public CrossbowImage url(String url) {
-        this.url = url;
+        builder.url(url);
         return this;
     }
 
@@ -79,7 +86,7 @@ public class CrossbowImage {
      * @param duration the duration to fade
      */
     public CrossbowImage fade(int duration) {
-        this.fade = duration;
+        builder.fade(duration);
         return this;
     }
 
@@ -89,7 +96,7 @@ public class CrossbowImage {
      * @param errorRes the drawable res to use
      */
     public CrossbowImage error(@DrawableRes int errorRes) {
-        this.errorRes = errorRes;
+        builder.errorRes(errorRes);
         return this;
     }
 
@@ -99,7 +106,7 @@ public class CrossbowImage {
      * @param defaultRes the drawable res to use
      */
     public CrossbowImage defaultRes(@DrawableRes int defaultRes) {
-        this.defaultRes = defaultRes;
+        builder.errorRes(defaultRes);
         return this;
     }
 
@@ -116,7 +123,7 @@ public class CrossbowImage {
      * @param scaleType scaletype to set.
      */
     public CrossbowImage defaultScale(ImageView.ScaleType scaleType) {
-        this.preScaleType = scaleType;
+        builder.preScaleType(scaleType);
         return this;
     }
 
@@ -125,7 +132,7 @@ public class CrossbowImage {
      *
      */
     public CrossbowImage dontScale() {
-        this.dontScale = true;
+        builder.dontScale(true);
         return this;
     }
 
@@ -140,7 +147,7 @@ public class CrossbowImage {
      * Sets the image scaletype to fit center when the image loads
      */
     public CrossbowImage listen(Listener listener) {
-        this.listener = listener;
+        builder.listen(listener);
         return this;
     }
 
@@ -150,12 +157,12 @@ public class CrossbowImage {
      * @param scaleType th scaletype to set.
      */
     public CrossbowImage scale(ImageView.ScaleType scaleType) {
-        this.scaleType = scaleType;
+        builder.scaleType(scaleType);
         return this;
     }
 
     public CrossbowImage dontClear() {
-        this.dontClear = true;
+        builder.dontClear(true);
         return this;
     }
 
@@ -170,8 +177,8 @@ public class CrossbowImage {
     }
 
     public void cancelLoad(ImageView imageView) {
-        if(propertiesMap.containsKey(imageView)) {
-            propertiesMap.get(imageView).cancelRequest();
+        if(loadMap.containsKey(imageView)) {
+            loadMap.get(imageView).cancelRequest();
         }
     }
 
@@ -182,60 +189,40 @@ public class CrossbowImage {
      */
     public void into(ImageView imageView) {
         if(imageView == null) {
-            cleanUpConfig();
+            scrapBuilder();
             return;
         }
 
-        //Stop old request if needed and reuse the props
+        ImageLoad imageLoad;
 
-        ImageProperties imageProperties;
-
-        if(propertiesMap.containsKey(imageView)) {
-            propertiesMap.get(imageView).cancelRequest();
-            imageProperties = propertiesMap.get(imageView);
-            imageProperties.clean();
+        //Stop old request if needed
+        if(loadMap.containsKey(imageView)) {
+            ImageLoad recycledLoad = loadMap.get(imageView);
+            recycledLoad.cancelRequest();
+            loadMap.remove(imageView);
+            imageLoad = builder.build(recycledLoad, imageView);
         }
         else {
-            imageProperties = new ImageProperties();
+            imageLoad = builder.build(imageView);
         }
 
-        imageProperties.url = url;
-        imageProperties.fade = fade;
-        imageProperties.defaultRes = defaultRes;
-        imageProperties.errorRes = errorRes;
-        imageProperties.scaleType = scaleType;
-        imageProperties.dontClear = dontClear;
-        imageProperties.preScaleType = preScaleType;
-        imageProperties.dontScale = dontScale;
-        imageProperties.listener = listener;
-        imageProperties.setImageLoader(imageLoader);
-        imageProperties.setImageView(imageView);
-
-        imageView.getViewTreeObserver().addOnPreDrawListener(imageProperties);
-        propertiesMap.put(imageView, imageProperties);
-        cleanUpConfig();
+        loadMap.put(imageView, imageLoad);
+        imageLoad.load();
+        scrapBuilder();
     }
 
     /**
      * Cancels the request for the ImageView
      */
     public void cancel(ImageView imageView) {
-        if(propertiesMap.containsKey(imageView)) {
-            propertiesMap.get(imageView).cancelRequest();
-            propertiesMap.remove(imageView);
+        if(loadMap.containsKey(imageView)) {
+            loadMap.get(imageView).cancelRequest();
+            loadMap.remove(imageView);
         }
     }
 
-    private void cleanUpConfig() {
-        fade = 0;
-        defaultRes = 0;
-        errorRes = 0;
-        url = null;
-        scaleType = null;
-        preScaleType = null;
-        dontClear = false;
-        dontScale = false;
-        listener = null;
+    private void scrapBuilder() {
+        builderScrap.push(builder);
     }
 
     public interface Listener {
