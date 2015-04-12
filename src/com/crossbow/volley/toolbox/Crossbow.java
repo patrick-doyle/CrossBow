@@ -8,7 +8,9 @@ import android.widget.AbsListView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
+import com.crossbow.volley.BitmapPool;
 import com.crossbow.volley.VolleyStack;
 
 import java.io.BufferedReader;
@@ -33,6 +35,7 @@ public class Crossbow {
     private static Crossbow crossbow;
 
     private static final String STACK_DIR = "Crossbow";
+    private static final String TAG = "Crossbow";
     private static final String STACK_FILE = "stack.data";
 
     private Crossbow(Context context) {
@@ -41,6 +44,7 @@ public class Crossbow {
             volleyStack = createStack();
         }
         buildFromStack(volleyStack);
+        VolleyLog.setTag(TAG);
     }
 
     public static Crossbow get(Context context) {
@@ -158,6 +162,11 @@ public class Crossbow {
         return imageCache;
     }
 
+    public final void trimMemory() {
+        BitmapPool bitmapPool = BitmapPool.get();
+        bitmapPool.trim();
+    }
+
     /**
      * Test if the app is running on something newer than HoneyComb (API >= 11)
      */
@@ -185,27 +194,7 @@ public class Crossbow {
      * @param onScrollListener optional scrollListener to pass the scroll events to
      */
     public void listenToList(AbsListView absListView, @Nullable final AbsListView.OnScrollListener onScrollListener) {
-        absListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if(scrollState == SCROLL_STATE_FLING) {
-                    stopQueue();
-                }
-                else {
-                    startQueue();
-                }
-                if(onScrollListener != null) {
-                    onScrollListener.onScrollStateChanged(view, scrollState);
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if(onScrollListener != null) {
-                    onScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
-                }
-            }
-        });
+        absListView.setOnScrollListener(new RelayScrollListener(onScrollListener, this));
     }
 
     /**

@@ -1,16 +1,17 @@
 package com.crossbow.volley.toolbox;
 
 import com.android.volley.Response;
-import com.crossbow.volley.FileRequest;
+import com.crossbow.volley.FileReadRequest;
+import com.crossbow.volley.FileResponse;
 
 /**
  * Created by Patrick on 26/03/2015.
  */
-public class StringFileRequest extends FileRequest<String> {
+public class StringFileRequest extends FileReadRequest<String> {
 
-    private final Response.Listener<String> listener;
+    private final FileResponse.ReadListener<String> listener;
 
-    public StringFileRequest(String filePath, Response.ErrorListener errorListener, Response.Listener<String> listener) {
+    public StringFileRequest(String filePath, FileResponse.ErrorListener errorListener, FileResponse.ReadListener<String> listener) {
         super(filePath, errorListener);
         this.listener = listener;
     }

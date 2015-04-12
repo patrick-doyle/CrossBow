@@ -1,13 +1,9 @@
-package com.crossbow.volley.toolbox;
+package com.crossbow.volley;
 
 import android.os.Handler;
 import android.os.Looper;
 
 import com.android.volley.VolleyError;
-import com.crossbow.volley.FileDelivery;
-import com.crossbow.volley.FileRequest;
-import com.crossbow.volley.FileResponse;
-
 /**
  * Created by Patrick on 29/03/2015.
  */
@@ -19,14 +15,24 @@ public class BasicFileDelivery implements FileDelivery {
     public void deliverSuccess(FileRequest<?> fileRequest, FileResponse<?> fileResponse) {
 
         if(!fileRequest.isCanceled()) {
+            fileRequest.mark("post-result");
+            fileRequest.finish();
             handler.post(new SuccessRunnable(fileRequest, fileResponse));
+        }
+        else {
+            fileRequest.mark("result-canceled-at-delivery");
         }
     }
 
     @Override
     public void deliverError(FileRequest<?> fileRequest, VolleyError error) {
         if(!fileRequest.isCanceled()) {
+            fileRequest.mark("post-error");
+            fileRequest.finish();
             handler.post(new ErrorRunnable(fileRequest, error));
+        }
+        else {
+            fileRequest.mark("error-canceled-at-delivery");
         }
     }
 

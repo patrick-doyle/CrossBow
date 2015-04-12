@@ -1,12 +1,11 @@
 package com.crossbow.volley;
 
 import android.test.suitebuilder.annotation.LargeTest;
-import android.test.suitebuilder.annotation.SmallTest;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.crossbow.volley.mock.MockFileDelivery;
-import com.crossbow.volley.mock.MockFileReader;
+import com.crossbow.volley.mock.MockFileStack;
 import com.crossbow.volley.mock.MockFileRequest;
 
 import junit.framework.TestCase;
@@ -21,7 +20,7 @@ public class FileDispatcherTest extends TestCase {
 
     private FileDispatcher dispatcher;
     private PriorityBlockingQueue<FileRequest<?>> queue = new PriorityBlockingQueue<>();
-    private MockFileReader mockFileReader = new MockFileReader();
+    private MockFileStack mockFileReader = new MockFileStack();
     private MockFileDelivery mockFileDelivery = new MockFileDelivery();
 
     @Override

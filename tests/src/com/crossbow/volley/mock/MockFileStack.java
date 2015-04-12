@@ -2,7 +2,7 @@ package com.crossbow.volley.mock;
 
 import com.android.volley.ParseError;
 import com.android.volley.VolleyError;
-import com.crossbow.volley.FileReader;
+import com.crossbow.volley.FileStack;
 import com.crossbow.volley.FileRequest;
 
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Created by Patrick on 29/03/2015.
  */
-public class MockFileReader implements FileReader {
+public class MockFileStack implements FileStack {
 
     private boolean shouldFail = false;
 
@@ -19,7 +19,7 @@ public class MockFileReader implements FileReader {
     }
 
     @Override
-    public byte[] readFile(FileRequest fileRequest) throws VolleyError {
+    public byte[] readFileData(FileRequest fileRequest) throws VolleyError {
         if(shouldFail) {
             throw new ParseError(new IOException());
         }

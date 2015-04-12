@@ -121,4 +121,18 @@ public class BitmapPool {
         }
         return 1;
     }
+
+    public void trim() {
+        synchronized(unusedBitmaps) {
+            Iterator<WeakReference<Bitmap>> iterator = unusedBitmaps.iterator();
+            while (iterator.hasNext()) {
+                WeakReference<Bitmap> reference = iterator.next();
+                Bitmap bitmap = reference.get();
+                if(bitmap != null) {
+                    bitmap.recycle();
+                }
+                iterator.remove();
+            }
+        }
+    }
 }

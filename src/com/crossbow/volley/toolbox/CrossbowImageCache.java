@@ -1,19 +1,10 @@
 package com.crossbow.volley.toolbox;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.support.v4.graphics.BitmapCompat;
 import android.support.v4.util.LruCache;
 
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
-
-import java.lang.ref.WeakReference;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Copyright (C) 2014 Patrick Doyle

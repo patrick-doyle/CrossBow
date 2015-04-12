@@ -60,6 +60,7 @@ public class NetworkDispatcher extends Thread {
         mNetwork = network;
         mCache = cache;
         mDelivery = delivery;
+        setName("CrossBow Network Thread");
     }
 
     /**
