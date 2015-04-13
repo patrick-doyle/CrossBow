@@ -2,6 +2,8 @@
 /local.properties
 /.idea/workspace.xml
 .DS_Store
+/captures/*
+/captures
 
 # built application files
 *.apk

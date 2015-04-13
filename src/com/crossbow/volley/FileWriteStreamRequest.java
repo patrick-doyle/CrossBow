@@ -8,7 +8,7 @@ import java.io.OutputStream;
 /**
  * Created by Patrick on 07/04/2015.
  */
-public abstract class FileWriteStreamRequest extends FileRequest<Boolean> {
+public abstract class FileWriteStreamRequest extends FileRequest<Void> {
 
     private final FileResponse.WriteListener writeListener;
 
@@ -29,7 +29,7 @@ public abstract class FileWriteStreamRequest extends FileRequest<Boolean> {
     protected abstract void writeData(OutputStream outputStream);
 
     @Override
-    protected void deliverResult(Boolean result) {
+    protected void deliverResult(Void result) {
         if(writeListener != null) {
             writeListener.onResponse();
         }

@@ -89,6 +89,11 @@ public class FileQueue {
 
         String filePath = fileRequest.getFilePath();
 
+        //add to the inFlight requests
+        synchronized (inFlightRequests) {
+            inFlightRequests.add(fileRequest);
+        }
+
         synchronized (inUseFiles) {
             if(inUseFiles.contains(filePath)) {
 
@@ -105,15 +110,15 @@ public class FileQueue {
             }
             else {
                 inUseFiles.add(filePath);
-
-                //add to the inFlight requests
-                synchronized (inFlightRequests) {
-                    inFlightRequests.add(fileRequest);
-                }
                 requestQueue.add(fileRequest);
                 fileRequest.mark("add-to-queue");
             }
         }
+    }
+
+    //Visible for testing
+    PriorityBlockingQueue<FileRequest<?>> getRequestQueue() {
+        return requestQueue;
     }
 
     /**
@@ -196,12 +201,17 @@ public class FileQueue {
             if(blockedRequests.containsKey(filePath)) {
                 LinkedList<FileRequest<?>> blocked = blockedRequests.get(filePath);
                 FileRequest<?> request = blocked.pop();
-                requestQueue.add(request);
-                inUseFiles.add(filePath);
+                if(!request.isCanceled()) {
+                    requestQueue.add(request);
+                    inUseFiles.add(filePath);
+                    fileRequest.mark("request-unblocked");
+                }
+                else {
+                    fileRequest.mark("request-unblocked-canceled");
+                }
 
-                fileRequest.mark("request-unblocked");
 
-                if(blocked.isEmpty()) {
+                if (blocked.isEmpty()) {
                     blockedRequests.remove(filePath);
                 }
             }

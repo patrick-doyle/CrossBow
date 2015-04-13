@@ -9,11 +9,11 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.ImageLoader;
 
-public abstract class VolleyStack {
+public abstract class CrossbowStack {
 
     private Context context;
 
-    public VolleyStack(Context context) {
+    public CrossbowStack(Context context) {
         this.context = context.getApplicationContext();
     }
 

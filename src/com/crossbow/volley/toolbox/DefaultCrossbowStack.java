@@ -15,19 +15,19 @@ import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
-import com.crossbow.volley.VolleyStack;
+import com.crossbow.volley.CrossbowStack;
 
 import java.io.File;
 
 
-public class DefaultVolleyStack extends VolleyStack {
+public class DefaultCrossbowStack extends CrossbowStack {
 
     private static final int DISK_CACHE_SIZE = 5 * 1024 * 1024;
 
     private String cacheDir;
     private int memCacheSize;
 
-    public DefaultVolleyStack(Context context) {
+    public DefaultCrossbowStack(Context context) {
         super(context);
         this.cacheDir = getContext().getCacheDir() + File.separator + "CrossbowCache";
 
@@ -46,12 +46,7 @@ public class DefaultVolleyStack extends VolleyStack {
 
     @Override
     public @NonNull ImageLoader createImageLoader(RequestQueue requestQueue, ImageLoader.ImageCache imageCache) {
-        if(imageCache instanceof CrossbowImageCache) {
-            return new CrossbowImageLoader(requestQueue, (CrossbowImageCache) imageCache);
-        }
-        else {
-            return new ImageLoader(requestQueue, imageCache);
-        }
+        return new ImageLoader(requestQueue, imageCache);
     }
 
     @Override

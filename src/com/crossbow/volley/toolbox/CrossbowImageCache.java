@@ -2,6 +2,7 @@ package com.crossbow.volley.toolbox;
 
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.support.v4.graphics.BitmapCompat;
 import android.support.v4.util.LruCache;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -35,12 +36,7 @@ public class CrossbowImageCache implements ImageLoader.ImageCache {
         imageCache = new LruCache<String, Bitmap>(size){
             @Override
             protected int sizeOf(String key, Bitmap value) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    return value.getAllocationByteCount();
-                }
-                else {
-                    return value.getRowBytes() * value.getHeight();
-                }
+                return BitmapCompat.getAllocationByteCount(value);
             }
         };
     }

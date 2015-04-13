@@ -15,7 +15,7 @@ public class BasicFileStackTest extends AndroidTestCase {
     @MediumTest
     public void testFileReader() throws VolleyError {
 
-        FileRequest request = new StringFileRequest("testFile.txt", null, null);
+        FileReadRequest request = new StringFileRequest("testFile.txt", null, null);
 
         FileStack fileStack = new BasicFileStack(getContext());
         byte[] fileData = fileStack.readFileData(request);

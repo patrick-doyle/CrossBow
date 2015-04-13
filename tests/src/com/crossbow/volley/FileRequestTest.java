@@ -34,12 +34,13 @@ public class FileRequestTest extends TestCase {
         assertTrue(high.compareTo(high) == 0);
     }
 
-    private static class TestRequest extends FileRequest {
+    private static class TestRequest extends FileReadRequest {
 
         private Request.Priority priority;
+        private static int count = 9;
 
         public TestRequest(Request.Priority priority) {
-            super(null, null);
+            super(Integer.toHexString(count++), null);
             this.priority = priority;
         }
 

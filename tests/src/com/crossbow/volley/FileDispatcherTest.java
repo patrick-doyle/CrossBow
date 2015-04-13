@@ -4,7 +4,6 @@ import android.test.suitebuilder.annotation.LargeTest;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.crossbow.volley.mock.MockFileDelivery;
 import com.crossbow.volley.mock.MockFileStack;
 import com.crossbow.volley.mock.MockFileRequest;
 
@@ -38,13 +37,13 @@ public class FileDispatcherTest extends TestCase {
         final boolean[] sucess = new boolean[1];
         final boolean[] error = new boolean[1];
 
-        MockFileRequest fileRequest = new MockFileRequest(new Response.Listener<String>() {
+        MockFileRequest fileRequest = new MockFileRequest(new FileResponse.ReadListener<String>() {
             @Override
             public void onResponse(String response) {
                 sucess[0] = true;
                 countDownLatch.countDown();
             }
-        }, new Response.ErrorListener() {
+        }, new FileResponse.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 error[0] = true;
@@ -69,13 +68,13 @@ public class FileDispatcherTest extends TestCase {
 
         mockFileReader.setShouldFail(true);
 
-        MockFileRequest fileRequest = new MockFileRequest(new Response.Listener<String>() {
+        MockFileRequest fileRequest = new MockFileRequest(new FileResponse.ReadListener<String>() {
             @Override
             public void onResponse(String response) {
                 sucess[0] = true;
                 countDownLatch.countDown();
             }
-        }, new Response.ErrorListener() {
+        }, new FileResponse.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 error[0] = true;

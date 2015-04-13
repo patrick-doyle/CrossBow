@@ -8,8 +8,15 @@ import android.support.annotation.Nullable;
 
 import com.android.volley.ParseError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.ByteArrayPool;
+import com.android.volley.toolbox.PoolingByteArrayOutputStream;
 import com.crossbow.volley.BitmapPool;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Locale;
 
 /**
@@ -32,7 +39,7 @@ public class ImageDecoder {
     /**
      * Shared lock to prevent multiple images getting decoded at once and trowing an OOM error.
      */
-    private final static Object decodeLock = new Object();
+    private final static Object DECODE_LOCK = new Object();
 
     /**
      * @see #parseImage(byte[], Bitmap.Config, int, int)
@@ -48,6 +55,30 @@ public class ImageDecoder {
         return parseImage(data, null, maxWidth, maxHeight);
     }
 
+    public static Bitmap parseStream(InputStream inputStream, @Nullable Bitmap.Config config, int maxWidth, int maxHeight) throws ParseError {
+        synchronized (DECODE_LOCK) {
+            try {
+                ByteArrayPool byteArrayPool = new ByteArrayPool(4096 * 2);
+                PoolingByteArrayOutputStream byteArrayOutputStream = new PoolingByteArrayOutputStream(byteArrayPool);
+
+                byte[] buffer = byteArrayPool.getBuf(4096);
+                int length;
+                while ((length = inputStream.read(buffer)) != -1) {
+                    byteArrayOutputStream.write(buffer, 0, length);
+                }
+
+                byte[] data = byteArrayOutputStream.toByteArray();
+                Bitmap bitmap = parseImage(data, config, maxWidth, maxHeight);
+                data = null;
+                System.gc();
+                return bitmap;
+            }
+            catch (IOException e) {
+                throw new ParseError(e);
+            }
+        }
+    }
+
     /**
      * Decode a byte array into a bitmap, this will try its best to reuse old bitmaps allocations and will scale the image to the max height or width passed in.
      *
@@ -61,7 +92,7 @@ public class ImageDecoder {
     public static Bitmap parseImage(@NonNull byte[] data, @Nullable Bitmap.Config config, int maxWidth, int maxHeight) throws ParseError {
 
         //Decode images one at a time, helps prevent OOMs
-        synchronized (decodeLock) {
+        synchronized (DECODE_LOCK) {
 
             BitmapPool bitmapPool = BitmapPool.get();
 
@@ -72,9 +103,10 @@ public class ImageDecoder {
                 config = Bitmap.Config.RGB_565;
             }
 
+            decodeOptions.inPreferredConfig = config;
+
             //If there is no limit on image size, do a plain decode
             if (maxWidth == 0 && maxHeight == 0) {
-                decodeOptions.inPreferredConfig = config;
                 bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, decodeOptions);
             }
             else {

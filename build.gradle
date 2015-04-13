@@ -15,7 +15,7 @@ android {
 
     sourceSets {
         defaultConfig {
-            testApplicationId 'com.crossbow.volley.tests'
+            testApplicationId 'com.crossbow.tests'
         }
 
         main {

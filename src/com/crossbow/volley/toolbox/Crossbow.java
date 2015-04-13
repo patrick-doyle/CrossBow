@@ -11,7 +11,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.crossbow.volley.BitmapPool;
-import com.crossbow.volley.VolleyStack;
+import com.crossbow.volley.CrossbowStack;
+import com.crossbow.volley.FileQueue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,9 +29,11 @@ import java.lang.reflect.InvocationTargetException;
 public class Crossbow {
 
     private Context context;
-    private VolleyStack volleyStack;
+    private CrossbowStack crossbowStack;
     private RequestQueue requestQueue;
+    private FileQueue fileQueue;
     private ImageLoader imageLoader;
+    private FileImageLoader fileImageLoader;
     private ImageLoader.ImageCache imageCache;
     private static Crossbow crossbow;
 
@@ -40,10 +43,10 @@ public class Crossbow {
 
     private Crossbow(Context context) {
         this.context = context.getApplicationContext();
-        if(volleyStack == null) {
-            volleyStack = createStack();
+        if(crossbowStack == null) {
+            crossbowStack = createStack();
         }
-        buildFromStack(volleyStack);
+        buildFromStack(crossbowStack);
         VolleyLog.setTag(TAG);
     }
 
@@ -54,7 +57,7 @@ public class Crossbow {
         return crossbow;
     }
 
-    public static <T extends VolleyStack> void registerStack(Context context, Class<T> volleyStack) {
+    public static <T extends CrossbowStack> void registerStack(Context context, Class<T> volleyStack) {
 
         File dir = new File(context.getCacheDir().getAbsolutePath() + File.separator + STACK_DIR);
         dir.mkdirs();
@@ -68,7 +71,7 @@ public class Crossbow {
         }
     }
 
-    private VolleyStack createStack() {
+    private CrossbowStack createStack() {
         File file = new File(context.getCacheDir().getAbsolutePath() + File.separator + STACK_DIR, STACK_FILE);
         String stackName;
         try {
@@ -88,16 +91,16 @@ public class Crossbow {
             Constructor<?> constructor = stackClass.getConstructor(types);
 
             Object[] parameters = {context};
-            volleyStack = (VolleyStack) constructor.newInstance(parameters);
+            crossbowStack = (CrossbowStack) constructor.newInstance(parameters);
             br.close();
-            Log.i("Crossbow", "Using Custom Volley Stack - " + volleyStack.getClass().getName());
-            return volleyStack;
+            Log.i("Crossbow", "Using Custom Volley Stack - " + crossbowStack.getClass().getName());
+            return crossbowStack;
         }
         catch (IOException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
             Log.i("Crossbow", "Using default Volley Stack");
         }
 
-        return new DefaultVolleyStack(context);
+        return new DefaultCrossbowStack(context);
 
     }
 
@@ -105,17 +108,26 @@ public class Crossbow {
         return context.getApplicationContext();
     }
 
-    private void buildFromStack(VolleyStack volleyStack) {
+    private void buildFromStack(CrossbowStack crossbowStack) {
         if(requestQueue == null) {
-            requestQueue = volleyStack.createRequestQueue();
+            requestQueue = crossbowStack.createRequestQueue();
+        }
+
+        if(fileQueue == null) {
+            fileQueue = new FileQueue(context);
+            fileQueue.start();
         }
 
         if(imageCache == null) {
-            imageCache = volleyStack.createImageCache();
+            imageCache = crossbowStack.createImageCache();
         }
 
         if(imageLoader == null) {
-            imageLoader = volleyStack.createImageLoader(requestQueue, imageCache);
+            imageLoader = crossbowStack.createImageLoader(requestQueue, imageCache);
+        }
+
+        if(fileImageLoader == null) {
+            fileImageLoader = new FileImageLoader(fileQueue, imageCache);
         }
     }
 
@@ -153,6 +165,13 @@ public class Crossbow {
      */
     public final ImageLoader getImageLoader() {
         return imageLoader;
+    }
+
+    /**
+     * Gets the shared image loader instance
+     */
+    public final FileImageLoader getFileImageLoader() {
+        return fileImageLoader;
     }
 
     /**

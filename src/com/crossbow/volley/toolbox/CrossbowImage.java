@@ -50,6 +50,7 @@ public class CrossbowImage {
     }
 
     private ImageLoader imageLoader;
+    private FileImageLoader fileImageLoader;
     private Crossbow crossbow;
     private WeakHashMap<ImageView, ImageLoad> loadMap = new WeakHashMap<ImageView, ImageLoad>();
     private Deque<ImageLoad.Builder> builderScrap = new LinkedList<>();
@@ -58,15 +59,16 @@ public class CrossbowImage {
     private CrossbowImage(Context context) {
         crossbow = Crossbow.get(context);
         imageLoader = crossbow.getImageLoader();
+        fileImageLoader = crossbow.getFileImageLoader();
     }
 
     private void newLoad() {
         if(!builderScrap.isEmpty()) {
             builder = builderScrap.pop();
-            builder.reset(imageLoader);
+            builder.reset(imageLoader, fileImageLoader);
         }
         else {
-            builder = new ImageLoad.Builder(imageLoader);
+            builder = new ImageLoad.Builder(imageLoader, fileImageLoader);
         }
     }
 
@@ -77,6 +79,26 @@ public class CrossbowImage {
      */
     public CrossbowImage url(String url) {
         builder.url(url);
+        return this;
+    }
+
+    /**
+     * Sets the file to load
+     *
+     * @param file the filePath for the image
+     */
+    public CrossbowImage file(String file) {
+        builder.file(file);
+        return this;
+    }
+
+    /**
+     * Sets the drawable resource
+     *
+     * @param drawable the resource id of thr drawable to load
+     */
+    public CrossbowImage drawable(int drawable) {
+        builder.drawable(drawable);
         return this;
     }
 
@@ -106,7 +128,7 @@ public class CrossbowImage {
      * @param defaultRes the drawable res to use
      */
     public CrossbowImage defaultRes(@DrawableRes int defaultRes) {
-        builder.errorRes(defaultRes);
+        builder.defaultRes(defaultRes);
         return this;
     }
 
@@ -122,8 +144,18 @@ public class CrossbowImage {
      *
      * @param scaleType scaletype to set.
      */
-    public CrossbowImage defaultScale(ImageView.ScaleType scaleType) {
+    public CrossbowImage placeHolderScale(ImageView.ScaleType scaleType) {
         builder.preScaleType(scaleType);
+        return this;
+    }
+
+    /**
+     * Sets the scale type for the error image image.
+     *
+     * @param errorScaleType scaletype to set.
+     */
+    public CrossbowImage errorScale(ImageView.ScaleType errorScaleType) {
+        builder.errorScaleType(errorScaleType);
         return this;
     }
 
@@ -139,7 +171,7 @@ public class CrossbowImage {
     /**
      * Sets the image scaletype to fit center when the image loads
      */
-    public CrossbowImage fit() {
+    public CrossbowImage fitInto() {
         return scale(ImageView.ScaleType.FIT_CENTER);
     }
 
@@ -154,7 +186,7 @@ public class CrossbowImage {
     /**
      * Sets the image scaletype to this when the image loads
      *
-     * @param scaleType th scaletype to set.
+     * @param scaleType the scaletype to set.
      */
     public CrossbowImage scale(ImageView.ScaleType scaleType) {
         builder.scaleType(scaleType);
