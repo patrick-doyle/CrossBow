@@ -15,6 +15,7 @@ import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
+import com.crossbow.volley.CrossbowImageCache;
 import com.crossbow.volley.CrossbowStack;
 
 import java.io.File;

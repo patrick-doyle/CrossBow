@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.graphics.BitmapCompat;
-import android.util.Log;
 
 import com.android.volley.VolleyLog;
 

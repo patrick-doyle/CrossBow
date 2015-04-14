@@ -16,12 +16,12 @@
 
 package com.android.volley.toolbox;
 
+import android.test.AndroidTestCase;
+import android.test.suitebuilder.annotation.SmallTest;
+
 import com.android.volley.Request.Method;
 import com.android.volley.mock.MockHttpURLConnection;
 import com.android.volley.mock.TestRequest;
-
-import android.test.AndroidTestCase;
-import android.test.suitebuilder.annotation.SmallTest;
 
 @SmallTest
 public class HurlStackTest extends AndroidTestCase {

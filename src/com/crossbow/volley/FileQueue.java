@@ -1,14 +1,11 @@
 package com.crossbow.volley;
 
-import android.content.ContentValues;
 import android.content.Context;
 
 import com.crossbow.volley.toolbox.BasicFileStack;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;

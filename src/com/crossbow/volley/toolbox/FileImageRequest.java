@@ -3,9 +3,7 @@ package com.crossbow.volley.toolbox;
 import android.graphics.Bitmap;
 
 import com.android.volley.ParseError;
-import com.android.volley.Response;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.HttpHeaderParser;
 import com.crossbow.volley.FileReadStreamRequest;
 import com.crossbow.volley.FileResponse;
 

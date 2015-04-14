@@ -2,8 +2,6 @@ package com.crossbow.volley;
 
 import com.android.volley.VolleyError;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 

@@ -1,8 +1,5 @@
 package com.crossbow.volley;
 
-import com.android.volley.Response;
-
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 /**

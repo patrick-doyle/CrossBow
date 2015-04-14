@@ -2,10 +2,9 @@ package com.crossbow.volley;
 
 import android.test.suitebuilder.annotation.LargeTest;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.crossbow.volley.mock.MockFileStack;
 import com.crossbow.volley.mock.MockFileRequest;
+import com.crossbow.volley.mock.MockFileStack;
 
 import junit.framework.TestCase;
 

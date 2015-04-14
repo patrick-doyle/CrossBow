@@ -16,6 +16,9 @@
 
 package com.android.volley.toolbox;
 
+import android.test.AndroidTestCase;
+import android.test.suitebuilder.annotation.SmallTest;
+
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -24,9 +27,6 @@ import com.android.volley.mock.MockHttpStack;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHttpResponse;
-
-import android.test.AndroidTestCase;
-import android.test.suitebuilder.annotation.SmallTest;
 
 import java.util.HashMap;
 import java.util.Map;

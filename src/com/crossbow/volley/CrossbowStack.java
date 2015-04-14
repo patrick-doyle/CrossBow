@@ -3,10 +3,7 @@ package com.crossbow.volley;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.android.volley.Cache;
-import com.android.volley.Network;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.ImageLoader;
 
 public abstract class CrossbowStack {

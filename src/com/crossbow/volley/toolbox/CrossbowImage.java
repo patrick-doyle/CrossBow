@@ -93,7 +93,7 @@ public class CrossbowImage {
     }
 
     /**
-     * Sets the drawable resource
+     * Sets the drawable resource to load (This runs on the main thread)
      *
      * @param drawable the resource id of thr drawable to load
      */
@@ -133,7 +133,7 @@ public class CrossbowImage {
     }
 
     /**
-     * Sets the image scaletype to center crop when the image loads
+     * Sets the image {@link android.widget.ImageView.ScaleType Scaletype} to center crop when the image loads
      */
     public CrossbowImage centerCrop() {
         return scale(ImageView.ScaleType.CENTER_CROP);
@@ -142,7 +142,7 @@ public class CrossbowImage {
     /**
      * Sets the scale type for the default/placeholder image.
      *
-     * @param scaleType scaletype to set.
+     * @param scaleType {@link android.widget.ImageView.ScaleType Scaletype} to set.
      */
     public CrossbowImage placeHolderScale(ImageView.ScaleType scaleType) {
         builder.preScaleType(scaleType);
@@ -152,7 +152,7 @@ public class CrossbowImage {
     /**
      * Sets the scale type for the error image image.
      *
-     * @param errorScaleType scaletype to set.
+     * @param errorScaleType {@link android.widget.ImageView.ScaleType Scaletype} to set.
      */
     public CrossbowImage errorScale(ImageView.ScaleType errorScaleType) {
         builder.errorScaleType(errorScaleType);
@@ -160,10 +160,9 @@ public class CrossbowImage {
     }
 
     /**
-     * Prevent the Imagefrom getting scaled at all. <b>Will cause the image to load the full size image into the cache</b>
-     *
+     * Loads the raw bitmap <b>Will cause the image to load the FULL SIZE image</b>
      */
-    public CrossbowImage dontScale() {
+    public CrossbowImage raw() {
         builder.dontScale(true);
         return this;
     }
@@ -176,7 +175,7 @@ public class CrossbowImage {
     }
 
     /**
-     * Sets the image scaletype to fit center when the image loads
+     * Sets a listener to allow you to see when the image loads
      */
     public CrossbowImage listen(Listener listener) {
         builder.listen(listener);
@@ -193,21 +192,37 @@ public class CrossbowImage {
         return this;
     }
 
+    /**
+     * Dont remove the old image before setting the new image
+     * @return
+     */
     public CrossbowImage dontClear() {
         builder.dontClear(true);
         return this;
     }
 
+    /**
+     * @see #into(View, int)
+     * @param root
+     * @param imageViewId
+     */
     public void into(View root, @IdRes int imageViewId) {
         ImageView imageView = (ImageView) root.findViewById(imageViewId);
         into(imageView);
     }
 
+    /**
+     * @see #into(View, int)
+     * @param imageViewId
+     */
     public void into(Activity activty, @IdRes int imageViewId) {
         ImageView imageView = (ImageView) activty.findViewById(imageViewId);
         into(imageView);
     }
 
+    /**
+     * Cancels the bitmap load for this imageview
+     */
     public void cancelLoad(ImageView imageView) {
         if(loadMap.containsKey(imageView)) {
             loadMap.get(imageView).cancelRequest();

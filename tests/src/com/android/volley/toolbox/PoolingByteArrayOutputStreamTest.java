@@ -16,11 +16,11 @@
 
 package com.android.volley.toolbox;
 
-import java.io.IOException;
-import java.util.Arrays;
-
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
+
+import java.io.IOException;
+import java.util.Arrays;
 
 @SmallTest
 public class PoolingByteArrayOutputStreamTest extends AndroidTestCase {

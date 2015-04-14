@@ -2,7 +2,6 @@ package com.crossbow.volley.mock;
 
 import com.android.volley.ParseError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ByteArrayPool;
 import com.crossbow.volley.FileReadRequest;
 import com.crossbow.volley.FileReadStreamRequest;
 import com.crossbow.volley.FileStack;

@@ -3,7 +3,6 @@ package com.crossbow.volley;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
 
 import junit.framework.TestCase;
 

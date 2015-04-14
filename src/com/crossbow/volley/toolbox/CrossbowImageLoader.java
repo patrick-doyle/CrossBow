@@ -27,7 +27,7 @@ import com.android.volley.toolbox.ImageLoader;
 public class CrossbowImageLoader extends ImageLoader {
 
     /**
-     * Constructs a new ImageLoader.
+     * Constructs a new ImageLoader that can uses the Image decoder.
      *
      * @param queue      The RequestQueue to use for making image requests.
      * @param imageCache The cache to use as an L1 cache.

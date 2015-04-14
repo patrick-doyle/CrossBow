@@ -8,11 +8,9 @@ import com.crossbow.volley.FileQueue;
 import com.crossbow.volley.FileResponse;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Patrick on 13/04/2015.
@@ -25,17 +23,41 @@ public class FileImageLoader {
 
     private ImageLoader.ImageCache imageCache;
 
+    /**
+     * Creates a new FileImageLoader
+     * @param fileQueue the file queue to use to process the requests
+     * @param imageCache the image cache to use. should be the same one used for the Network image loader to help prevent Out of Memory Errors
+     */
     public FileImageLoader(FileQueue fileQueue, ImageLoader.ImageCache imageCache) {
         this.fileQueue = fileQueue;
         this.imageCache = imageCache;
     }
 
+    /**
+     * Creates a mew file image load. The {@link FileImageRequest} is used with the {@link ImageDecoder} to make the decodes run in time with the
+     * crossbow network image loader. This will try to load from the sdcard first and then from assets. This will return the raw decoded image with no scaling
+     * @param filePath the path to image
+     * @param listener the listener to receive the image
+     * @return A file image container. This is used to cancel the image load
+     */
+    public FileImageContainer get(String filePath, Listener listener) {
+        return this.get(filePath, 0, 0, listener);
+    }
+
+    /**
+     * Creates a mew file image load. The {@link FileImageRequest} is used with the {@link ImageDecoder} to make the decodes run in time with the
+     * crossbow network image loader. This will try to load from the sdcard first and then from assets
+     * @param filePath the path to image
+     * @param maxWidth the max width of the image
+     * @param maxHeight the max height to the image
+     * @param listener the listener to receive the image
+     * @return A file image container. This is used to cancel the image load
+     */
     public FileImageContainer get(String filePath, int maxWidth, int maxHeight, Listener listener) {
 
         final String cacheKey = getCacheKey(filePath, maxWidth, maxHeight);
 
-        FileImageContainer fileImageContainer = new FileImageContainer(cacheKey, imageCache);
-        fileImageContainer.listener = listener;
+        FileImageContainer fileImageContainer = new FileImageContainer(listener);
 
         Bitmap bitmap = imageCache.getBitmap(cacheKey);
         if(bitmap != null) {
@@ -43,7 +65,7 @@ public class FileImageLoader {
         }
         else {
 
-            //check if there is a
+            //check if there is a request in flight
             if(batchedFileRequests.containsKey(cacheKey)) {
                 batchedFileRequests.get(cacheKey).addConatiner(fileImageContainer);
             }
@@ -95,34 +117,17 @@ public class FileImageLoader {
                 .append("#H").append(maxHeight).append(path).toString();
     }
 
-    public static class FileImageContainer implements FileResponse.ReadListener<Bitmap>, FileResponse.ErrorListener {
-
-        private FileImageContainer(String cacheKey, ImageLoader.ImageCache imageCache) {
-            this.cacheKey = cacheKey;
-            this.imageCache = imageCache;
-        }
-
-        private String cacheKey;
-        private ImageLoader.ImageCache imageCache;
+    /**
+     * Used to keep track of the requests as they go through the file queue. Also used to cancel the file request in flight if needed.
+     */
+    public static class FileImageContainer {
 
         private Listener listener;
 
         private FileImageRequest fileImageRequest;
 
-        @Override
-        public void onResponse(Bitmap response) {
-            if(response != null) {
-                imageCache.putBitmap(cacheKey, response);
-                callListener(response, false);
-            }
-            else {
-                callError(null);
-            }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            callError(error);
+        private FileImageContainer(Listener listener) {
+            this.listener = listener;
         }
 
         private void callListener(Bitmap bitmap, boolean fromCache) {
@@ -147,6 +152,9 @@ public class FileImageLoader {
         }
     }
 
+    /**
+     * Wrapper for handing a batch of requests for the same image size
+     */
     private class BatchedFileRequests {
 
         private LinkedList<FileImageContainer> requests = new LinkedList<>();

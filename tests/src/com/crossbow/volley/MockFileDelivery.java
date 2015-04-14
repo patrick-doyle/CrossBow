@@ -1,9 +1,6 @@
 package com.crossbow.volley;
 
 import com.android.volley.VolleyError;
-import com.crossbow.volley.FileDelivery;
-import com.crossbow.volley.FileRequest;
-import com.crossbow.volley.FileResponse;
 
 /**
  * Created by Patrick on 29/03/2015.

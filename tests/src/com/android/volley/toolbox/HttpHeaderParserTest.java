@@ -21,13 +21,13 @@ import android.test.suitebuilder.annotation.SmallTest;
 import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 
+import junit.framework.TestCase;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import junit.framework.TestCase;
 
 @SmallTest
 public class HttpHeaderParserTest extends TestCase {

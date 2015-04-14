@@ -1,17 +1,12 @@
 package com.crossbow.volley;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.Volley;
 
-import java.io.File;
 import java.util.LinkedList;
-import java.util.Locale;
 
 /**
  * Created by Patrick on 24/03/2015.

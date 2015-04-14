@@ -1,7 +1,5 @@
 package com.crossbow.volley;
 
-import com.android.volley.Response;
-
 /**
  * Created by Patrick on 07/04/2015.
  */

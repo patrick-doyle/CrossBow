@@ -1,6 +1,5 @@
 package com.crossbow.volley.toolbox;
 
-import com.android.volley.Response;
 import com.crossbow.volley.FileReadRequest;
 import com.crossbow.volley.FileResponse;
 

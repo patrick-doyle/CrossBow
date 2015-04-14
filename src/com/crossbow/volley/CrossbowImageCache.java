@@ -1,13 +1,12 @@
-package com.crossbow.volley.toolbox;
+package com.crossbow.volley;
 
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.support.v4.graphics.BitmapCompat;
 import android.support.v4.util.LruCache;
 
 import com.android.volley.toolbox.ImageLoader;
 
-/**
+/*
  * Copyright (C) 2014 Patrick Doyle
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

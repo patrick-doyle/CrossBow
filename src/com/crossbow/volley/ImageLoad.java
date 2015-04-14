@@ -13,7 +13,9 @@ import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.crossbow.volley.toolbox.*;
+import com.crossbow.volley.toolbox.CrossbowImage;
+import com.crossbow.volley.toolbox.FileImageLoader;
+import com.crossbow.volley.toolbox.ScaleTypeDrawable;
 
 import java.lang.ref.WeakReference;
 
