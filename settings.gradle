@@ -1,0 +1,7 @@
+include ':Libraries:CrossBow',
+        ':Libraries:Crossbow-Core',
+        ':Libraries:CrossBow-Wear',
+        ':Libraries:Crossbow-Wear-Receiver',
+        ':Libraries:Crossbow-Wear-Core',
+        ':app',
+        ':wear'

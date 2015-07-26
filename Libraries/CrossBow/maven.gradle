@@ -1,0 +1,19 @@
+apply plugin: 'maven'
+
+group = 'com.company.root'
+version = '0.0.1-SNAPSHOT'
+
+task writeNewPom << {
+    pom {
+        project {
+            inceptionYear '2015'
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+        }
+    }.writeTo("pom.xml")
+}

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_margin="20dp"
+        android:columnCount="2"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/load_glide"
+            android:layout_width="wrap_content"
+            android:text="Glide"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/load_crossbow_image"
+            android:layout_width="wrap_content"
+            android:text="Crossbow Image"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/load_pisacco"
+            android:layout_width="wrap_content"
+            android:text="Piscasso"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/load_crossbow"
+            android:layout_width="wrap_content"
+            android:text="Crossbow"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/load_retofit"
+            android:layout_width="wrap_content"
+            android:text="Retofit"
+            android:layout_height="wrap_content" />
+    </GridLayout>
+
+    <TextView
+        android:id="@+id/load_stats"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/load_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:maxLines="10"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/imageview"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_margin="20dp"
+        android:textSize="16sp"/>
+
+</LinearLayout>

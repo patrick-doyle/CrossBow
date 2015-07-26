@@ -1,0 +1,2 @@
+//Run this script to enable full logging for all network and file requests
+adb shell setprop log.tag.com.crossbow.wear.Crossbow VERBOSE

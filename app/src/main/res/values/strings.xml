@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">requestQueue-test</string>
+
+    <string name="asset_image_load">Load Image Asset</string>
+    <string name="network_image_load">Load Image Network</string>
+    <string name="network_image_list">Load Image List</string>
+    <string name="json_load">Load Json</string>
+
+    <array name="image_list">
+        <item>http://i.imgur.com/ByktT4N.jpg</item>
+        <item>http://i.imgur.com/vRqhBfX.jpg</item>
+        <item>http://i.imgur.com/hauF01h.jpg</item>
+        <item>http://i.imgur.com/UobqM8w.jpg</item>
+        <item>http://i.imgur.com/0831T0n.jpg</item>
+        <item>http://i.imgur.com/UHijfrv.jpg</item>
+        <item>http://i.imgur.com/vGVlCYJ.jpg</item>
+        <item>http://i.imgur.com/EWi5Mcp.jpg</item>
+        <item>http://i.imgur.com/JsblZlQ.jpg</item>
+        <item>http://i.imgur.com/rU9FRXX.jpg</item>
+        <item>http://i.imgur.com/NGt8G5p.jpg</item>
+        <item>http://i.imgur.com/XsyRdk8.jpg</item>
+        <item>http://i.imgur.com/WRyGCv8.jpg</item>
+        <item>http://i.imgur.com/LHFDDVX.jpg</item>
+        <item>http://i.imgur.com/LcmzeEv.jpg</item>
+        <item>http://i.imgur.com/rksZAzS.jpg</item>
+        <item>http://i.imgur.com/fT1YBex.jpg</item>
+        <item>http://i.imgur.com/PpkkQrS.jpg</item>
+        <item>http://i.imgur.com/Q2ZQoPH.jpg</item>
+        <item>http://i.imgur.com/BekzOMo.jpg</item>
+        <item>http://i.imgur.com/ZXjZOjG.jpg</item>
+        <item>http://i.imgur.com/q8naFmT.jpg</item>
+        <item>http://i.imgur.com/0OTwxpP.jpg</item>
+        <item>http://i.imgur.com/EhwB2Y8.jpg</item>
+        <item>http://i.imgur.com/YWd4hUs.jpg</item>
+        <item>http://i.imgur.com/7GoUKlp.jpg</item>
+        <item>http://i.imgur.com/RtsQd6T.jpg</item>
+        <item>http://i.imgur.com/Hlg1xc4.jpg</item>
+    </array>
+</resources>
