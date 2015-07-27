@@ -68,7 +68,7 @@ public class CrossbowImageTest extends AndroidTestCase {
         ColorDrawable defaultDrawable = new ColorDrawable(Color.BLUE);
         CrossbowImage.Builder builder = new CrossbowImage.Builder(null, null);
         builder.placeholder(defaultDrawable);
-        builder.plcaeholderScale(ImageView.ScaleType.FIT_END);
+        builder.placeholderScale(ImageView.ScaleType.FIT_END);
         CrossbowImage crossbowImage = builder.into(imageView);
 
         crossbowImage.setError(null);

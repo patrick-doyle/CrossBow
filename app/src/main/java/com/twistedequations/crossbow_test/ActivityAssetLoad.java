@@ -48,6 +48,6 @@ public class ActivityAssetLoad extends AppCompatActivity {
                     textView.setText("Error");
                 }
             }
-        }).into(this, R.id.asset_image);
+        }).into(this, R.id.asset_image).load();
     }
 }

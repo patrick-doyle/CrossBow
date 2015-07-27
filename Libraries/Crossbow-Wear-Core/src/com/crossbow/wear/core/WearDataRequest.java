@@ -11,7 +11,6 @@ import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.google.android.gms.wearable.DataMap;
 
 import java.util.Collections;
 import java.util.HashMap;

@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.android.volley.Response;
-import com.crossbow.wear.core.WearFlags;
 import com.crossbow.volley.toolbox.RecycleImageRequest;
+import com.crossbow.wear.core.WearFlags;
 import com.crossbow.wear.core.WearRequest;
 
 /**

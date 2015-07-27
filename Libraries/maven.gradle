@@ -6,3 +6,10 @@ version = "0.8.0"
 
 def siteUrl = 'https://github.com/izacus/FuzzyDateFormatter'
 def gitUrl = 'https://github.com/izacus/FuzzyDateFormatter.git'
+
+Properties props = new Properties()
+props.load(new FileInputStream("/path/file.properties"))
+
+bintray {
+
+}

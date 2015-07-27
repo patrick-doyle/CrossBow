@@ -151,7 +151,7 @@ public class ActivityComapreLibs extends AppCompatActivity {
                     showToast();
                 }
             }
-        }).into(imageView);
+        }).into(imageView).load();
     }
 
     private void loadPissaco() {

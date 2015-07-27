@@ -8,10 +8,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.crossbow.volley.toolbox.Crossbow;
+import com.crossbow.volley.toolbox.GsonRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.twistedequations.crossbow_test.api.RequestRepos;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,20 +38,17 @@ public class ActivityJson extends AppCompatActivity {
         ButterKnife.bind(this);
 
         final long startTime = System.currentTimeMillis();
-        StringRequest stringRequest = new StringRequest("http://www.telize.com/geoip", new Response.Listener<String>() {
+        GsonRequest<List<Repo>> requestRepos = new  GsonRequest<List<Repo>>("https://api.github.com/users/twistedequations/repos", new Response.Listener<List<Repo>>() {
             @Override
-            public void onResponse(String response) {
-
+            public void onResponse(List<Repo> response) {
                 long time = System.currentTimeMillis() - startTime;
-                JsonElement jsonElement = jsonParser.parse(response);
-                textView.setText("http://www.telize.com/geoip\nin " + time + "ms\n\n" + gson.toJson(jsonElement));
+                textView.setText("https://api.github.com/users/twistedequations/repos\nin " + time + "ms\n\n" + response.get(0));
             }
-        }, new Response.ErrorListener() {
+        }, new com.android.volley.Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
             }
-        });
-        Crossbow.get(this).add(stringRequest);
+        }){};
+        Crossbow.get(this).add(requestRepos);
     }
 }

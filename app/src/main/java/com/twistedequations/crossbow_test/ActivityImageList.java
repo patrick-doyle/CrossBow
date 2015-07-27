@@ -63,12 +63,13 @@ public class ActivityImageList extends AppCompatActivity {
             }
 
             Crossbow.get(getApplicationContext())
-                    .loadImage()
-                    .fade(200)
-                    .source(imageUrls[position])
-                    .centerCrop()
-                    .debug()
-                    .into(imageView);
+                .loadImage()
+                .fade(200)
+                .source(imageUrls[position])
+                .centerCrop()
+                .debug()
+                .into(imageView)
+                .load();
 
             return imageView;
         }

@@ -1,25 +1,13 @@
 package com.crossbow.wear.core;
 
-import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 
-import com.android.volley.Network;
 import com.android.volley.NetworkResponse;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.DataMap;
-import com.google.android.gms.wearable.Wearable;
 
-import junit.framework.Assert;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.zip.GZIPInputStream;
 
 /**
  * Created by Patrick on 11/07/2015.

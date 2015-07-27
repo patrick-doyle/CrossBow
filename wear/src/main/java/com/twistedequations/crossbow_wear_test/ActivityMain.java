@@ -62,7 +62,8 @@ public class ActivityMain extends Activity {
                         Log.d("ActivityMain", "onLoad() returned " + success);
 
                     }
-                }).into(imageView);
+                }).into(imageView)
+                .load();
     }
 
     @OnClick(R.id.send_message)

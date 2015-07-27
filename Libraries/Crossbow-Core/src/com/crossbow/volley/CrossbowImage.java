@@ -1,6 +1,7 @@
 package com.crossbow.volley;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -80,6 +81,10 @@ public class CrossbowImage implements ViewTreeObserver.OnPreDrawListener, ImageL
 
     private FileImageLoader fileImageLoader;
 
+    private int width = DEFAULT;
+
+    private int height = DEFAULT;
+
     private static WeakHashMap<ImageView, CrossbowImage> inProgressLoads = new WeakHashMap<>();
 
     private CrossbowImage(ImageLoader imageLoader, FileImageLoader fileImageLoader) {
@@ -141,7 +146,13 @@ public class CrossbowImage implements ViewTreeObserver.OnPreDrawListener, ImageL
 
         int width = 0;
         int height = 0;
-        if (!this.dontScale) {
+        if(this.width != DEFAULT && this.height != DEFAULT) {
+            //Use provided width and height if provided
+            width = this.width;
+            height = this.height;
+        }
+        else if (!this.dontScale) {
+            //Use the raw image
             width = view.getWidth();
             height = view.getHeight();
         }
@@ -297,13 +308,16 @@ public class CrossbowImage implements ViewTreeObserver.OnPreDrawListener, ImageL
      */
     public static class Builder {
 
+        private final Context context;
+
         private CrossbowImage crossbowImage;
 
         private int defaultRes = DEFAULT;
 
         private int errorRes = DEFAULT;
 
-        public Builder(ImageLoader imageLoader, FileImageLoader fileImageLoader) {
+        public Builder(Context context, ImageLoader imageLoader, FileImageLoader fileImageLoader) {
+            this.context = context.getApplicationContext();
             crossbowImage = new CrossbowImage(imageLoader, fileImageLoader);
         }
 
@@ -326,12 +340,30 @@ public class CrossbowImage implements ViewTreeObserver.OnPreDrawListener, ImageL
         }
 
         /**
+         * Sets a pixel size for the image to be decoded to ignoring the size of the imageview
+         */
+        public Builder pixelSize(int width, int height) {
+            this.crossbowImage.width = width;
+            this.crossbowImage.height = height;
+            return this;
+        }
+
+        /**
+         * Sets a density pixel size size for the image to be decoded to ignoring the size of the imageview
+         */
+        public Builder dpSize(int width, int height) {
+            this.crossbowImage.width = width;
+            this.crossbowImage.height = height;
+            return this;
+        }
+
+        /**
          * The drawable res to use when the image is loading
          *
          * @param defaultRes the drawable res to use
          */
         public Builder placeholder(@DrawableRes int defaultRes) {
-            this.defaultRes = defaultRes;
+            this.crossbowImage.defaultDrawable = context.getResources().getDrawable(defaultRes);
             return this;
         }
 
@@ -341,7 +373,7 @@ public class CrossbowImage implements ViewTreeObserver.OnPreDrawListener, ImageL
          * @param errorRes the drawable res to use
          */
         public Builder error(@DrawableRes int errorRes) {
-            this.errorRes = errorRes;
+            this.crossbowImage.errorDrawable = context.getResources().getDrawable(errorRes);
             return this;
         }
 
@@ -385,7 +417,7 @@ public class CrossbowImage implements ViewTreeObserver.OnPreDrawListener, ImageL
          *
          * @param preScaleType {@link ImageView.ScaleType Scaletype} to set.
          */
-        public Builder plcaeholderScale(ImageView.ScaleType preScaleType) {
+        public Builder placeholderScale(ImageView.ScaleType preScaleType) {
             this.crossbowImage.preScaleType = preScaleType;
             return this;
         }
@@ -435,17 +467,17 @@ public class CrossbowImage implements ViewTreeObserver.OnPreDrawListener, ImageL
          * @param root root view to look in
          * @param imageViewId id of the imageview
          */
-        public void into(View root, @IdRes int imageViewId) {
+        public Builder into(View root, @IdRes int imageViewId) {
             ImageView imageView = (ImageView) root.findViewById(imageViewId);
-            into(imageView);
+            return into(imageView);
         }
 
         /**
          * @see #into(View, int)
          */
-        public void into(Activity activty, @IdRes int imageViewId) {
+        public Builder into(Activity activty, @IdRes int imageViewId) {
             ImageView imageView = (ImageView) activty.findViewById(imageViewId);
-            into(imageView);
+            return into(imageView);
         }
 
         /**
@@ -473,19 +505,19 @@ public class CrossbowImage implements ViewTreeObserver.OnPreDrawListener, ImageL
             return this;
         }
 
-        public CrossbowImage into(@NonNull ImageView imageView) {
-
-            this.crossbowImage.imageView = new WeakReference<ImageView>(imageView);
-
-            if(defaultRes!= DEFAULT) {
-                this.crossbowImage.defaultDrawable = imageView.getResources().getDrawable(defaultRes);
+        /**
+         * Starts the image load
+         */
+        public void load() {
+            if(crossbowImage.imageView == null) {
+                throw new IllegalArgumentException("Image view must not by null");
             }
-            if(errorRes!= DEFAULT) {
-                this.crossbowImage.defaultDrawable = imageView.getResources().getDrawable(errorRes);
-            }
-
             crossbowImage.load();
-            return crossbowImage;
+        }
+
+        public Builder into(@NonNull ImageView imageView) {
+            this.crossbowImage.imageView = new WeakReference<ImageView>(imageView);
+            return this;
         }
     }
 
