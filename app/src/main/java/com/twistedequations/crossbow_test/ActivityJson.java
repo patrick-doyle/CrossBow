@@ -8,6 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.crossbow.volley.toolbox.Crossbow;
+import com.crossbow.volley.toolbox.GsonGetRequest;
 import com.crossbow.volley.toolbox.GsonRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,7 +39,7 @@ public class ActivityJson extends AppCompatActivity {
         ButterKnife.bind(this);
 
         final long startTime = System.currentTimeMillis();
-        GsonRequest<List<Repo>> requestRepos = new  GsonRequest<List<Repo>>("https://api.github.com/users/twistedequations/repos", new Response.Listener<List<Repo>>() {
+        GsonGetRequest<List<Repo>> requestRepos = new  GsonGetRequest<List<Repo>>("https://api.github.com/users/twistedequations/repos", new Response.Listener<List<Repo>>() {
             @Override
             public void onResponse(List<Repo> response) {
                 long time = System.currentTimeMillis() - startTime;

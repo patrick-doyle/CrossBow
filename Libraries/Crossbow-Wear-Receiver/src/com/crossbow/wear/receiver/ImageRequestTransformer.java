@@ -12,9 +12,7 @@ import com.crossbow.wear.core.ResponseTransformer;
 import java.io.ByteArrayOutputStream;
 
 /**
- * Created by Patrick on 25/07/2015.
- *
- * used to compress the images to a smaller size before they get sent to the wearable
+ * Used to compress the images to a smaller size before they get sent to the wearable
  */
 public class ImageRequestTransformer implements ResponseTransformer {
 

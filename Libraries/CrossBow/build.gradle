@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.2.3'
@@ -8,7 +8,7 @@ buildscript {
 }
 
 apply plugin: 'com.android.library'
-apply from: 'maven.gradle'
+
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
@@ -42,7 +42,8 @@ android {
     }
 }
 
+apply from: 'maven.gradle'
+
 dependencies {
     compile project(':Libraries:Crossbow-Core')
-    compile 'com.android.support:support-v4:22.2.0'
 }

@@ -12,15 +12,13 @@ import com.crossbow.wear.toolbox.WearCrossbowBuilder;
  */
 public class CrossbowWear {
 
-    private static CrossbowBuilder crossbowBuilder;
+    private static Crossbow crossbow;
 
-    private CrossbowWear(Context context) {
-    }
-
-    public static com.crossbow.volley.toolbox.Crossbow get(Context context) {
-        if(crossbowBuilder == null) {
-            crossbowBuilder = new WearCrossbowBuilder(context);
+    public static Crossbow get(Context context) {
+        WearCrossbowBuilder crossbowBuilder = new WearCrossbowBuilder(context);
+        if(crossbow == null) {
+            crossbow = new Crossbow(context, crossbowBuilder);
         }
-        return Crossbow.get(context, crossbowBuilder);
+        return crossbow;
     }
 }

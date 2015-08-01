@@ -34,28 +34,20 @@ public class Crossbow {
      * @param context context of the application
      */
     public static Crossbow get(Context context) {
-        return get(context, new CrossbowBuilder(context));
-    }
-
-    /**
-     * Creates a singleton that uses the components from the CrossbowBuilder. Use {@link com.crossbow.volley.toolbox.CrossbowBuilder Builder} to plugin custom components.
-     * @param context context of the application
-     */
-    public static Crossbow get(Context context, CrossbowBuilder crossbowBuilder) {
         if(defaultInstance == null) {
             //Create a custom stack
-            defaultInstance = new Crossbow(context, crossbowBuilder);
+            defaultInstance = new Crossbow(context, new DefaultCrossbowBuilder(context));
         }
         return defaultInstance;
     }
 
     public Crossbow(Context context, CrossbowBuilder crossbowBuilder) {
         this.context = context.getApplicationContext();
-        this.requestQueue = crossbowBuilder.requestQueue;
-        this.imageLoader = crossbowBuilder.imageLoader;
-        this.imageCache = crossbowBuilder.imageCache;
-        this.fileQueue = crossbowBuilder.fileQueue;
-        this.fileImageLoader = crossbowBuilder.fileImageLoader;
+        this.requestQueue = crossbowBuilder.getRequestQueue();
+        this.imageLoader = crossbowBuilder.getImageLoader();
+        this.imageCache = crossbowBuilder.getImageCache();
+        this.fileQueue = crossbowBuilder.getFileQueue();
+        this.fileImageLoader = crossbowBuilder.getFileImageLoader();
     }
 
     public CrossbowImage.Builder loadImage() {

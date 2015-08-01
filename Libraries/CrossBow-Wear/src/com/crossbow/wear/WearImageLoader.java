@@ -6,13 +6,13 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.crossbow.volley.toolbox.CrossbowImageLoader;
+import com.crossbow.volley.toolbox.NetworkImageLoader;
 import com.crossbow.wear.toolbox.WearImageRequest;
 
 /**
  * Created by Patrick on 10/07/2015.
  */
-public class WearImageLoader extends CrossbowImageLoader {
+public class WearImageLoader extends NetworkImageLoader {
     /**
      * Constructs a new ImageLoader that can uses the Image decoder.
      *

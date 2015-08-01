@@ -2,8 +2,9 @@ package com.twistedequations.crossbow_test.wear;
 
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
 import com.crossbow.wear.core.ResponseTransformer;
-import com.crossbow.wear.receiver.CrossbowRemoteService;
+import com.crossbow.wear.receiver.CrossbowListenerService;
 import com.google.android.gms.wearable.MessageEvent;
 
 import java.util.Map;
@@ -11,7 +12,7 @@ import java.util.Map;
 /**
  * Created by Patrick on 25/07/2015.
  */
-public class WearMessageService extends CrossbowRemoteService {
+public class WearMessageService extends CrossbowListenerService {
 
     @Override
     public Map<String, ResponseTransformer> getTransformerMap() {

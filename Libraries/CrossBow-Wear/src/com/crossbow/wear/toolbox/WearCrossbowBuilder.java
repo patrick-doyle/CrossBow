@@ -4,20 +4,20 @@ import android.content.Context;
 
 import com.android.volley.Network;
 import com.android.volley.toolbox.HttpStack;
-import com.crossbow.volley.toolbox.CrossbowBuilder;
+import com.crossbow.volley.toolbox.DefaultCrossbowBuilder;
 import com.crossbow.wear.PlayNetwork;
 
 /**
  * Created by Patrick on 27/07/2015.
  */
-public class WearCrossbowBuilder extends CrossbowBuilder {
+public class WearCrossbowBuilder extends DefaultCrossbowBuilder {
 
     public WearCrossbowBuilder(Context context) {
         super(context);
     }
 
     @Override
-    public Network createNetwork(HttpStack httpStack) {
+    public Network onCreateNetwork(HttpStack httpStack) {
         return new PlayNetwork(getContext());
     }
 }

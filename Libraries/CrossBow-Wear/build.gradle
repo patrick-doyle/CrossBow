@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.2.3'
@@ -40,6 +40,8 @@ android {
         preDexLibraries = false
     }
 }
+
+apply from: 'maven.gradle'
 
 dependencies {
     compile project(':Libraries:Crossbow-Core')

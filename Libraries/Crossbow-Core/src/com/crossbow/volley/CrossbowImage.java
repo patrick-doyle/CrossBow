@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.net.Uri;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.crossbow.volley.toolbox.FileImageLoader;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.WeakHashMap;
 
@@ -492,6 +494,16 @@ public class CrossbowImage implements ViewTreeObserver.OnPreDrawListener, ImageL
             else {
                 crossbowImage.file = source;
             }
+            return this;
+        }
+
+        /**
+         * Sets the file uri source to load
+         *
+         * @param source the source for the image (File Uri)
+         */
+        public Builder source(Uri source) {
+            crossbowImage.file = new File(source.getPath()).getAbsolutePath();
             return this;
         }
 

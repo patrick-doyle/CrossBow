@@ -23,7 +23,6 @@ public class WearImageRequest extends RecycleImageRequest implements WearRequest
         this.maxHeight = maxHeight;
     }
 
-    @NonNull
     @Override
     public Bundle getTransformerParams() {
         Bundle bundle = new Bundle();

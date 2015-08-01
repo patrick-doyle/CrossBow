@@ -24,7 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
-public class CrossbowImageLoader extends ImageLoader {
+public class NetworkImageLoader extends ImageLoader {
 
     /**
      * Constructs a new ImageLoader that can uses the Image decoder.
@@ -32,7 +32,7 @@ public class CrossbowImageLoader extends ImageLoader {
      * @param queue      The RequestQueue to use for making image requests.
      * @param imageCache The cache to use as an L1 cache.
      */
-    public CrossbowImageLoader(RequestQueue queue, ImageCache imageCache) {
+    public NetworkImageLoader(RequestQueue queue, ImageCache imageCache) {
         super(queue, imageCache);
     }
 

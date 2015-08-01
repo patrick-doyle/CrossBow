@@ -22,14 +22,14 @@ import java.util.Map;
 /**
  * Created by Patrick on 11/07/2015.
  */
-public abstract class CrossbowRemoteService extends WearableListenerService {
+public class CrossbowListenerService extends WearableListenerService {
 
     //Queue of buffered events to hold events while the repeater service is connected
 
     private WearRequestHandler dataItemHandler;
     private Map<String, ResponseTransformer> transformerMap = new HashMap<>();
 
-    public CrossbowRemoteService() {
+    public CrossbowListenerService() {
         transformerMap.put(WearFlags.IMAGE_TRANSFORMER_KEY, new ImageRequestTransformer());
     }
 

@@ -27,10 +27,6 @@ public abstract class GsonRequest<T> extends Request<T> {
         this.type = new TypeToken<T>(){}.getType();
     }
 
-    public GsonRequest(String url, Response.Listener<T> listener, Response.ErrorListener errorListener) {
-        this(Method.GET, url, listener, errorListener);
-    }
-
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
 

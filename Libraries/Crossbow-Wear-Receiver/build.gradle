@@ -43,6 +43,8 @@ android {
     }
 }
 
+apply from: 'maven.gradle'
+
 dependencies {
     compile  project(':Libraries:Crossbow-Core')
     compile  project(':Libraries:Crossbow-Wear-Core')

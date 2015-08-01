@@ -28,7 +28,7 @@ install {
                 packaging 'aar'
 
                 // Add your description here
-                name 'Crossbow'
+                name 'Crossbow-Wear'
                 description = mavenProps.getProperty("desc")
                 url = mavenProps.getProperty("siteUrl")
 
@@ -68,7 +68,7 @@ task sourcesJar(type: Jar) {
 
 task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
-    classpath +=      project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath +=  project.files(android.getBootClasspath().join(File.pathSeparator))
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -87,7 +87,7 @@ bintray {
 
     pkg {
         repo = 'maven'
-        name = 'crossbow'
+        name = 'crossbow-wear-receiver'
         userOrg = mavenProps.getProperty("devID")
         licenses = ['Apache-2.0']
         vcsUrl = mavenProps.getProperty("gitUrl")
