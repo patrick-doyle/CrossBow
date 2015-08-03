@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.android.volley.Response;
 import com.crossbow.volley.toolbox.RecycleImageRequest;
+import com.crossbow.wear.core.ParamsBundle;
 import com.crossbow.wear.core.WearConstants;
 import com.crossbow.wear.core.WearRequest;
 
@@ -26,8 +27,8 @@ public class WearImageRequest extends RecycleImageRequest implements WearRequest
     }
 
     @Override
-    public Bundle getTransformerParams() {
-        Bundle bundle = new Bundle();
+    public ParamsBundle getTransformerParams() {
+        ParamsBundle bundle = new ParamsBundle();
         bundle.putInt("maxWidth", maxWidth);
         bundle.putInt("maxHeight", maxHeight);
         bundle.putSerializable("config", config);

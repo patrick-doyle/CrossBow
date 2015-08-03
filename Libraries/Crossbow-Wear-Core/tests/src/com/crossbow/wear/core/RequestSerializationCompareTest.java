@@ -3,6 +3,7 @@ package com.crossbow.wear.core;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.test.suitebuilder.annotation.SmallTest;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -13,58 +14,39 @@ import com.android.volley.Response;
 import junit.framework.TestCase;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 /**
 
  */
-public class RequestSerializationTest extends TestCase {
+public class RequestSerializationCompareTest extends TestCase {
 
     @SmallTest
-    public void testRequestSerialization() throws AuthFailureError, IOException {
+    public void testRequestSerializationSize() throws AuthFailureError, IOException {
         String uuid = UUID.randomUUID().toString();
         TestRequest testRequest = new TestRequest();
         byte[] serializedRequest = RequestSerialUtil.serializeRequest(uuid, testRequest);
+        byte[] serializedRequestOld = RequestSerialUtilOld.serializeRequest(uuid, testRequest);
 
-        WearDataRequest dataRequest = RequestSerialUtil.deSerializeRequest(serializedRequest);
-
-        assertTrue(Arrays.equals(testRequest.getBody(), dataRequest.getBody()));
-        assertTrue(equalBundles(testRequest.getTransformerParams(), dataRequest.getTransformerArgs()));
-        assertEquals(testRequest.getCacheKey(), dataRequest.getCacheKey());
-        assertEquals(testRequest.getUrl(), dataRequest.getUrl());
-        assertEquals(testRequest.getBodyContentType(), dataRequest.getBodyContentType());
-        assertEquals(testRequest.getPriority(), dataRequest.getPriority());
-        assertEquals(testRequest.getTransFormerKey(), dataRequest.getTransformerKey());
-        assertEquals(testRequest.getMethod(), dataRequest.getMethod());
-        assertEquals(testRequest.getHeaders(), dataRequest.getHeaders());
-        assertEquals(testRequest.getRetryPolicy().getCurrentRetryCount(), dataRequest.getRetryPolicy().getCurrentRetryCount());
-        assertEquals(testRequest.getRetryPolicy().getCurrentTimeout(), dataRequest.getRetryPolicy().getCurrentTimeout());
+        Log.d("TEST", "New size = " + serializedRequest.length + ", old size = " + serializedRequestOld.length);
     }
 
-    public boolean equalBundles(ParamsBundle one, ParamsBundle two) {
-        if(one.size() != two.size())
-            return false;
+    @SmallTest
+    public void testRequestSerializationSpeed() throws AuthFailureError, IOException {
+        String uuid = UUID.randomUUID().toString();
+        TestRequest testRequest = new TestRequest();
+        long start = System.nanoTime();
 
-        Set<String> setOne = one.keySet();
-        Object valueOne;
-        Object valueTwo;
+        byte[] serializedRequestOld = RequestSerialUtilOld.serializeRequest(uuid, testRequest);
 
-        for(String key : setOne) {
-            valueOne = one.get(key);
-            valueTwo = two.get(key);
-            if(valueOne == null) {
-                if(valueTwo != null || !two.containsKey(key))
-                    return false;
-            }
-            else if(!valueOne.equals(valueTwo))
-                return false;
-        }
+        long startOld = System.nanoTime();
+        Log.d("TEST", "Old time = " + ((System.nanoTime() - startOld)) + "ns");
 
-        return true;
+        byte[] serializedRequest = RequestSerialUtil.serializeRequest(uuid, testRequest);
+
+        Log.d("TEST", "New time = " + ((System.nanoTime() - start)) + "ns");
     }
 
     private class TestRequest extends Request<Boolean> implements WearRequest {

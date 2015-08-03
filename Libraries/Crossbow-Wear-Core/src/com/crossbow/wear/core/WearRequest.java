@@ -15,7 +15,7 @@ public interface WearRequest {
      *
      * @return a bundle of args
      */
-    public @Nullable Bundle getTransformerParams();
+    public @Nullable ParamsBundle getTransformerParams();
 
     /**
      * The key used to map the {@link com.crossbow.wear.core.ResponseTransformer ResponseTransformer}

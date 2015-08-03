@@ -43,11 +43,13 @@ public class WearDataRequest extends Request<NetworkResponse> {
 
     private final Priority priority;
 
-    private final Bundle transformerArgs;
+    private final ParamsBundle transformerArgs;
 
     private final RetryPolicy retryPolicy;
 
-    public WearDataRequest(int method, String url, String uuid, String transformerKey, int retryCount, int timeout, String cacheKey, String tag, String bodyContentType, Map<String, String> headers, byte[] body, Priority priority, Bundle transformerArgs) {
+    public WearDataRequest(int method, String url, String uuid, String transformerKey, int retryCount, int timeout,
+                           String cacheKey, String tag, String bodyContentType, Map<String, String> headers,
+                           byte[] body, Priority priority, ParamsBundle transformerArgs) {
         super(method, url, null);
         this.uuid = uuid;
         this.cacheKey = cacheKey;
@@ -122,7 +124,7 @@ public class WearDataRequest extends Request<NetworkResponse> {
         return uuid;
     }
 
-    public Bundle getTransformerArgs() {
+    public ParamsBundle getTransformerArgs() {
         return transformerArgs;
     }
 

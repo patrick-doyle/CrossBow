@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.android.volley.ParseError;
 import com.crossbow.volley.toolbox.ImageDecoder;
+import com.crossbow.wear.core.ParamsBundle;
 import com.crossbow.wear.core.ResponseTransformer;
 
 import java.io.ByteArrayOutputStream;
@@ -18,7 +19,7 @@ public class ImageRequestTransformer implements ResponseTransformer {
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
-    public byte[] transform(Bundle requestArgs, byte[] data) throws ParseError {
+    public byte[] transform(ParamsBundle requestArgs, byte[] data) throws ParseError {
 
         int width = requestArgs.getInt("width", 500);
         int height = requestArgs.getInt("height", 500);

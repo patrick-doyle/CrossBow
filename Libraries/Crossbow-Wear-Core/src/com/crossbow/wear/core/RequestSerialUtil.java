@@ -4,8 +4,17 @@ import android.os.Bundle;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.google.android.gms.wearable.DataMap;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -15,83 +24,54 @@ import java.util.Set;
  */
 public class RequestSerialUtil {
 
-    private static String URL = "com.crossbow.wear.url";
-
-    private static String BODY_CONTENT_TYPE = "com.crossbow.wear.body_content_type";
-
-    private static String POST_BODY = "com.crossbow.wear.post_body";
-
-    private static String TIMEOUT = "com.crossbow.wear.timeout";
-
-    private static String RETRYIES = "com.crossbow.wear.retries";
-
-    private static String PRIORITY = "com.crossbow.wear.priority";
-
-    private static String METHOD = "com.crossbow.wear.method";
-
-    private static String CACHE_KEY = "com.crossbow.wear.cache_key";
-
-    private static String TAG = "com.crossbow.wear.tag";
-
-    private static String UUID = "com.crossbow.wear.uuid";
-
-    private static String TRANSFORMER = "com.crossbow.wear.transformer";
-
-    private static String TRANSFORMER_ARGS = "com.crossbow.wear.transformer_args";
-
-    private static String HEADER_KEYS = "com.crossbow.wear.headers_keys";
-
-    private static String HEADER_VALUES = "com.crossbow.wear.headers_values";
-
     public static byte[] serializeRequest(String uuid, Request<?> request) throws AuthFailureError, IOException {
 
-        //TODO write more efficient serializer to prevent key overhead
-        DataMap dataMap = new DataMap();
-        dataMap.putByteArray(POST_BODY, request.getBody());
-        dataMap.putString(TAG, request.getTag() != null ? request.getTag().toString() : null);
-        dataMap.putString(URL, request.getUrl());
-        dataMap.putString(BODY_CONTENT_TYPE, request.getBodyContentType());
-        dataMap.putString(CACHE_KEY, request.getCacheKey());
-        dataMap.putString(UUID, uuid);
-        dataMap.putString(PRIORITY, request.getPriority().name());
-        dataMap.putInt(TIMEOUT, request.getTimeoutMs());
-        dataMap.putInt(METHOD, request.getMethod());
-        dataMap.putInt(RETRYIES, request.getRetryPolicy().getCurrentRetryCount());
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(500);
+        DataOutputStream dataStream = new DataOutputStream(outputStream);
 
-        Map<String, String> headers = request.getHeaders();
-        if(headers != null) {
-            int index = 0;
-            Set<Map.Entry<String, String>> entries = headers.entrySet();
-            String[] headerKeys = new String[entries.size()];
-            String[] headerValues = new String[entries.size()];
+        //metadata first
+        dataStream.writeUTF(uuid);
 
-            for(Map.Entry<String, String> entry : entries) {
-                headerKeys[index] = entry.getKey();
-                headerValues[index] = entry.getValue();
-                index ++;
-            }
+        //byte arrays
+        writeBytes(dataStream, request.getBody());
 
-            dataMap.putStringArray(HEADER_KEYS, headerKeys);
-            dataMap.putStringArray(HEADER_VALUES, headerValues);
-        }
+        //Strings
+        dataStream.writeUTF(request.getTag() != null ? request.getTag().toString() : "");
+        dataStream.writeUTF(request.getUrl());
+        dataStream.writeUTF(request.getBodyContentType());
+        dataStream.writeUTF(request.getCacheKey());
 
+        //enum
+        dataStream.writeUTF(request.getPriority().name());
+
+        //ints
+        dataStream.writeInt(request.getTimeoutMs());
+        dataStream.writeInt(request.getMethod());
+        dataStream.writeInt(request.getRetryPolicy().getCurrentRetryCount());
+
+        //map of headers
+        writeMap(dataStream, request.getHeaders());
+
+        //transformer key and bundle
         if(request instanceof WearRequest) {
             WearRequest wearRequest = WearRequest.class.cast(request);
-            dataMap.putString(TRANSFORMER, wearRequest.getTransFormerKey());
-            Bundle bundle = wearRequest.getTransformerParams();
+            ParamsBundle bundle = wearRequest.getTransformerParams();
+            String transformerKey = wearRequest.getTransFormerKey();
             if(bundle == null) {
-                dataMap.putDataMap(TRANSFORMER_ARGS, DataMap.fromBundle(new Bundle(0)));
+                bundle = new ParamsBundle(0);
             }
-            else {
-                dataMap.putDataMap(TRANSFORMER_ARGS, DataMap.fromBundle(wearRequest.getTransformerParams()));
+            if(transformerKey == null) {
+                transformerKey = "";
             }
+            dataStream.writeUTF(transformerKey);
+            bundle.writeToStream(dataStream);
         }
         else {
-            dataMap.putString(TRANSFORMER, "");
-            dataMap.putDataMap(TRANSFORMER_ARGS,  DataMap.fromBundle(new Bundle(0)));
+            dataStream.writeUTF("");
+            new ParamsBundle(0).writeToStream(dataStream);
         }
-
-        byte[] data = dataMap.toByteArray();
+        byte[] data = outputStream.toByteArray();
+        dataStream.close();
         //gzip the data
         return Gzipper.zip(data);
     }
@@ -99,40 +79,85 @@ public class RequestSerialUtil {
     public static WearDataRequest deSerializeRequest(byte[] request) throws IOException {
         //decompress the gzipped data
         byte[] deCompressed = Gzipper.unzip(request);
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(deCompressed);
+        DataInputStream dataStream = new DataInputStream(inputStream);
 
-        DataMap dataMap = DataMap.fromByteArray(deCompressed);
+        //metadata
+        String uuid = dataStream.readUTF();
 
-        String url = dataMap.getString(URL);
-        String tag = dataMap.getString(TAG);
-        String bodyType = dataMap.getString(BODY_CONTENT_TYPE);
-        String cacheKey = dataMap.getString(CACHE_KEY);
-        String uuid = dataMap.getString(UUID);
-        String transformerKey = dataMap.getString(TRANSFORMER);
+        //byte arrays
+        byte[] postBody = readBytes(dataStream);
 
-        int timeout = dataMap.getInt(TIMEOUT, 2500);
-        int retryies = dataMap.getInt(RETRYIES, 1);
-        int method = dataMap.getInt(METHOD, Request.Method.GET);
+        //Strings
+        String tag = dataStream.readUTF();
+        String url = dataStream.readUTF();
+        String bodyType = dataStream.readUTF();
+        String cacheKey = dataStream.readUTF();
 
-        byte[] postBody = dataMap.getByteArray(POST_BODY);
-        Bundle transformerArgs;
-        if(dataMap.getDataMap(TRANSFORMER_ARGS) != null) {
-            transformerArgs = dataMap.getDataMap(TRANSFORMER_ARGS).toBundle();
+        //Enum
+        Request.Priority priority = Request.Priority.valueOf(dataStream.readUTF());
+
+        //ints
+        int timeout = dataStream.readInt();
+        int method = dataStream.readInt();
+        int retryies = dataStream.readInt();
+
+        //headers
+        Map<String, String> headers = readMap(dataStream);
+
+        //transformer key, bundle
+        String transformerKey = dataStream.readUTF();
+        ParamsBundle transformerArgs = ParamsBundle.readFromStream(dataStream);
+        dataStream.close();
+
+        return new WearDataRequest(method, url, uuid, transformerKey,
+                retryies, timeout, cacheKey, tag, bodyType,
+                headers, postBody, priority, transformerArgs);
+    }
+
+    private static void writeMap(DataOutputStream outputStream, Map<String, String> map) throws IOException {
+        //Write size, then key-values
+        outputStream.writeInt(map.size());
+        Set<Map.Entry<String, String>> entries = map.entrySet();
+        for(Map.Entry<String, String> entry : entries) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            outputStream.writeUTF(key);
+            outputStream.writeUTF(value);
+        }
+    }
+
+    private static void writeBytes(DataOutputStream outputStream, byte[] data) throws IOException {
+        //Write size, then key-values
+        if(data != null) {
+            outputStream.writeInt(data.length);
+            outputStream.write(data);
         }
         else {
-            transformerArgs = new Bundle();
+            outputStream.writeInt(0);
+            outputStream.write(new byte[0]);
         }
-        Request.Priority priority = Request.Priority.valueOf(dataMap.getString(PRIORITY, Request.Priority.NORMAL.name()));
-
-        String[] headerKeys = dataMap.getStringArray(HEADER_KEYS);
-        String[] headerValues = dataMap.getStringArray(HEADER_VALUES);
-
-        Map<String, String> headers = new HashMap<>();
-        if(headerKeys != null) {
-            for (int i = 0; i < headerKeys.length; i++) {
-                headers.put(headerKeys[i], headerValues[i]);
-            }
-        }
-
-        return new WearDataRequest(method, url, uuid, transformerKey, retryies, timeout, cacheKey, tag, bodyType, headers, postBody, priority, transformerArgs);
     }
+
+    private static byte[] readBytes(DataInputStream outputStream) throws IOException {
+        //Write size, then key-values
+        int size = outputStream.readInt();
+        byte[] data = new byte[size];
+        outputStream.read(data);
+        return data;
+    }
+
+    private static Map<String, String> readMap(DataInputStream dataInputStream) throws IOException {
+        //Read size, then key-values in a loop
+        int size = dataInputStream.readInt();
+        Map<String, String> map = new HashMap<>(size);
+        for (int i = 0; i < size; i++) {
+            String key = dataInputStream.readUTF();
+            String value = dataInputStream.readUTF();
+            map.put(key, value);
+        }
+        return map;
+    }
+
+
 }

@@ -15,9 +15,6 @@ import java.util.Map;
 import java.util.UUID;
 
 
-/**
-
- */
 public class WearDataRequestTest extends TestCase {
 
     private String uuid = UUID.randomUUID().toString();
@@ -38,7 +35,7 @@ public class WearDataRequestTest extends TestCase {
 
     private Request.Priority priority = Request.Priority.HIGH;
 
-    private Bundle transformerArgs = new Bundle();
+    private ParamsBundle transformerArgs = new ParamsBundle();
 
     private RetryPolicy retryPolicy;
 

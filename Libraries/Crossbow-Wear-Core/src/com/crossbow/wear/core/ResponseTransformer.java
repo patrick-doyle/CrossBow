@@ -1,7 +1,5 @@
 package com.crossbow.wear.core;
 
-import android.os.Bundle;
-
 import com.android.volley.ParseError;
 
 /**
@@ -17,5 +15,5 @@ public interface ResponseTransformer {
      * @param data the data from the network.
      * @return the shrunk data for the wearable request to parse
      */
-    byte[] transform(Bundle requestArgs, byte[] data) throws ParseError;
+    byte[] transform(ParamsBundle requestArgs, byte[] data) throws ParseError;
 }
