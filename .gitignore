@@ -40,3 +40,4 @@ build/*
 *~
 *.swp
 *config*
+**Test Results**.html
