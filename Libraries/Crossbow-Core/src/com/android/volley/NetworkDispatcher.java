@@ -45,7 +45,7 @@ public class NetworkDispatcher extends Thread {
     private volatile boolean mQuit = false;
 
     /**
-     * Creates a new network dispatcher thread.  You must call {@link #start()}
+     s a new network dispatcher thread.  You must call {@link #start()}
      * in order to begin processing.
      *
      * @param queue Queue of incoming requests for triage

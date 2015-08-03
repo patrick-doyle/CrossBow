@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Created by Patrick on 12/04/2015.
+
  */
 public class FileQueueTest extends AndroidTestCase {
 

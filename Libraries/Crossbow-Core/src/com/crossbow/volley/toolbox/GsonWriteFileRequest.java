@@ -13,7 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Created by Patrick on 27/07/2015.
+
  */
 public class GsonWriteFileRequest extends FileRequest<Boolean> {
 

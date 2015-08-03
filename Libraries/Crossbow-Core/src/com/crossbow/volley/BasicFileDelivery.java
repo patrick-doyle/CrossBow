@@ -6,7 +6,7 @@ import android.os.Looper;
 import com.android.volley.VolleyError;
 
 /**
- * Created by Patrick on 29/03/2015.
+
  */
 public class BasicFileDelivery implements FileDelivery {
 

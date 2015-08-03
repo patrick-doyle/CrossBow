@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Patrick on 11/07/2015.
+
  */
 public class WearDataRequest extends Request<NetworkResponse> {
 

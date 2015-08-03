@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by Patrick on 26/07/2015.
+
  */
 public class WearNetworkResponseTest extends TestCase {
 

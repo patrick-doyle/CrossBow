@@ -16,7 +16,7 @@ import java.util.UUID;
 
 
 /**
- * Created by Patrick on 26/07/2015.
+
  */
 public class WearDataRequestTest extends TestCase {
 

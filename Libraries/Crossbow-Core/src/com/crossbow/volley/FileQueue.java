@@ -14,9 +14,10 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by Patrick on 24/03/2015.
+
  *
- * The file queue handles the creation of a queue and the dispatching of the file read/writes to separate threads. This is run independently of the normal com.android.com.crossbow.volley request queue.
+ * The file queue handles the creation of a queue and the dispatching of the file read/writes to
+ * separate threads. This is run independently of the normal {@link com.android.volley.RequestQueue RequestQueue}
  *
  * The default thread count is 3.
  */

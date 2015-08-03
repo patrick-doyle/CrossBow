@@ -16,9 +16,9 @@ import android.view.Gravity;
 import android.widget.ImageView;
 
 /**
- * Created by Patrick on 13/04/2015.
+
  *
- * Drawable wrapper that allows a ImageView.ScaleType to be applied to the
+ * Drawable wrapper that allows a ImageView.ScaleType to be applied to the wrapped drawable
  */
 public class ScaleTypeDrawable extends Drawable {
 

@@ -10,7 +10,7 @@ import junit.framework.TestCase;
 import java.io.File;
 
 /**
- * Created by Patrick on 26/03/2015.
+
  */
 public class FileRequestTest extends TestCase {
 

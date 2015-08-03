@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 import java.io.IOException;
 
 /**
- * Created by Patrick on 20/07/2015.
+ *
  */
 public class GZipperTest extends TestCase {
 

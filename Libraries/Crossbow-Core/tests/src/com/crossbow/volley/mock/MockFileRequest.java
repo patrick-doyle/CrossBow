@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by Patrick on 29/03/2015.
+
  */
 public class MockFileRequest extends FileRequest<String> {
 

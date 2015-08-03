@@ -1,11 +1,3 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.3'
-    }
-}
 
 apply plugin: 'com.android.library'
 
@@ -28,6 +20,10 @@ android {
             java.srcDirs         = ['src']
             manifest.srcFile 'AndroidManifest.xml'
 
+            java {
+                exclude '**com/crossbow/volley/**.java'
+                exclude '**com/android/volley/**.java'
+            }
         }
 
         androidTest.setRoot('tests')
@@ -46,7 +42,6 @@ android {
 apply from: 'maven.gradle'
 
 dependencies {
-    compile  project(':Libraries:Crossbow-Core')
     compile  project(':Libraries:Crossbow-Wear-Core')
     compile  'com.google.android.gms:play-services-wearable:7.5.0'
 }

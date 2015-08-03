@@ -5,7 +5,6 @@ import android.os.Bundle;
 import com.android.volley.ParseError;
 
 /**
- * Created by Patrick on 11/07/2015.
  * Used to change/shrink the response on the phone to make it easier for the wearable to handle. The ImageRequestTransformer is a good example.
  * All responses are gzipped to save on bluetooth bandwidth so using a ResponseTransformer to zid the response would be counter productive
  */

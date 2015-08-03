@@ -8,7 +8,8 @@ import com.crossbow.wear.toolbox.WearCrossbowBuilder;
 
 
 /**
- * Created by Patrick on 11/01/14.
+ * Used to get the correct version of crossbow that uses the {@link PlayNetwork} to transmit data to the
+ * handheld.
  */
 public class CrossbowWear {
 

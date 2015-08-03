@@ -11,7 +11,7 @@ import java.io.File;
 import java.util.LinkedList;
 
 /**
- * Created by Patrick on 24/03/2015.
+
  */
 public abstract class FileRequest<T> implements Comparable<FileRequest>{
 

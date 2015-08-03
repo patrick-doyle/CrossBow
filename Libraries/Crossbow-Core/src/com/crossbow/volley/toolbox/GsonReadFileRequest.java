@@ -13,6 +13,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Type;
 
+/**
+ * File Request for reading a json file and parsing it GSON. Needs to be subclassed to prevent
+ * java type erasure
+ * <code>
+ *    <pre>
+ *        GsonRequest request = new GsonRequest(params...){}; <-- important curly braces
+ *    </pre>
+ * </code>
+ */
 public abstract class GsonReadFileRequest<T> extends FileRequest<T> {
 
     private final FileResponse.Listener<T> listener;

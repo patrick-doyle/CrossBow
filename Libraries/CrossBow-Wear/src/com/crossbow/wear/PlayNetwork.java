@@ -31,7 +31,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by Patrick on 05/07/2015.
+ * Custom network that uses play services to send the requests to the handheld instead of the
+ * http stack
  */
 public class PlayNetwork implements Network, MessageApi.MessageListener {
 
@@ -135,7 +136,7 @@ public class PlayNetwork implements Network, MessageApi.MessageListener {
     }
 
     private String getBestNode(long timeOut) throws VolleyError {
-        final String nodeCompatibilty = context.getString(R.string.crossbow_compatbility);
+        final String nodeCompatibilty = context.getString(R.string.crossbow_compatibility);
         CapabilityApi.GetCapabilityResult nodes = Wearable.CapabilityApi.getCapability(googleApiClient, nodeCompatibilty, CapabilityApi.FILTER_REACHABLE).await(timeOut, TimeUnit.MILLISECONDS);
         String nodeID = null;
         Set<Node> nodeList = nodes.getCapability().getNodes();

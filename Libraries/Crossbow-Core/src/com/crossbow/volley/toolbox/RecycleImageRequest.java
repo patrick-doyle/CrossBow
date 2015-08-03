@@ -25,6 +25,9 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.ImageRequest;
 
+/**
+ * Subclass of {@link ImageRequest} that uses {@link ImageDecoder} to improve decoding and memory usage.
+ */
 public class RecycleImageRequest extends ImageRequest {
 
     private final int mMaxWidth;

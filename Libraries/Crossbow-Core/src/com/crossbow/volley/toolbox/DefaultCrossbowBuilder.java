@@ -16,7 +16,7 @@ import com.squareup.okhttp.OkHttpClient;
 import java.io.File;
 
 /**
- * Created by Patrick on 27/07/2015.
+
  */
 public class DefaultCrossbowBuilder extends CrossbowBuilder {
 

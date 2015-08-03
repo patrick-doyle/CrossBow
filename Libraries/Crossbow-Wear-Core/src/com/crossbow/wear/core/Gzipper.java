@@ -6,7 +6,7 @@ import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 /**
- * Created by Patrick on 20/07/2015.
+ * Util Class for zipping and unzipping data for sending it the watch
  */
 public class Gzipper {
 
@@ -16,14 +16,12 @@ public class Gzipper {
     public static byte[] unzip(byte[] rawData) {
         //seperate the first byte into data and flag
         byte flag = rawData[0];
-        byte[] data = new byte[rawData.length - 1];
-        System.arraycopy(rawData, 1, data, 0, data.length);
 
         if(flag == FLAG_COMPRESSED) {
             Inflater inflater = new Inflater();
-            inflater.setInput(data);
+            inflater.setInput(rawData, 1, rawData.length - 1);
 
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream(rawData.length - 1);
             byte[] buffer = new byte[1024];
             while (!inflater.finished()) {
                 int count = 0;
@@ -36,7 +34,13 @@ public class Gzipper {
             }
             return outputStream.toByteArray();
         }
-        return data;
+        else {
+            //data was compressed, strip the first flag byte off the data
+            byte[] data = new byte[rawData.length - 1];
+            System.arraycopy(rawData, 1, data, 0, data.length);
+            return data;
+        }
+
     }
 
     public static byte[] zip(byte[] data) {

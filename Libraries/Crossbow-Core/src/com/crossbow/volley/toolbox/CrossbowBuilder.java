@@ -7,7 +7,7 @@ import com.crossbow.volley.CrossbowImageCache;
 import com.crossbow.volley.FileQueue;
 
 /**
- * Created by Patrick on 27/07/2015.
+
  */
 public abstract class CrossbowBuilder {
 

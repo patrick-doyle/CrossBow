@@ -8,7 +8,9 @@ import com.crossbow.volley.toolbox.DefaultCrossbowBuilder;
 import com.crossbow.wear.PlayNetwork;
 
 /**
- * Created by Patrick on 27/07/2015.
+ * Used to get the correct version of WearCrossbowBuilder that uses the {@link PlayNetwork} to transmit
+ * data to the handheld. If you are writing a custom stack please use the {@link PlayNetwork} as
+ * the network or request will not be sent to wearable.
  */
 public class WearCrossbowBuilder extends DefaultCrossbowBuilder {
 

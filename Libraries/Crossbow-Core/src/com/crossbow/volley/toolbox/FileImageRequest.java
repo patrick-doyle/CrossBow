@@ -11,7 +11,7 @@ import com.crossbow.volley.FileResponse;
 import java.io.File;
 
 /**
- * Created by Patrick on 12/04/2015.
+
  */
 public class FileImageRequest extends FileRequest<Bitmap> {
 

@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * Created by Patrick on 13/04/2015.
+ * Similar function to {@link ImageLoader} except that it reads images from files instead of the network.
  */
 public class FileImageLoader {
 

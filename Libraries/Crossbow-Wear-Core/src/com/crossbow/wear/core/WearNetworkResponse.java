@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by Patrick on 11/07/2015.
+ * Internal class that wraps the volley NetworkResponse and can serialized
  */
 public class WearNetworkResponse {
 

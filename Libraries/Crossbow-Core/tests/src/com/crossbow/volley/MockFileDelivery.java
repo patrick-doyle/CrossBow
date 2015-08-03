@@ -3,7 +3,7 @@ package com.crossbow.volley;
 import com.android.volley.VolleyError;
 
 /**
- * Created by Patrick on 29/03/2015.
+
  *
  * Posts the reslts of the background thread of the dispactcher
  */

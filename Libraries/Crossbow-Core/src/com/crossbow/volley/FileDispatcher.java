@@ -8,7 +8,7 @@ import com.android.volley.VolleyError;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * Created by Patrick on 24/03/2015.
+
  */
 public class FileDispatcher extends Thread {
 

@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 /**
- * Created by Patrick on 03/07/2015.
+
  */
 public class FilesTest extends AndroidTestCase {
 

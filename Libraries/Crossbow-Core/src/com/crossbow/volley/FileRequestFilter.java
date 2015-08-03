@@ -1,7 +1,7 @@
 package com.crossbow.volley;
 
 /**
- * Created by Patrick on 06/04/2015.
+
  */
 public interface FileRequestFilter {
 

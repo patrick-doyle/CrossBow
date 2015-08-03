@@ -49,7 +49,7 @@ public class CacheDispatcher extends Thread {
     private volatile boolean mQuit = false;
 
     /**
-     * Creates a new cache triage dispatcher thread.  You must call {@link #start()}
+     s a new cache triage dispatcher thread.  You must call {@link #start()}
      * in order to begin processing.
      *
      * @param cacheQueue Queue of incoming requests for triage

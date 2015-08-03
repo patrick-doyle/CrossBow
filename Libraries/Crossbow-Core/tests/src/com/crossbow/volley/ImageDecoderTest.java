@@ -10,7 +10,7 @@ import com.crossbow.volley.toolbox.ImageDecoder;
 import java.io.File;
 
 /**
- * Created by Patrick on 03/07/2015.
+
  */
 public class ImageDecoderTest extends AndroidTestCase {
 

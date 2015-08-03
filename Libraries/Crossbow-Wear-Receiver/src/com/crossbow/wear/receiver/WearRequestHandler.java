@@ -26,7 +26,8 @@ import java.util.Map;
 import java.util.Queue;
 
 /**
- * Created by Patrick on 11/07/2015.
+ * Handles the creation and registering of the google play services client as well as
+ * sending the request from the wearable and send the response from the wearable
  */
 public class WearRequestHandler {
 
@@ -53,7 +54,7 @@ public class WearRequestHandler {
 
     public void sendRequest(MessageEvent messageEvent) {
         if(googlePlayServicesConnected) {
-            setInterRequest(messageEvent);
+            setWearRequest(messageEvent);
         }
         else {
             messages.add(messageEvent);
@@ -66,7 +67,7 @@ public class WearRequestHandler {
         }
     }
 
-    private void setInterRequest(MessageEvent messageEvent) {
+    private void setWearRequest(MessageEvent messageEvent) {
         byte[] data = messageEvent.getData();
         final String sourceNodeID = messageEvent.getSourceNodeId();
         try {
@@ -92,7 +93,7 @@ public class WearRequestHandler {
 
     private void sendPendingRequests() {
         while (!messages.isEmpty()) {
-            setInterRequest(messages.poll());
+            setWearRequest(messages.poll());
         }
     }
 

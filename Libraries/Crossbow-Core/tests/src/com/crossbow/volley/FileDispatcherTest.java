@@ -12,7 +12,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
- * Created by Patrick on 26/03/2015.
+
  */
 public class FileDispatcherTest extends TestCase {
 

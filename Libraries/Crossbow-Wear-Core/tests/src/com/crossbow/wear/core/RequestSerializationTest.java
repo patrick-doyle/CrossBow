@@ -21,7 +21,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Created by Patrick on 16/07/2015.
+
  */
 public class RequestSerializationTest extends TestCase {
 

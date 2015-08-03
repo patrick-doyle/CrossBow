@@ -3,7 +3,7 @@ package com.crossbow.volley;
 import com.android.volley.toolbox.ImageLoader;
 
 /**
- * Created by Patrick on 27/07/2015.
+
  */
 public interface CrossbowImageCache extends ImageLoader.ImageCache {
 

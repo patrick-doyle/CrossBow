@@ -89,23 +89,23 @@ public class ActivityMain extends Activity {
     }
 
     private void getBestNode(long timeOut){
-        final String nodeCompatibilty = getString(com.crossbow.wear.R.string.crossbow_compatbility);
+        final String nodeCompatibilty = getString(com.crossbow.wear.R.string.crossbow_compatibility);
         Wearable.CapabilityApi.getCapability(googleApiClient, nodeCompatibilty, CapabilityApi.FILTER_REACHABLE).setResultCallback(
-                new ResultCallback<CapabilityApi.GetCapabilityResult>() {
-                    @Override
-                    public void onResult(CapabilityApi.GetCapabilityResult nodes) {
-                        String nodeID = null;
-                        Set<Node> nodeList = nodes.getCapability().getNodes();
+            new ResultCallback<CapabilityApi.GetCapabilityResult>() {
+                @Override
+                public void onResult(CapabilityApi.GetCapabilityResult nodes) {
+                String nodeID = null;
+                Set<Node> nodeList = nodes.getCapability().getNodes();
 
-                        //get the nearest node
-                        for(Node node : nodeList) {
-                            if(node.isNearby()) {
-                                nodeID = node.getId();
-                                break;
-                            }
-                            nodeID = node.getId();
-                        }
-                        sendMessage(nodeID);
+                //get the nearest node
+                for(Node node : nodeList) {
+                    if(node.isNearby()) {
+                        nodeID = node.getId();
+                        break;
+                    }
+                    nodeID = node.getId();
+                }
+                sendMessage(nodeID);
                     }
                 }
         );

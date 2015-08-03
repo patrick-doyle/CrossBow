@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by Patrick on 27/07/2015.
+
  */
 public class OkHttpStack implements HttpStack {
 

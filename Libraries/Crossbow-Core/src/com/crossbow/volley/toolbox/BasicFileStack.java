@@ -15,9 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/**
- * Created by Patrick on 25/03/2015.
- */
 public class BasicFileStack implements FileStack {
 
     private AssetManager assetManager;

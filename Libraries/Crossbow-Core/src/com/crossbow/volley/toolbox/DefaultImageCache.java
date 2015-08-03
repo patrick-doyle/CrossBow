@@ -7,7 +7,7 @@ import android.support.v4.util.LruCache;
 
 import com.crossbow.volley.CrossbowImageCache;
 
-/**
+/*
  * Copyright (C) 2014 Patrick Doyle
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

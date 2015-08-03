@@ -1,16 +1,5 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        maven { url 'https://raw.github.com/xujiaao/mvn-repository/master/releases' }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.3'
-        classpath 'com.github.xujiaao:aarLinkSources:1.0.0'
-    }
-}
 
 apply plugin: 'com.android.library'
-apply plugin: 'aar-link-sources'
 
 android {
     compileSdkVersion 22

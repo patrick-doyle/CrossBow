@@ -1,11 +1,15 @@
 package com.crossbow.volley.toolbox;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
-import com.google.gson.Gson;
 
 /**
- * Created by Patrick on 27/07/2015.
+ * Wrapper around the {@link GsonRequest} for get requests. Needs to be subclassed to prevent
+ * java type erasure
+ * <code>
+ *    <pre>
+ *        GsonRequest request = new GsonRequest(params...){}; <-- important curly braces
+ *    </pre>
+ * </code>
  */
 public abstract class GsonGetRequest<T> extends GsonRequest<T> {
 

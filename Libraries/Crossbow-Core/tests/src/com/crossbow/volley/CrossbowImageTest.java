@@ -8,7 +8,7 @@ import android.test.AndroidTestCase;
 import android.widget.ImageView;
 
 /**
- * Created by Patrick on 27/06/2015.
+
  */
 public class CrossbowImageTest extends AndroidTestCase {
 

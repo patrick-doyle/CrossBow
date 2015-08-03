@@ -6,7 +6,8 @@ import android.support.annotation.CallSuper;
 import com.android.volley.RequestQueue;
 import com.crossbow.volley.toolbox.Crossbow;
 import com.crossbow.wear.core.ResponseTransformer;
-import com.crossbow.wear.core.WearFlags;
+import com.crossbow.wear.core.WearConstants;
+import com.crossbow.wear.core.WearRequest;
 import com.google.android.gms.wearable.CapabilityInfo;
 import com.google.android.gms.wearable.Channel;
 import com.google.android.gms.wearable.DataEventBuffer;
@@ -20,7 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Patrick on 11/07/2015.
+ * Base service for receiving requests form the wearable.
+ * Your WearableListenerService should extend this class instead.
+ * Any request transformers should be registered in the {@link #onGetTransformerMap()} and if you are using a
+ * custom CrossbowBuilder you need to set it with the {@link #onGetRequestQueue()} method
  */
 public class CrossbowListenerService extends WearableListenerService {
 
@@ -30,26 +34,45 @@ public class CrossbowListenerService extends WearableListenerService {
     private Map<String, ResponseTransformer> transformerMap = new HashMap<>();
 
     public CrossbowListenerService() {
-        transformerMap.put(WearFlags.IMAGE_TRANSFORMER_KEY, new ImageRequestTransformer());
+        transformerMap.put(WearConstants.IMAGE_TRANSFORMER_KEY, new ImageRequestTransformer());
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Map<String, ResponseTransformer> extraTransFormers = getTransformerMap();
+        Map<String, ResponseTransformer> extraTransFormers = onGetTransformerMap();
         if(extraTransFormers != null) {
             transformerMap.putAll(extraTransFormers);
         }
 
-        RequestQueue requestQueue = getRequestQueue();
+        RequestQueue requestQueue = onGetRequestQueue();
         dataItemHandler = new WearRequestHandler(this, requestQueue, transformerMap);
     }
 
-    public Map<String, ResponseTransformer> getTransformerMap() {
+    /**
+     * Used to register {@link ResponseTransformer}s needed to shrink network responses to a
+     * manageable size for the wearable
+     *
+     * @return a map of transformer keys to ResponseTransformer that match the key returned
+     * from the {@link WearRequest#getTransFormerKey()} method
+     */
+    public Map<String, ResponseTransformer> onGetTransformerMap() {
         return Collections.emptyMap();
     }
 
-    public RequestQueue getRequestQueue() {
+    /**
+     * If you using a custom set of crossbow/volley components you need to return the correct request
+     * queue here or a second request queue will be creating ignoring your custom set up. If you are using the default
+     * setup via
+     * <code>
+     *     <pre>
+     *         Crossbow.get(this).getRequestQueue()
+     *     </pre>
+     * </code>
+     * the you do not need to override this method.
+     * @return the request queue you are using.
+     */
+    public RequestQueue onGetRequestQueue() {
         return Crossbow.get(this).getRequestQueue();
     }
 
@@ -59,6 +82,12 @@ public class CrossbowListenerService extends WearableListenerService {
         dataItemHandler.disconnect();
     }
 
+    /**
+     * Used to tell if the message is from the watch. If this returns true you can ignore the message as it will be
+     * handled by the library
+     * @param messageEvent the message event received from {@link #onMessageReceived(MessageEvent)}
+     * @return true if the message was sent by crossbow wear from the wearable
+     */
     protected boolean isCrossBowMessage(MessageEvent messageEvent) {
         return WearRequestHandler.isWearMessage(messageEvent);
     }

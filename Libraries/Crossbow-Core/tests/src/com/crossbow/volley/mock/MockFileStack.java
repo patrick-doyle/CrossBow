@@ -9,7 +9,7 @@ import com.crossbow.volley.FileStack;
 import java.io.IOException;
 
 /**
- * Created by Patrick on 29/03/2015.
+
  */
 public class MockFileStack implements FileStack {
 

@@ -5,14 +5,13 @@ import android.os.Bundle;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.google.android.gms.wearable.DataMap;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by Patrick on 16/07/2015.
+ * Class used to flatten requests into a byte array for transmission over the wear apis
  */
 public class RequestSerialUtil {
 
@@ -46,6 +45,7 @@ public class RequestSerialUtil {
 
     public static byte[] serializeRequest(String uuid, Request<?> request) throws AuthFailureError, IOException {
 
+        //TODO write more efficient serializer to prevent key overhead
         DataMap dataMap = new DataMap();
         dataMap.putByteArray(POST_BODY, request.getBody());
         dataMap.putString(TAG, request.getTag() != null ? request.getTag().toString() : null);
@@ -78,7 +78,13 @@ public class RequestSerialUtil {
         if(request instanceof WearRequest) {
             WearRequest wearRequest = WearRequest.class.cast(request);
             dataMap.putString(TRANSFORMER, wearRequest.getTransFormerKey());
-            dataMap.putDataMap(TRANSFORMER_ARGS, DataMap.fromBundle(wearRequest.getTransformerParams()));
+            Bundle bundle = wearRequest.getTransformerParams();
+            if(bundle == null) {
+                dataMap.putDataMap(TRANSFORMER_ARGS, DataMap.fromBundle(new Bundle(0)));
+            }
+            else {
+                dataMap.putDataMap(TRANSFORMER_ARGS, DataMap.fromBundle(wearRequest.getTransformerParams()));
+            }
         }
         else {
             dataMap.putString(TRANSFORMER, "");

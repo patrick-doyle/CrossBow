@@ -10,7 +10,7 @@ import com.crossbow.volley.toolbox.NetworkImageLoader;
 import com.crossbow.wear.toolbox.WearImageRequest;
 
 /**
- * Created by Patrick on 10/07/2015.
+
  */
 public class WearImageLoader extends NetworkImageLoader {
     /**

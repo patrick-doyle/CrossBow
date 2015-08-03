@@ -5,7 +5,7 @@ import android.widget.AbsListView;
 import com.android.volley.RequestQueue;
 
 /**
- * Created by Patrick on 12/04/2015.
+
  */
 public class RelayScrollListener implements AbsListView.OnScrollListener {
 
