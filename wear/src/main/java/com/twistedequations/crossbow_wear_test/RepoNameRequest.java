@@ -39,12 +39,6 @@ public class RepoNameRequest extends Request<List<String>> {
         return Response.success(repoNames, HttpHeaderParser.parseCacheHeaders(response));
     }
 
-
-    @Override
-    public String getCacheKey() {
-        return UUID.randomUUID().toString();
-    }
-
     @Override
     protected void deliverResponse(List<String> response) {
         listListener.onResponse(response);
