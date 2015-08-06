@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Patrick on 26/07/2015.
@@ -36,6 +37,12 @@ public class RepoNameRequest extends Request<List<String>> {
             repoNames.add(repo.name);
         }
         return Response.success(repoNames, HttpHeaderParser.parseCacheHeaders(response));
+    }
+
+
+    @Override
+    public String getCacheKey() {
+        return UUID.randomUUID().toString();
     }
 
     @Override

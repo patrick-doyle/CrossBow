@@ -6,7 +6,7 @@ import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 /**
- * Util Class for zipping and unzipping data for sending it the watch
+ * Util Class for zipping and unzipping data for sending it the wearable
  */
 public class Gzipper {
 
@@ -35,7 +35,7 @@ public class Gzipper {
             return outputStream.toByteArray();
         }
         else {
-            //data was compressed, strip the first flag byte off the data
+            //data was not compressed, strip the first flag byte off the data
             byte[] data = new byte[rawData.length - 1];
             System.arraycopy(rawData, 1, data, 0, data.length);
             return data;

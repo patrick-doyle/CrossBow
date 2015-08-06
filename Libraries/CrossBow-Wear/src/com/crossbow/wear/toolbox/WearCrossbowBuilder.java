@@ -2,10 +2,13 @@ package com.crossbow.wear.toolbox;
 
 import android.content.Context;
 
+import com.android.volley.Cache;
 import com.android.volley.Network;
+import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HttpStack;
 import com.crossbow.volley.toolbox.DefaultCrossbowBuilder;
 import com.crossbow.wear.PlayNetwork;
+import com.squareup.okhttp.OkHttpClient;
 
 /**
  * Used to get the correct version of WearCrossbowBuilder that uses the {@link PlayNetwork} to transmit
@@ -19,7 +22,24 @@ public class WearCrossbowBuilder extends DefaultCrossbowBuilder {
     }
 
     @Override
+    public OkHttpClient onCreateHttpClient() {
+        return null;
+    }
+
+    @Override
+    public HttpStack onCreateHttpStack(OkHttpClient okHttpClient) {
+        return null;
+    }
+
+    @Override
     public Network onCreateNetwork(HttpStack httpStack) {
         return new PlayNetwork(getContext());
+    }
+
+    @Override
+    public RequestQueue onCreateRequestQueue(Cache cache, Network network) {
+        RequestQueue requestQueue = new RequestQueue(cache, network, 3);
+        requestQueue.start();
+        return requestQueue;
     }
 }

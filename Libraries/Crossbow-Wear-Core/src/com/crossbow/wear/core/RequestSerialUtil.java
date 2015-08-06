@@ -33,7 +33,7 @@ public class RequestSerialUtil {
         dataStream.writeUTF(uuid);
 
         //byte arrays
-        writeBytes(dataStream, request.getBody());
+        SerialUtil.writeBytes(dataStream, request.getBody());
 
         //Strings
         dataStream.writeUTF(request.getTag() != null ? request.getTag().toString() : "");
@@ -50,7 +50,7 @@ public class RequestSerialUtil {
         dataStream.writeInt(request.getRetryPolicy().getCurrentRetryCount());
 
         //map of headers
-        writeMap(dataStream, request.getHeaders());
+        SerialUtil.writeMap(dataStream, request.getHeaders());
 
         //transformer key and bundle
         if(request instanceof WearRequest) {
@@ -86,7 +86,7 @@ public class RequestSerialUtil {
         String uuid = dataStream.readUTF();
 
         //byte arrays
-        byte[] postBody = readBytes(dataStream);
+        byte[] postBody = SerialUtil.readBytes(dataStream);
 
         //Strings
         String tag = dataStream.readUTF();
@@ -103,7 +103,7 @@ public class RequestSerialUtil {
         int retryies = dataStream.readInt();
 
         //headers
-        Map<String, String> headers = readMap(dataStream);
+        Map<String, String> headers = SerialUtil.readMap(dataStream);
 
         //transformer key, bundle
         String transformerKey = dataStream.readUTF();
@@ -113,50 +113,6 @@ public class RequestSerialUtil {
         return new WearDataRequest(method, url, uuid, transformerKey,
                 retryies, timeout, cacheKey, tag, bodyType,
                 headers, postBody, priority, transformerArgs);
-    }
-
-    private static void writeMap(DataOutputStream outputStream, Map<String, String> map) throws IOException {
-        //Write size, then key-values
-        outputStream.writeInt(map.size());
-        Set<Map.Entry<String, String>> entries = map.entrySet();
-        for(Map.Entry<String, String> entry : entries) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            outputStream.writeUTF(key);
-            outputStream.writeUTF(value);
-        }
-    }
-
-    private static void writeBytes(DataOutputStream outputStream, byte[] data) throws IOException {
-        //Write size, then key-values
-        if(data != null) {
-            outputStream.writeInt(data.length);
-            outputStream.write(data);
-        }
-        else {
-            outputStream.writeInt(0);
-            outputStream.write(new byte[0]);
-        }
-    }
-
-    private static byte[] readBytes(DataInputStream outputStream) throws IOException {
-        //Write size, then key-values
-        int size = outputStream.readInt();
-        byte[] data = new byte[size];
-        outputStream.read(data);
-        return data;
-    }
-
-    private static Map<String, String> readMap(DataInputStream dataInputStream) throws IOException {
-        //Read size, then key-values in a loop
-        int size = dataInputStream.readInt();
-        Map<String, String> map = new HashMap<>(size);
-        for (int i = 0; i < size; i++) {
-            String key = dataInputStream.readUTF();
-            String value = dataInputStream.readUTF();
-            map.put(key, value);
-        }
-        return map;
     }
 
 

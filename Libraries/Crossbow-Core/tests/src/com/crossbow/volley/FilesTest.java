@@ -3,6 +3,7 @@ package com.crossbow.volley;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
+import com.android.volley.VolleyError;
 import com.crossbow.volley.toolbox.Files;
 
 import java.io.File;
@@ -20,19 +21,19 @@ public class FilesTest extends AndroidTestCase {
     }
 
     @SmallTest
-    public void testFileAssetStringRead() throws IOException {
+    public void testFileAssetStringRead() throws VolleyError {
         String data = Files.readAssetString(getContext(), "test-file.txt");
         assertEquals("testfilecontents", data);
     }
 
     @SmallTest
-    public void testFileAssetRead() throws IOException {
+    public void testFileAssetRead() throws VolleyError {
         byte[] data = Files.readAssetData(getContext(), "test-file.txt");
         assertTrue(Arrays.equals("testfilecontents".getBytes(), data));
     }
 
     @SmallTest
-    public void testFileAssetCopy() throws IOException {
+    public void testFileAssetCopy() throws VolleyError {
         File testCopy = new File(getContext().getFilesDir() + File.separator + "test-dir");
         testCopy.mkdirs();
         testCopy = new File(testCopy, "files-test.test");
@@ -43,7 +44,7 @@ public class FilesTest extends AndroidTestCase {
     }
 
     @SmallTest
-    public void testFileWrite() throws IOException {
+    public void testFileWrite() throws VolleyError {
         File testCopy = new File(getContext().getFilesDir() + File.separator + "test-dir");
         testCopy.mkdirs();
         testCopy = new File(testCopy, "files-write1.test");
@@ -52,7 +53,7 @@ public class FilesTest extends AndroidTestCase {
     }
 
     @SmallTest
-    public void testFileWriteData() throws IOException {
+    public void testFileWriteData() throws VolleyError {
         File testCopy = new File(getContext().getFilesDir() + File.separator + "test-dir");
         testCopy.mkdirs();
         testCopy = new File(testCopy, "files-write-data.test");
@@ -61,7 +62,7 @@ public class FilesTest extends AndroidTestCase {
     }
 
     @SmallTest
-    public void testFileWriteLines() throws IOException {
+    public void testFileWriteLines() throws VolleyError {
         File testCopy = new File(getContext().getFilesDir() + File.separator + "test-dir");
         testCopy.mkdirs();
         testCopy = new File(testCopy, "files-write-lines.test");

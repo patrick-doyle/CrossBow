@@ -1,6 +1,7 @@
 package com.crossbow.wear;
 
 import android.content.Context;
+import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -40,9 +41,9 @@ public class PlayNetwork implements Network, MessageApi.MessageListener {
     private final boolean serviceAvaiable;
     private final int playServicesAvaibleCode;
 
-    private final Map<String, CountDownLatch> latchMap = Collections.synchronizedMap(new HashMap<String, CountDownLatch>());
-    private final Map<String, WearNetworkResponse> responsesMap = Collections.synchronizedMap(new HashMap<String, WearNetworkResponse>());
-    private final Set<String> inflightUuids = Collections.synchronizedSet(new HashSet<String>());
+    private final Map<String, CountDownLatch> latchMap = Collections.synchronizedMap(new ArrayMap<String, CountDownLatch>(7));
+    private final Map<String, WearNetworkResponse> responsesMap = Collections.synchronizedMap(new ArrayMap<String, WearNetworkResponse>(7));
+    private final Set<String> inflightUuids = Collections.synchronizedSet(new HashSet<String>(7));
     private Context context;
 
     public PlayNetwork(Context context) {

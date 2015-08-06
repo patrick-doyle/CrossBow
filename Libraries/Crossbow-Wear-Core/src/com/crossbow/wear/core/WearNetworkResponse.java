@@ -14,21 +14,21 @@ import java.util.Set;
  */
 public class WearNetworkResponse {
 
-    private static final String RESPONSE_STATUS_CODE = "com.crossbow.wear.response.status";
+    private static final String RESPONSE_STATUS_CODE = "c.cb.w.re.stat";
 
-    private static final String RESPONSE_UUID = "com.crossbow.wear.response.uuid";
+    private static final String RESPONSE_UUID = "c.cb.w.re.uuid";
 
-    private static final String RESPONSE_DATA = "com.crossbow.wear.response.data";
+    private static final String RESPONSE_DATA = "c.cb.w.re.data";
 
-    private static final String RESPONSE_HEADER_KEYS = "com.crossbow.wear.response.headers_keys";
+    private static final String RESPONSE_HEADER_KEYS = "c.cb.w.re.head_k";
 
-    private static final String RESPONSE_HEADER_VALUES = "com.crossbow.wear.response.headers_values";
+    private static final String RESPONSE_HEADER_VALUES = "c.cb.w.re.head_v";
 
-    private static final String RESPONSE_MODIFED = "com.crossbow.wear.response.modified";
+    private static final String RESPONSE_MODIFED = "c.cb.w.re.mod";
 
-    private static final String RESPONSE_NETWORK_TIME = "com.crossbow.wear.response.network_time";
+    private static final String RESPONSE_NETWORK_TIME = "c.cb.w.re.time";
 
-    private static final String RESPONSE_SUCCESS = "com.crossbow.wear.response.success";
+    private static final String RESPONSE_SUCCESS = "c.cb.w.re.suc";
 
     public final String uuid;
 

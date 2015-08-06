@@ -39,6 +39,9 @@ public class ActivityDetails extends Activity {
 
     GoogleApiClient googleApiClient;
 
+    long start;
+    int returnedCount = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,22 +55,38 @@ public class ActivityDetails extends Activity {
         progressBar.setVisibility(View.VISIBLE);
         textView.setText(null);
         Log.d("Activity", "Sending request");
-        RepoNameRequest repoNameRequest = new RepoNameRequest("https://api.github.com/users/twistedequations/repos", new Response.Listener<List<String>>() {
-            @Override
-            public void onResponse(List<String> response) {
-                Log.d("Activity", "response = " + response);
-                progressBar.setVisibility(View.GONE);
-                textView.setText(TextUtils.join("\n", response));
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Activity", "error = " + error);
-                progressBar.setVisibility(View.GONE);
-                textView.setText("error = " + error);
-            }
-        });
-        CrossbowWear.get(this).add(repoNameRequest);
+
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 10; i++) {
+            RepoNameRequest repoNameRequest = new RepoNameRequest("https://api.github.com/users/twistedequations/repos", new Response.Listener<List<String>>() {
+                @Override
+                public void onResponse(List<String> response) {
+                    Log.d("Activity", "response = " + response);
+                    //textView.setText(TextUtils.join("\n", response));
+                    onReturn();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("Activity", "error = " + error);
+                    progressBar.setVisibility(View.GONE);
+                    textView.setText("error = " + error);
+                    onReturn();
+                }
+            });
+            CrossbowWear.get(this).add(repoNameRequest);
+        }
+    }
+
+    private void onReturn() {
+        returnedCount ++;
+        progressBar.setVisibility(View.GONE);
+        if(returnedCount == 10) {
+            textView.setText("10 Requests took " +(System.currentTimeMillis() - start));
+        }
+        else {
+            textView.setText("returnedCount = " +returnedCount);
+        }
     }
 
 }

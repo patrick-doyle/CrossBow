@@ -16,8 +16,8 @@ public class CrossbowWear {
     private static Crossbow crossbow;
 
     public static Crossbow get(Context context) {
-        WearCrossbowBuilder crossbowBuilder = new WearCrossbowBuilder(context);
         if(crossbow == null) {
+            WearCrossbowBuilder crossbowBuilder = new WearCrossbowBuilder(context);
             crossbow = new Crossbow(context, crossbowBuilder);
         }
         return crossbow;

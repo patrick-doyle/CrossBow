@@ -27,12 +27,7 @@ public class MockFileRequest extends FileRequest<String> {
 
     @Override
     public FileResponse<String> doFileWork(File file) throws VolleyError {
-        try {
-            return FileResponse.success(new String(Files.readFileData(file)));
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new VolleyError(e);
-        }
+        return FileResponse.success(new String(Files.readFileData(file)));
     }
 
     @Override

@@ -520,11 +520,12 @@ public class CrossbowImage implements ViewTreeObserver.OnPreDrawListener, ImageL
         /**
          * Starts the image load
          */
-        public void load() {
+        public CrossbowImage load() {
             if(crossbowImage.imageView == null) {
                 throw new IllegalArgumentException("Image view must not by null");
             }
             crossbowImage.load();
+            return crossbowImage;
         }
 
         public Builder into(@NonNull ImageView imageView) {

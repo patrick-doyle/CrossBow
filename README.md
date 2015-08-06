@@ -1,4 +1,4 @@
-Crossbow (In Development, not ready for use)
+Crossbow - (Testing for release)
 ===========
 
 Extension to the Volley library adding an easy to use wrapper around Volley. Supports android 2.3
@@ -323,8 +323,8 @@ public class CustomWearService extends CrossbowListenerService {
     </intent-filter>
 </service>
 ```
-If you happen to a custom crossbow instance or custom components to need to let the CrossbowListenerService know
-what RequestQueue to use for the wear requests. This is done is you subclass of CrossbowListenerService and overriding the
+If you are using a custom crossbow instance or custom components you to need to let the CrossbowListenerService know
+what RequestQueue to use for the wear requests. This is done is your subclass of CrossbowListenerService and overriding the
 getRequestQueue() method.
 ```java
 public class CustomWearService extends CrossbowListenerService {
@@ -453,3 +453,20 @@ public class WearMessageService extends CrossbowListenerService {
 ```
 
 }
+
+## License
+
+```
+Copyright 2015 Patrick Doyle
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.

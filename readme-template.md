@@ -323,8 +323,8 @@ public class CustomWearService extends CrossbowListenerService {
     </intent-filter>
 </service>
 ```
-If you happen to a custom crossbow instance or custom components to need to let the CrossbowListenerService know
-what RequestQueue to use for the wear requests. This is done is you subclass of CrossbowListenerService and overriding the
+If you are using a custom crossbow instance or custom components you to need to let the CrossbowListenerService know
+what RequestQueue to use for the wear requests. This is done is your subclass of CrossbowListenerService and overriding the
 getRequestQueue() method.
 ```java
 public class CustomWearService extends CrossbowListenerService {
