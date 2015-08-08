@@ -1,5 +1,6 @@
 Crossbow
 ===========
+[ ![Download](https://api.bintray.com/packages/twistedequations/maven/crossbow-wear-receiver/images/download.svg) ](https://bintray.com/twistedequations/maven/crossbow-wear-receiver/_latestVersion)
 
 Extension to the Volley library adding an easy to use wrapper around Volley. Supports android 2.3
 and up on phones and 4.3 and up for the wear module

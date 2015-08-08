@@ -85,7 +85,6 @@ bintray {
     user = bintayProps.getProperty("user")
     key = bintayProps.getProperty("key")
     configurations = ['archives']
-    dryRun = mavenProps.getProperty("dryRun")
     pkg {
         repo = 'maven'
         name = 'crossbow'
