@@ -1,6 +1,7 @@
 
 
 apply plugin: 'com.android.library'
+apply from: '../shared-code/dependencies.gradle'
 
 android {
     compileSdkVersion 22
@@ -13,16 +14,16 @@ android {
 
         main {
             assets.srcDirs       = ['assets']
-            res.srcDirs          = ['res']
+            res.srcDirs          = ['res', '../shared-code/crossbow-wear-core/main/res']
             aidl.srcDirs         = ['src']
             resources.srcDirs    = ['src']
             renderscript.srcDirs = ['src']
-            java.srcDirs         = ['src']
+            java.srcDirs         = ['src', '../shared-code/crossbow-core/main/src', '../shared-code/crossbow-wear-core/main/src']
             manifest.srcFile 'AndroidManifest.xml'
         }
 
-        androidTest.setRoot('tests')
-        androidTest.java.srcDirs = ['tests/src']
+        androidTest.java.srcDirs = ['tests/src', '../shared-code/crossbow-core/test/src', '../shared-code/crossbow-wear-core/main/src']
+        androidTest.assets.srcDirs = ['../shared-code/crossbow-core/test/assets']
     }
     
     lintOptions {
@@ -37,7 +38,5 @@ android {
 apply from: 'maven.gradle'
 
 dependencies {
-    compile project(':Libraries:Crossbow-Core')
-    compile project(':Libraries:Crossbow-Wear-Core')
     compile 'com.google.android.gms:play-services-wearable:7.5.0'
 }

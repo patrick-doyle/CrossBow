@@ -1,0 +1,7 @@
+
+
+dependencies {
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.google.code.gson:gson:2.3'
+    compile 'com.android.support:support-v4:22.2.1'
+}

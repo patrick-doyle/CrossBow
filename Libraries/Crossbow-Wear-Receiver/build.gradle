@@ -1,5 +1,6 @@
 
 apply plugin: 'com.android.library'
+apply from: '../shared-code/dependencies.gradle'
 
 android {
 
@@ -12,24 +13,27 @@ android {
         }
 
         main {
-            assets.srcDirs       = ['assets']
-            res.srcDirs          = ['res']
-            aidl.srcDirs         = ['src']
-            resources.srcDirs    = ['src']
+            assets.srcDirs = ['assets']
+            res.srcDirs = ['res', '../shared-code/crossbow-wear-core/main/res']
+            aidl.srcDirs = ['src']
+            resources.srcDirs = ['src']
             renderscript.srcDirs = ['src']
-            java.srcDirs         = ['src']
             manifest.srcFile 'AndroidManifest.xml'
 
             java {
-                exclude '**com/crossbow/volley/**.java'
-                exclude '**com/android/volley/**.java'
+                srcDirs = ['src', '../shared-code/crossbow-wear-core/main/src']
             }
         }
 
-        androidTest.setRoot('tests')
-        androidTest.java.srcDirs = ['tests/src']
+        androidTest.java.srcDirs = ['tests/src', '../shared-code/crossbow-wear-core/test/src']
+        androidTest.assets.srcDirs = ['tests/src', '../shared-code/crossbow-wear-core/test/src']
     }
-    
+
+    packagingOptions {
+        exclude 'com/crossbow/volley/**'
+        exclude 'com/android/volley/**'
+    }
+
     lintOptions {
         abortOnError false
     }
@@ -39,9 +43,15 @@ android {
     }
 }
 
+task androidReleaseJar(type: Jar, dependsOn: assembleRelease) {
+    from "$buildDir/intermediates/classes/release/"
+    exclude 'com/crossbow/volley/**.class'
+    exclude 'com/android/volley/**.class'
+}
+
 apply from: 'maven.gradle'
 
 dependencies {
-    compile  project(':Libraries:Crossbow-Wear-Core')
+    provided project(':Libraries:crossbow')
     compile  'com.google.android.gms:play-services-wearable:7.5.0'
 }

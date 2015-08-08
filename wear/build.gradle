@@ -27,5 +27,5 @@ android {
 dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.google.android.support:wearable:1.2.0'
-    compile project(':Libraries:CrossBow-Wear')
+    compile project(':Libraries:crossbow-wear')
 }

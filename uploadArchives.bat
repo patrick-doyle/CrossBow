@@ -1,4 +1,4 @@
 call gradlew copyReadme ^
-:Libraries:CrossBow:build :Libraries:CrossBow:bintrayUpload ^
-:Libraries:CrossBow-Wear:build :Libraries:CrossBow-Wear:bintrayUpload ^
-:Libraries:Crossbow-Wear-Receiver:build :Libraries:Crossbow-Wear-Receiver:bintrayUpload
+:Libraries:crossbow:build :Libraries:crossbow:bintrayUpload ^
+:Libraries:crossbow-wear:build :Libraries:crossbow-wear:bintrayUpload ^
+:Libraries:crossbow-wear-receiver:build :Libraries:crossbow-wear-receiver:bintrayUpload

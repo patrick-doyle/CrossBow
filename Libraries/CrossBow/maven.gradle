@@ -28,7 +28,7 @@ install {
                 packaging 'aar'
 
                 // Add your description here
-                name 'Crossbow'
+                name 'crossbow'
                 description = mavenProps.getProperty("desc")
                 url = mavenProps.getProperty("siteUrl")
 
@@ -85,6 +85,7 @@ bintray {
     user = bintayProps.getProperty("user")
     key = bintayProps.getProperty("key")
     configurations = ['archives']
+
     pkg {
         repo = 'maven'
         name = 'crossbow'

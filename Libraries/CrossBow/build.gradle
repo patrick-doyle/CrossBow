@@ -1,6 +1,8 @@
 
 apply plugin: 'com.android.library'
 
+apply from: '../shared-code/dependencies.gradle'
+
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
@@ -16,13 +18,14 @@ android {
             aidl.srcDirs         = ['src']
             resources.srcDirs    = ['src']
             renderscript.srcDirs = ['src']
-            java.srcDirs         = ['src']
+            java.srcDirs         = ['src', '../shared-code/crossbow-core/main/src']
             manifest.srcFile 'AndroidManifest.xml'
 
         }
 
         androidTest.setRoot('tests')
-        androidTest.java.srcDirs = ['tests/src']
+        androidTest.java.srcDirs = ['tests/src', '../shared-code/crossbow-core/test/src']
+        androidTest.assets.srcDirs += ['../shared-code/crossbow-core/test/assets']
     }
     
     lintOptions {
@@ -32,11 +35,6 @@ android {
     dexOptions {
         preDexLibraries = false
     }
-}
-
-
-dependencies {
-    compile project(':Libraries:Crossbow-Core')
 }
 
 apply from: 'maven.gradle'

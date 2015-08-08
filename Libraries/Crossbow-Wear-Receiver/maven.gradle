@@ -28,7 +28,7 @@ install {
                 packaging 'aar'
 
                 // Add your description here
-                name 'Crossbow-Wear'
+                name 'crossbow-wear-receiver'
                 description = mavenProps.getProperty("desc")
                 url = mavenProps.getProperty("siteUrl")
 
