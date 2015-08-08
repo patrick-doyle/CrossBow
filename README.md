@@ -1,4 +1,4 @@
-Crossbow - (Testing for release)
+Crossbow
 ===========
 
 Extension to the Volley library adding an easy to use wrapper around Volley. Supports android 2.3
@@ -26,7 +26,7 @@ buildscript {
 Add the Crossbow dependency to your build.gradle in your wear project
 ```groovy
 dependencies {
-    compile 'com.twistedequations.crossbow:crossbow:0.8.3'
+    compile 'com.twistedequations.crossbow:crossbow:0.8.4'
 }
 ```
 
@@ -246,16 +246,12 @@ imageLoader.get("/images/image.png", new FileImageLoader.Listener() {
 Using Custom Volley Components
 ------
 
-If you want to use your own components you can extend CrossbowBuilder or its simpler subclass
-DefaultCrossbowBuilder which has hooks to override the default components. If you wanted to use a
+If you want to use your own components you can implement CrossbowComponents or its simpler subclass
+DefaultCrossbowComponents which has hooks to override the default components. If you wanted to use a
 custom network of a different OkHttpClient
 
 ```java
-public class CustomCrossbowBuilder extends CrossbowBuilder {
-
-    public CustomCrossbowBuilder(Context context) {
-        super(context);
-    }
+public class CustomCrossbowBuilder extends DefaultCrossbowComponents {
 
     @Override
     public Network onCreateNetwork(HttpStack httpStack) {
@@ -268,14 +264,25 @@ public class CustomCrossbowBuilder extends CrossbowBuilder {
     }
 }
 ```
-And apply it using
+And register it using in the application class
 ```java
-CrossBow crossbow = new Crossbow(context, crossbowComponents);
+Crossbow.initialize(context, components);
 ```
+or any where before calling
+```java
+Crossbow.get(context);
+```
+for the first time.
 
-This CrossBow instance is not a singleton so you need to wrap it in a singleton or use it in a way that makes
-it behave like a singleton.
+If you want to manage the crossbow singleton yourself you can use
+```java
+Crossbow crossbow = new Crossbow(crossbow, components);
+```
+and store it manually in the application for a singleton wrapper.
 
+Note:
+If you use dagger2 you can extend the CrossbowComponents interface and annotate it with a module to
+use dependency injection
 
 Crossbow Wear
 ===========
@@ -289,7 +296,7 @@ Setup
 Add the CrossbowWear dependency to your build.gradle in your wear project
 ```groovy
 dependencies {
-    compile 'com.twistedequations.crossbow:crossbow-wear:0.8.3'
+    compile 'com.twistedequations.crossbow:crossbow-wear:0.8.4'
 }
 ```
 
@@ -297,8 +304,8 @@ On the Handheld app you need to have the main Crossbow and the Crossbow wear rec
 handle the in oncoming requests from the wearable
 ```groovy
 dependencies {
- compile 'com.twistedequations.crossbow:crossbow:0.8.3'
- compile 'com.twistedequations.crossbow:crossbow-wear-receiver:0.8.3'
+ compile 'com.twistedequations.crossbow:crossbow:0.8.4'
+ compile 'com.twistedequations.crossbow:crossbow-wear-receiver:0.8.4'
 }
 ```
 
