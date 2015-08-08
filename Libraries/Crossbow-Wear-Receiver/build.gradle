@@ -1,6 +1,5 @@
 
 apply plugin: 'com.android.library'
-apply from: '../shared-code/dependencies.gradle'
 
 android {
 
@@ -25,8 +24,7 @@ android {
             }
         }
 
-        androidTest.java.srcDirs = ['tests/src', '../shared-code/crossbow-wear-core/test/src']
-        androidTest.assets.srcDirs = ['tests/src', '../shared-code/crossbow-wear-core/test/src']
+        androidTest.setRoot('tests')
     }
 
     packagingOptions {

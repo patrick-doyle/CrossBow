@@ -24,8 +24,7 @@ android {
         }
 
         androidTest.setRoot('tests')
-        androidTest.java.srcDirs = ['tests/src', '../shared-code/crossbow-core/test/src']
-        androidTest.assets.srcDirs += ['../shared-code/crossbow-core/test/assets']
+        androidTest.java.srcDirs += ['tests/src']
     }
     
     lintOptions {

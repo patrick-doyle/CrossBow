@@ -186,7 +186,7 @@ public class CrossbowImage implements ViewTreeObserver.OnPreDrawListener, ImageL
     }
 
     @VisibleForTesting
-    void setBitmap(Bitmap bitmap, boolean fromCache) {
+    public void setBitmap(Bitmap bitmap, boolean fromCache) {
         ImageView imageView = this.imageView.get();
         if (bitmap != null && imageView != null) {
 
@@ -229,7 +229,7 @@ public class CrossbowImage implements ViewTreeObserver.OnPreDrawListener, ImageL
     }
 
     @VisibleForTesting
-    void setError(VolleyError volleyError) {
+    public void setError(VolleyError volleyError) {
         ImageView imageView = this.imageView.get();
         if(imageView == null) {
             return;

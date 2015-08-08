@@ -22,8 +22,8 @@ android {
             manifest.srcFile 'AndroidManifest.xml'
         }
 
-        androidTest.java.srcDirs = ['tests/src', '../shared-code/crossbow-core/test/src', '../shared-code/crossbow-wear-core/main/src']
-        androidTest.assets.srcDirs = ['../shared-code/crossbow-core/test/assets']
+        androidTest.setRoot('tests')
+        androidTest.java.srcDirs += ['tests/src']
     }
     
     lintOptions {
