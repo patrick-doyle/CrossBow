@@ -26,7 +26,7 @@ buildscript {
 Add the Crossbow dependency to your build.gradle in your wear project
 ```groovy
 dependencies {
-    compile 'com.twistedequations.crossbow:crossbow:0.8.2'
+    compile 'com.twistedequations.crossbow:crossbow:0.8.3'
 }
 ```
 
@@ -270,7 +270,7 @@ public class CustomCrossbowBuilder extends CrossbowBuilder {
 ```
 And apply it using
 ```java
-CrossBow crossbow = new Crossbow(context, crossbowBuilder);
+CrossBow crossbow = new Crossbow(context, crossbowComponents);
 ```
 
 This CrossBow instance is not a singleton so you need to wrap it in a singleton or use it in a way that makes
@@ -289,7 +289,7 @@ Setup
 Add the CrossbowWear dependency to your build.gradle in your wear project
 ```groovy
 dependencies {
-    compile 'com.twistedequations.crossbow:crossbow-wear:0.8.2'
+    compile 'com.twistedequations.crossbow:crossbow-wear:0.8.3'
 }
 ```
 
@@ -297,8 +297,8 @@ On the Handheld app you need to have the main Crossbow and the Crossbow wear rec
 handle the in oncoming requests from the wearable
 ```groovy
 dependencies {
- compile 'com.twistedequations.crossbow:crossbow:0.8.2'
- compile 'com.twistedequations.crossbow:crossbow-wear-receiver:0.8.2'
+ compile 'com.twistedequations.crossbow:crossbow:0.8.3'
+ compile 'com.twistedequations.crossbow:crossbow-wear-receiver:0.8.3'
 }
 ```
 

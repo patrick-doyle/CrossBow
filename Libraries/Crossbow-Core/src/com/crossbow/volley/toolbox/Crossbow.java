@@ -12,9 +12,6 @@ import com.crossbow.volley.FileRequest;
 import com.crossbow.volley.FileRequestFilter;
 
 public class Crossbow {
-
-    private static final String TAG = "Crossbow";
-
     private Context context;
 
     private RequestQueue requestQueue;
@@ -27,27 +24,39 @@ public class Crossbow {
 
     private CrossbowImageCache imageCache;
 
-    private static Crossbow defaultInstance;
+    private static Crossbow instance;
 
     /**
      * Creates a singleton stack that uses the default components.
      * @param context context of the application
      */
     public static Crossbow get(Context context) {
-        if(defaultInstance == null) {
-            //Create a custom stack
-            defaultInstance = new Crossbow(context, new DefaultCrossbowBuilder(context));
+        if(instance == null) {
+            initialize(context);
         }
-        return defaultInstance;
+        return instance;
     }
 
-    public Crossbow(Context context, CrossbowBuilder crossbowBuilder) {
+    /**
+     * Called in the application class to pass in a different CrossbowComponents instance
+     * @param context the application context
+     * @param crossbowComponents interface for providing the parts needed for crossbow to work
+     */
+    public static void initialize(Context context, CrossbowComponents crossbowComponents) {
+        instance = new Crossbow(context, crossbowComponents);
+    }
+
+    public static void initialize(Context context) {
+        initialize(context, new DefaultCrossbowComponents(context));
+    }
+
+    public Crossbow(Context context, CrossbowComponents crossbowComponents) {
         this.context = context.getApplicationContext();
-        this.requestQueue = crossbowBuilder.getRequestQueue();
-        this.imageLoader = crossbowBuilder.getImageLoader();
-        this.imageCache = crossbowBuilder.getImageCache();
-        this.fileQueue = crossbowBuilder.getFileQueue();
-        this.fileImageLoader = crossbowBuilder.getFileImageLoader();
+        this.requestQueue = crossbowComponents.provideRequestQueue();
+        this.imageLoader = crossbowComponents.provideImageLoader();
+        this.imageCache = crossbowComponents.provideImageCache();
+        this.fileQueue = crossbowComponents.provideFileQueue();
+        this.fileImageLoader = crossbowComponents.provideFileImageLoader();
     }
 
     public CrossbowImage.Builder loadImage() {

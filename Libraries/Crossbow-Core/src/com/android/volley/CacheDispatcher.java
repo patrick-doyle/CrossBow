@@ -64,6 +64,7 @@ public class CacheDispatcher extends Thread {
         mNetworkQueue = networkQueue;
         mCache = cache;
         mDelivery = delivery;
+        setName("Crossbow-Cache-Thread");
     }
 
     /**

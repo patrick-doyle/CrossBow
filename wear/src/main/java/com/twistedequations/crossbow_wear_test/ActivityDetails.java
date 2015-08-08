@@ -57,7 +57,7 @@ public class ActivityDetails extends Activity {
         Log.d("Activity", "Sending request");
 
         start = System.currentTimeMillis();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             RepoNameRequest repoNameRequest = new RepoNameRequest("https://api.github.com/users/twistedequations/repos", new Response.Listener<List<String>>() {
                 @Override
                 public void onResponse(List<String> response) {
@@ -81,7 +81,7 @@ public class ActivityDetails extends Activity {
     private void onReturn() {
         returnedCount ++;
         progressBar.setVisibility(View.GONE);
-        if(returnedCount == 10) {
+        if(returnedCount == 1) {
             textView.setText("10 Requests took " +(System.currentTimeMillis() - start));
         }
         else {

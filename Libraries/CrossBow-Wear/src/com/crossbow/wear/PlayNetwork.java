@@ -113,7 +113,7 @@ public class PlayNetwork implements Network, MessageApi.MessageListener {
         WearNetworkResponse networkResponse = responsesMap.get(uuid);
         responsesMap.remove(uuid);
 
-        if(!networkResponse.success) {
+        if(networkResponse == null || !networkResponse.success) {
             throw new VolleyError("No response in map");
         }
         return networkResponse.getNetworkResponse();
@@ -123,16 +123,22 @@ public class PlayNetwork implements Network, MessageApi.MessageListener {
     public void onMessageReceived(MessageEvent messageEvent) {
         if(messageEvent.getPath().contains("crossbow_wear")) {
             byte[] data = messageEvent.getData();
-            WearNetworkResponse wearNetworkResponse = WearNetworkResponse.fromByteArray(data);
             Log.d("Play Network", "request response returned");
+            try {
+                WearNetworkResponse wearNetworkResponse = WearNetworkResponse.fromByteArray(data);
+                String uuid = wearNetworkResponse.uuid;
+                responsesMap.put(uuid, wearNetworkResponse);
 
-            String uuid = wearNetworkResponse.uuid;
-            responsesMap.put(uuid, wearNetworkResponse);
-            if(latchMap.containsKey(uuid)) {
-                //unlatch the correct thread
-                Log.d("Play Network", "unlatching thread");
-                latchMap.get(uuid).countDown();
+                if(latchMap.containsKey(uuid)) {
+                    //unlatch the correct thread
+                    Log.d("Play Network", "unlatching thread");
+                    latchMap.get(uuid).countDown();
+                }
             }
+            catch (Exception e) {
+                Log.d("Play Network", "wearNetworkResponse error = " + e);
+            }
+            Log.d("Play Network", "request response returned");
         }
     }
 

@@ -26,7 +26,7 @@ public class WearNetworkResponseTest extends TestCase {
         String uuid = UUID.randomUUID().toString();
 
         Map<String, String> headers = new HashMap<>();
-        headers.put("Cache-Control", "max-age=3600");
+        headers.put("Cache-Control", "max-age=3600,s-max-age=60,must-revalidate");
         headers.put("Etag", "vbsudbjsdcjsacdhvscdbs");
 
         WearNetworkResponse networkResponse = new WearNetworkResponse(success, data, uuid, 340, headers, modifed, networkTime);
@@ -41,5 +41,7 @@ public class WearNetworkResponseTest extends TestCase {
         assertTrue(recreated.notModified);
         assertTrue(recreated.success);
         assertEquals(uuid, recreated.uuid);
+        assertEquals("max-age=3600,s-max-age=60,must-revalidate",recreated.headers.get("Cache-Control"));
+        assertEquals("vbsudbjsdcjsacdhvscdbs",recreated.headers.get("Etag"));
     }
 }

@@ -6,18 +6,18 @@ import com.android.volley.Cache;
 import com.android.volley.Network;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HttpStack;
-import com.crossbow.volley.toolbox.DefaultCrossbowBuilder;
+import com.crossbow.volley.toolbox.DefaultCrossbowComponents;
 import com.crossbow.wear.PlayNetwork;
 import com.squareup.okhttp.OkHttpClient;
 
 /**
- * Used to get the correct version of WearCrossbowBuilder that uses the {@link PlayNetwork} to transmit
+ * Used to get the correct version of WearCrossbowComponents that uses the {@link PlayNetwork} to transmit
  * data to the handheld. If you are writing a custom stack please use the {@link PlayNetwork} as
  * the network or request will not be sent to wearable.
  */
-public class WearCrossbowBuilder extends DefaultCrossbowBuilder {
+public class WearCrossbowComponents extends DefaultCrossbowComponents {
 
-    public WearCrossbowBuilder(Context context) {
+    public WearCrossbowComponents(Context context) {
         super(context);
     }
 

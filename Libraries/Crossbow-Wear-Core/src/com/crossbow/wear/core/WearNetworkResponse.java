@@ -5,6 +5,11 @@ import android.text.TextUtils;
 import com.android.volley.NetworkResponse;
 import com.google.android.gms.wearable.DataMap;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -13,22 +18,6 @@ import java.util.Set;
  * Internal class that wraps the volley NetworkResponse and can serialized
  */
 public class WearNetworkResponse {
-
-    private static final String RESPONSE_STATUS_CODE = "c.cb.w.re.stat";
-
-    private static final String RESPONSE_UUID = "c.cb.w.re.uuid";
-
-    private static final String RESPONSE_DATA = "c.cb.w.re.data";
-
-    private static final String RESPONSE_HEADER_KEYS = "c.cb.w.re.head_k";
-
-    private static final String RESPONSE_HEADER_VALUES = "c.cb.w.re.head_v";
-
-    private static final String RESPONSE_MODIFED = "c.cb.w.re.mod";
-
-    private static final String RESPONSE_NETWORK_TIME = "c.cb.w.re.time";
-
-    private static final String RESPONSE_SUCCESS = "c.cb.w.re.suc";
 
     public final String uuid;
 
@@ -74,64 +63,43 @@ public class WearNetworkResponse {
         }
     }
 
-    public static WearNetworkResponse fromByteArray(byte[] data) {
+    public static WearNetworkResponse fromByteArray(byte[] data) throws IOException {
         byte[] decompressed = Gzipper.unzip(data);
-        DataMap dataMap = DataMap.fromByteArray(decompressed);
-
-        String uuid = dataMap.getString(RESPONSE_UUID);
-        boolean success = dataMap.getBoolean(RESPONSE_SUCCESS, false);
-
-        if(success) {
-            int statusCode = dataMap.getInt(RESPONSE_STATUS_CODE, 500);
-            long networkTime = dataMap.getLong(RESPONSE_NETWORK_TIME, 0);
-            boolean modified = dataMap.getBoolean(RESPONSE_MODIFED, false);
-
-            byte[] responseData = dataMap.getByteArray(RESPONSE_DATA);
-
-            String[] headerKeys = TextUtils.split(dataMap.getString(RESPONSE_HEADER_KEYS), ",");
-            String[] headerValues = TextUtils.split(dataMap.getString(RESPONSE_HEADER_VALUES), ",");
-            Map<String, String> headers = new HashMap<>(headerKeys.length);
-            for (int i = 0; i < headerKeys.length; i++) {
-                headers.put(headerKeys[i], headerValues[i]);
-            }
-            return new WearNetworkResponse(true, responseData, uuid, statusCode, headers, modified, networkTime);
-        }
-        else {
-            return new WearNetworkResponse(false, uuid);
-        }
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decompressed);
+        DataInputStream dataStream = new DataInputStream(byteArrayInputStream);
+        String uuid = SerialUtil.readString(dataStream);
+        boolean success = dataStream.readBoolean();
+        int statusCode = dataStream.readInt();
+        long networkTime = dataStream.readLong();
+        boolean modified = dataStream.readBoolean();
+        byte[] responseData = SerialUtil.readBytes(dataStream);
+        Map<String, String> headers = SerialUtil.readMap(dataStream);
+        return new WearNetworkResponse(success, responseData, uuid, statusCode, headers, modified, networkTime);
     }
 
     public NetworkResponse getNetworkResponse() {
         return new NetworkResponse(statusCode, data, headers, notModified, networkTimeMs);
     }
 
-    public byte[] toByteArray() {
+    public byte[] toByteArray(){
 
-        DataMap dataMap = new DataMap();
-        dataMap.putString(RESPONSE_UUID, uuid);
-        dataMap.putBoolean(RESPONSE_SUCCESS, success);
-
-        if(success) {
-            dataMap.putInt(RESPONSE_STATUS_CODE, statusCode);
-            dataMap.putLong(RESPONSE_NETWORK_TIME, networkTimeMs);
-            dataMap.putBoolean(RESPONSE_MODIFED, notModified);
-
-            dataMap.putByteArray(RESPONSE_DATA, data);
-
-            Set<String> headerKeys = headers.keySet();
-            String[] keys = new String[headerKeys.size()];
-            String[] values = new String[headerKeys.size()];
-            int i =0;
-            for(String key : headerKeys) {
-                keys[i] = key;
-                values[i] = headers.get(key);
-                i++;
-            }
-
-            dataMap.putString(RESPONSE_HEADER_KEYS, TextUtils.join(",", keys));
-            dataMap.putString(RESPONSE_HEADER_VALUES, TextUtils.join(",", values));
+        int size = data != null ? data.length : 32;
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(size);
+        DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+        try {
+            SerialUtil.writeString(dataOutputStream, uuid);
+            dataOutputStream.writeBoolean(success);
+            dataOutputStream.writeInt(statusCode);
+            dataOutputStream.writeLong(networkTimeMs);
+            dataOutputStream.writeBoolean(notModified);
+            SerialUtil.writeBytes(dataOutputStream, data);
+            SerialUtil.writeMap(dataOutputStream, headers);
+            dataOutputStream.flush();
+            dataOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        return Gzipper.zip(dataMap.toByteArray());
+        return Gzipper.zip(outputStream.toByteArray());
     }
 }

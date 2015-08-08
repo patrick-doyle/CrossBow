@@ -3,8 +3,7 @@ package com.crossbow.wear;
 import android.content.Context;
 
 import com.crossbow.volley.toolbox.Crossbow;
-import com.crossbow.volley.toolbox.CrossbowBuilder;
-import com.crossbow.wear.toolbox.WearCrossbowBuilder;
+import com.crossbow.wear.toolbox.WearCrossbowComponents;
 
 
 /**
@@ -17,7 +16,8 @@ public class CrossbowWear {
 
     public static Crossbow get(Context context) {
         if(crossbow == null) {
-            WearCrossbowBuilder crossbowBuilder = new WearCrossbowBuilder(context);
+            //only create the WearCrossbowComponents once.
+            WearCrossbowComponents crossbowBuilder = new WearCrossbowComponents(context);
             crossbow = new Crossbow(context, crossbowBuilder);
         }
         return crossbow;

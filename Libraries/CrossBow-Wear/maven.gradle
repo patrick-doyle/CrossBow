@@ -57,18 +57,19 @@ install {
     }
 }
 
-
-dependencies {
-}
-
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
     classifier = 'sources'
 }
 
 task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath +=      project.files(android.getBootClasspath().join(File.pathSeparator))
+    source = fileTree("${project.rootDir}/Libraries")
+    include( "**/*.java" )
+    exclude "**/build/**","**/tests/**"
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    failOnError false
+    options.links("http://docs.oracle.com/javase/7/docs/api/");
+    options.links("http://d.android.com/reference/");
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -84,6 +85,7 @@ bintray {
     user = bintayProps.getProperty("user")
     key = bintayProps.getProperty("key")
     configurations = ['archives']
+    dryRun = mavenProps.getProperty("dryRun")
 
     pkg {
         repo = 'maven'

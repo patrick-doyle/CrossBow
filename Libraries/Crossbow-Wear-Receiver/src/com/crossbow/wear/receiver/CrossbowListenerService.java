@@ -24,7 +24,7 @@ import java.util.Map;
  * Base service for receiving requests form the wearable.
  * Your WearableListenerService should extend this class instead.
  * Any request transformers should be registered in the {@link #onGetTransformerMap()} and if you are using a
- * custom CrossbowBuilder you need to set it with the {@link #onGetRequestQueue()} method
+ * custom CrossbowComponents you need to set it with the {@link #onGetRequestQueue()} method
  */
 public class CrossbowListenerService extends WearableListenerService {
 
@@ -66,7 +66,7 @@ public class CrossbowListenerService extends WearableListenerService {
      * setup via
      * <code>
      *     <pre>
-     *         Crossbow.get(this).getRequestQueue()
+     *         Crossbow.get(this).provideRequestQueue()
      *     </pre>
      * </code>
      * the you do not need to override this method.

@@ -34,11 +34,12 @@ android {
     }
 }
 
-apply from: 'maven.gradle'
 
 dependencies {
     compile project(':Libraries:Crossbow-Core')
 }
+
+apply from: 'maven.gradle'
 
 task copyReadme << {
 

@@ -17,6 +17,7 @@
 package com.android.volley.toolbox;
 
 import android.os.SystemClock;
+import android.support.v4.util.ArrayMap;
 
 import com.android.volley.Cache.Entry;
 
@@ -79,7 +80,7 @@ public class BasicNetwork implements com.android.volley.Network {
             Map<String, String> responseHeaders = Collections.emptyMap();
             try {
                 // Gather headers.
-                Map<String, String> headers = new HashMap<String, String>();
+                Map<String, String> headers = new ArrayMap<>();
                 addCacheHeaders(headers, request.getCacheEntry());
                 httpResponse = mHttpStack.performRequest(request, headers);
                 StatusLine statusLine = httpResponse.getStatusLine();

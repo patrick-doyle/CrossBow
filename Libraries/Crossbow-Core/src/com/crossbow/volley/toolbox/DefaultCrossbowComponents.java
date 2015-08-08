@@ -18,7 +18,7 @@ import java.io.File;
 /**
 
  */
-public class DefaultCrossbowBuilder extends CrossbowBuilder {
+public class DefaultCrossbowComponents implements CrossbowComponents {
 
     private OkHttpClient okHttpClient;
 
@@ -38,11 +38,12 @@ public class DefaultCrossbowBuilder extends CrossbowBuilder {
 
     public NetworkImageLoader imageLoader;
 
-
     private static final int DISK_CACHE_SIZE = 15 * 1024 * 1024;
 
-    public DefaultCrossbowBuilder(Context context) {
-        super(context);
+    private Context context;
+
+    public DefaultCrossbowComponents(Context context) {
+        this.context = context.getApplicationContext();
         okHttpClient = onCreateHttpClient();
         httpStack = onCreateHttpStack(okHttpClient);
         network = onCreateNetwork(httpStack);
@@ -56,28 +57,32 @@ public class DefaultCrossbowBuilder extends CrossbowBuilder {
         imageLoader = onCreateImageLoader(requestQueue, crossbowImageCache);
     }
 
+    protected Context getContext() {
+        return context;
+    }
+
     @Override
-    public RequestQueue getRequestQueue() {
+    public RequestQueue provideRequestQueue() {
         return requestQueue;
     }
 
     @Override
-    public CrossbowImageCache getImageCache() {
+    public CrossbowImageCache provideImageCache() {
         return crossbowImageCache;
     }
 
     @Override
-    public FileImageLoader getFileImageLoader() {
+    public FileImageLoader provideFileImageLoader() {
         return fileImageLoader;
     }
 
     @Override
-    public FileQueue getFileQueue() {
+    public FileQueue provideFileQueue() {
         return fileQueue;
     }
 
     @Override
-    public NetworkImageLoader getImageLoader() {
+    public NetworkImageLoader provideImageLoader() {
         return imageLoader;
     }
 
