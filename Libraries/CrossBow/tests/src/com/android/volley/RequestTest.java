@@ -16,23 +16,17 @@
 
 package com.android.volley;
 
-import android.test.suitebuilder.annotation.SmallTest;
-
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
 import com.android.volley.Request.Priority;
-import com.android.volley.Response;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
-@SmallTest
-public class RequestTest extends TestCase {
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    public void testCompareTo() {
+@RunWith(RobolectricTestRunner.class)
+public class RequestTest {
+    
+    @Test public void compareTo() {
         int sequence = 0;
         TestRequest low = new TestRequest(Priority.LOW);
         low.setSequence(sequence++);
@@ -54,7 +48,7 @@ public class RequestTest extends TestCase {
     private class TestRequest extends Request<Object> {
         private Priority mPriority = Priority.NORMAL;
         public TestRequest(Priority priority) {
-            super(Method.GET, "", null);
+            super(Request.Method.GET, "", null);
             mPriority = priority;
         }
 
@@ -73,7 +67,7 @@ public class RequestTest extends TestCase {
         }
     }
 
-    public void testUrlParsing() {
+    @Test public void urlParsing() {
         UrlParseRequest nullUrl = new UrlParseRequest(null);
         assertEquals(0, nullUrl.getTrafficStatsTag());
         UrlParseRequest emptyUrl = new UrlParseRequest("");
@@ -88,7 +82,7 @@ public class RequestTest extends TestCase {
 
     private class UrlParseRequest extends Request<Object> {
         public UrlParseRequest(String url) {
-            super(Method.GET, url, null);
+            super(Request.Method.GET, url, null);
         }
 
         @Override

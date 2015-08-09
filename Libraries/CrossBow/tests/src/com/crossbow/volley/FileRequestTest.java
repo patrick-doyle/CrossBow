@@ -1,22 +1,25 @@
 package com.crossbow.volley;
 
-import android.test.suitebuilder.annotation.SmallTest;
-
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
-import com.crossbow.volley.FileRequest;
-import com.crossbow.volley.FileResponse;
+import com.crossbow.BuildConfig;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.io.File;
 
 /**
 
  */
-public class FileRequestTest extends TestCase {
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class)
+public class FileRequestTest {
 
-    @SmallTest
+    @Test
     public void testFileRequestPriority() {
         int sequence = 0;
 
@@ -31,11 +34,11 @@ public class FileRequestTest extends TestCase {
         TestRequest immeditate = new TestRequest(Request.Priority.IMMEDIATE);
 
 
-        assertTrue(low.compareTo(normal) > 0);
-        assertTrue(low.compareTo(high) > 0);
-        assertTrue(low2.compareTo(low) > 0);
-        assertTrue(immeditate.compareTo(high) < 0);
-        assertTrue(high.compareTo(high) == 0);
+        Assert.assertTrue(low.compareTo(normal) > 0);
+        Assert.assertTrue(low.compareTo(high) > 0);
+        Assert.assertTrue(low2.compareTo(low) > 0);
+        Assert.assertTrue(immeditate.compareTo(high) < 0);
+        Assert.assertTrue(high.compareTo(high) == 0);
     }
 
     private static class TestRequest extends FileRequest {

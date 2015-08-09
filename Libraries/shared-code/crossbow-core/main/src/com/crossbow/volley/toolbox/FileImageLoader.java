@@ -1,6 +1,7 @@
 package com.crossbow.volley.toolbox;
 
 import android.graphics.Bitmap;
+import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -75,7 +76,8 @@ public class FileImageLoader {
                 batchedFileRequest.addConatiner(fileImageContainer);
                 batchedFileRequests.put(cacheKey, batchedFileRequest);
 
-                FileImageRequest fileImageRequest = new FileImageRequest(filePath, Bitmap.Config.RGB_565, maxWidth, maxHeight, new FileResponse.ErrorListener() {
+                FileImageRequest fileImageRequest = new FileImageRequest(filePath, Bitmap.Config.RGB_565, maxWidth, maxHeight,
+                        ImageView.ScaleType.CENTER_CROP, new FileResponse.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         callError(error, cacheKey);

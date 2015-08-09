@@ -2,6 +2,7 @@ package com.crossbow.wear.toolbox;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.widget.ImageView;
 
 import com.android.volley.Response;
 import com.crossbow.volley.toolbox.RecycleImageRequest;
@@ -19,8 +20,9 @@ public class WearImageRequest extends RecycleImageRequest implements WearRequest
     private final int maxHeight;
     private final Bitmap.Config config;
 
-    public WearImageRequest(String url, Response.Listener<Bitmap> listener, int maxWidth, int maxHeight, Bitmap.Config decodeConfig, Response.ErrorListener errorListener) {
-        super(url, listener, maxWidth, maxHeight, decodeConfig, errorListener);
+    public WearImageRequest(String url, Response.Listener<Bitmap> listener, int maxWidth, int maxHeight, Bitmap.Config decodeConfig,
+                            ImageView.ScaleType scaleType, Response.ErrorListener errorListener) {
+        super(url, listener, maxWidth, maxHeight, decodeConfig, scaleType, errorListener);
         this.maxWidth = maxWidth;
         this.maxHeight = maxHeight;
         config = decodeConfig;

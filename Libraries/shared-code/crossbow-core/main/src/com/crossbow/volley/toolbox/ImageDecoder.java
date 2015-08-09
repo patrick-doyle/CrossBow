@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.widget.ImageView;
 
 import com.android.volley.ParseError;
@@ -118,8 +119,8 @@ public class ImageDecoder {
                 int actualHeight = decodeOptions.outHeight;
 
                 // Then compute the dimensions we would ideally like to decode to.
-                int desiredWidth = getResizedDimension(maxWidth, maxHeight,actualWidth, actualHeight, scaleType);
-                int desiredHeight = getResizedDimension(maxHeight, maxWidth,actualHeight, actualWidth, scaleType);
+                int desiredWidth = getResizedDimension(maxWidth, maxHeight, actualWidth, actualHeight, scaleType);
+                int desiredHeight = getResizedDimension(maxHeight, maxWidth, actualHeight, actualWidth, scaleType);
 
                 if(desiredHeight <= 0 || desiredWidth <= 0) {
                     IllegalArgumentException exception = new IllegalArgumentException(String.format(Locale.ENGLISH, "Invalid image size, desiredHeight = %s, desiredHeight = %s", desiredHeight, desiredWidth));
@@ -226,7 +227,8 @@ public class ImageDecoder {
      * @param actualSecondary Actual size of the secondary dimension
      * @param scaleType The ScaleType used to calculate the needed image size.
      */
-    private static int getResizedDimension(int maxPrimary, int maxSecondary, int actualPrimary,
+    @VisibleForTesting
+    static int getResizedDimension(int maxPrimary, int maxSecondary, int actualPrimary,
                                            int actualSecondary, ImageView.ScaleType scaleType) {
 
         // If no dominant value at all, just return the actual.

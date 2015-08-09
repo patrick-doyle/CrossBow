@@ -4,36 +4,45 @@ import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.android.volley.VolleyError;
-import com.crossbow.volley.FileQueue;
-import com.crossbow.volley.FileRequest;
-import com.crossbow.volley.FileResponse;
-import com.crossbow.volley.MockFileDelivery;
+import com.crossbow.BuildConfig;
 import com.crossbow.volley.mock.MockFileRequest;
 import com.crossbow.volley.mock.MockFileStack;
+
+import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.Collection;
 import java.util.concurrent.CountDownLatch;
 
+import static junit.framework.Assert.*;
+
 /**
 
  */
-public class FileQueueTest extends AndroidTestCase {
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class)
+public class FileQueueTest {
 
     FileQueue fileQueue;
     CountDownLatch countDownLatch;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         MockFileStack mockFileStack = new MockFileStack();
         MockFileDelivery mockFileDelivery = new MockFileDelivery(true);
 
         fileQueue = new FileQueue(mockFileDelivery, mockFileStack);
     }
 
-    @SmallTest
+    @Test
     public void testFileReadRequest() throws InterruptedException {
-        MockFileRequest fileRequest = new MockFileRequest("test-file.txt", new FileResponse.Listener<String>() {
+        MockFileRequest fileRequest = new MockFileRequest("tests/res/test-file.txt", new FileResponse.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 countDownLatch.countDown();
@@ -46,7 +55,7 @@ public class FileQueueTest extends AndroidTestCase {
         countDownLatch.await();
     }
 
-    @SmallTest
+    @Test
     public void testFileRequestCancel() throws InterruptedException {
         MockFileRequest request1 = new MockFileRequest("123", null, null);
         request1.setTag("test_tag");
@@ -67,7 +76,7 @@ public class FileQueueTest extends AndroidTestCase {
         assertTrue(request3.isCanceled());
     }
 
-    @SmallTest
+    @Test
     public void testFileBlocking() {
         MockFileRequest request1 = new MockFileRequest("123", null, null);
         request1.setTag("test_tag");
@@ -88,9 +97,8 @@ public class FileQueueTest extends AndroidTestCase {
         assertFalse(requestQueue.contains(request3));
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         fileQueue.stop();
     }
 

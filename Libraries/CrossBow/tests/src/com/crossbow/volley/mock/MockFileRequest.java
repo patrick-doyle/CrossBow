@@ -6,7 +6,6 @@ import com.crossbow.volley.FileResponse;
 import com.crossbow.volley.toolbox.Files;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
 

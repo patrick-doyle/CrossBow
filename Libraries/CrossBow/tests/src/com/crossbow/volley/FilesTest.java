@@ -1,77 +1,79 @@
 package com.crossbow.volley;
 
-import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.android.volley.VolleyError;
 import com.crossbow.volley.toolbox.Files;
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
 /**
 
  */
-public class FilesTest extends AndroidTestCase {
+public class FilesTest {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+    private File file;
+
+    @Before
+    public void setUp() throws Exception {
+        file = temporaryFolder.newFile();
+        FileOutputStream outputStream = new FileOutputStream(file);
+        outputStream.write("testfilecontents".getBytes());
+        outputStream.flush();
+        outputStream.close();
     }
 
-    @SmallTest
-    public void testFileAssetStringRead() throws VolleyError {
-        String data = Files.readAssetString(getContext(), "test-file.txt");
-        assertEquals("testfilecontents", data);
+    @Test
+    public void testInputStreamStringRead() throws Exception {
+        String data = Files.readInputStreamString(new FileInputStream(file));
+        Assert.assertEquals("testfilecontents", data);
     }
 
-    @SmallTest
-    public void testFileAssetRead() throws VolleyError {
-        byte[] data = Files.readAssetData(getContext(), "test-file.txt");
-        assertTrue(Arrays.equals("testfilecontents".getBytes(), data));
+    @Test
+    public void testInputStreamCopy() throws VolleyError, IOException {
+        File testCopy = temporaryFolder.newFile();
+        Files.copyFileFromStream(new FileInputStream(file), testCopy);
+        Assert.assertTrue(testCopy.exists());
+        Assert.assertTrue(Arrays.equals("testfilecontents".getBytes(), Files.readFileData(testCopy)));
+        Assert.assertEquals("testfilecontents", Files.readFileString(testCopy));
     }
 
-    @SmallTest
-    public void testFileAssetCopy() throws VolleyError {
-        File testCopy = new File(getContext().getFilesDir() + File.separator + "test-dir");
-        testCopy.mkdirs();
-        testCopy = new File(testCopy, "files-test.test");
-        Files.copyFileFromAssets(getContext(), "test-file.txt", testCopy);
-        assertTrue(testCopy.exists());
-        assertTrue(Arrays.equals("testfilecontents".getBytes(),  Files.readFileData(testCopy)));
-        assertEquals("testfilecontents", Files.readFileString(testCopy));
-    }
-
-    @SmallTest
-    public void testFileWrite() throws VolleyError {
-        File testCopy = new File(getContext().getFilesDir() + File.separator + "test-dir");
-        testCopy.mkdirs();
-        testCopy = new File(testCopy, "files-write1.test");
+    @Test
+    public void testFileWrite() throws VolleyError, IOException {
+        File testCopy = temporaryFolder.newFile();
         Files.writeFileString(testCopy, "test-file write");
-        assertEquals("test-file write", Files.readFileString(testCopy));
+        Assert.assertEquals("test-file write", Files.readFileString(testCopy));
     }
 
-    @SmallTest
-    public void testFileWriteData() throws VolleyError {
-        File testCopy = new File(getContext().getFilesDir() + File.separator + "test-dir");
-        testCopy.mkdirs();
-        testCopy = new File(testCopy, "files-write-data.test");
+    @Test
+    public void testFileWriteData() throws VolleyError, IOException {
+        File testCopy = temporaryFolder.newFile();
         Files.writeFileData(testCopy, "test-file write".getBytes());
-        assertEquals("test-file write", Files.readFileString(testCopy));
+        Assert.assertEquals("test-file write", Files.readFileString(testCopy));
     }
 
-    @SmallTest
-    public void testFileWriteLines() throws VolleyError {
-        File testCopy = new File(getContext().getFilesDir() + File.separator + "test-dir");
-        testCopy.mkdirs();
-        testCopy = new File(testCopy, "files-write-lines.test");
+    @Test
+    public void testFileWriteLines() throws VolleyError, IOException {
+        File testCopy = temporaryFolder.newFile();
         String[] lines = new String[]{"line1", "line2", "line3"};
         Files.writeFileLines(testCopy, lines);
 
         String[] readLines = new String[3];
         Files.readFileLines(testCopy).toArray(readLines);
 
-        assertTrue(Arrays.equals(lines, readLines));
+        Assert.assertTrue(Arrays.equals(lines, readLines));
     }
 }

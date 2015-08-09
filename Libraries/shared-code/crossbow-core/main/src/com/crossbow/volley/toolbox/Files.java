@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.crossbow.volley.FileError;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -37,6 +39,7 @@ public class Files {
             FileInputStream fileInputStream = null;
             fileInputStream = new FileInputStream(from);
             FileOutputStream fileOutputStream = new FileOutputStream(to);
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
 
             byte[] buffer = new byte[2048];
             int read = 0;
@@ -44,7 +47,8 @@ public class Files {
                 fileOutputStream.write(buffer, 0, read);
             }
             fileInputStream.close();
-            fileOutputStream.close();
+            bufferedOutputStream.flush();
+            bufferedOutputStream.close();
         } catch (IOException e) {
             throw new FileError(e);
         }
@@ -67,13 +71,14 @@ public class Files {
         try {
             ByteBuffer byteBuffer = ByteBuffer.allocate((int) file.length());
             FileInputStream fileInputStream = new FileInputStream(file);
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
 
             byte[] buffer = new byte[2048];
             int read = 0;
             while((read = fileInputStream.read(buffer)) > 0) {
                 byteBuffer.put(buffer, 0, read);
             }
-            fileInputStream.close();
+            bufferedInputStream.close();
             return byteBuffer.array();
         } catch (IOException e) {
             throw new FileError(e);
@@ -82,12 +87,10 @@ public class Files {
 
     /**
      * Reads a file from assets to a byte array
-     * @param  name file to read
      */
-    public static byte[] readAssetData(Context context, String name) throws FileError {
+    public static byte[] readInputStreamData(InputStream inputStream) throws FileError {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            InputStream inputStream = context.getApplicationContext().getAssets().open(name);
 
             int size = 0;
 
@@ -103,28 +106,34 @@ public class Files {
         } catch (IOException e) {
             throw new FileError(e);
         }
-
     }
 
     /**
      * Reads a file from assets to a byte array
-     * @param  name file to read
      */
-    public static boolean copyFileFromAssets(Context context, String name, File output) throws FileError {
+    public static String readInputStreamString(InputStream inputStream) throws FileError {
+        return new String(readInputStreamData(inputStream));
+    }
+
+    /**
+     * Reads a file from assets to a byte array
+     */
+    public static boolean copyFileFromStream(InputStream inputStream, File output) throws FileError {
 
         try {
             FileOutputStream outputStream = new FileOutputStream(output);
-            InputStream inputStream = context.getApplicationContext().getAssets().open(name);
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
 
             int size = 0;
 
             byte[] buffer = new byte[2048];
             while((size = inputStream.read(buffer)) >= 0){
-                outputStream.write(buffer,0,size);
+                bufferedOutputStream.write(buffer,0,size);
             }
 
             inputStream.close();
-            outputStream.close();
+            bufferedOutputStream.flush();
+            bufferedOutputStream.close();
 
         } catch (IOException e) {
             throw new FileError(e);
@@ -133,11 +142,27 @@ public class Files {
     }
 
     /**
+     * Reads a file from assets to a byte array
+     * @param  name file to read
+     */
+    public static boolean copyFileFromAssets(Context context, String name, File output) throws FileError {
+        try {
+            return copyFileFromStream(context.getAssets().open(name), output);
+        } catch (IOException e) {
+            throw new FileError(e);
+        }
+    }
+
+    /**
      * Reads a file from assets to a string
      * @param  name file to read
      */
     public static String readAssetString(Context context, String name) throws FileError {
-        return new String(readAssetData(context, name));
+        try {
+            return new String(readInputStreamData(context.getAssets().open(name)));
+        } catch (IOException e) {
+           throw new FileError(e);
+        }
     }
 
     /**

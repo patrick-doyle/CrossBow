@@ -4,27 +4,38 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.TransitionDrawable;
-import android.test.AndroidTestCase;
 import android.widget.ImageView;
 
-import com.crossbow.volley.CrossbowImage;
-import com.crossbow.volley.ScaleTypeDrawable;
+import com.crossbow.BuildConfig;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowSystemClock;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
 
  */
-public class CrossbowImageTest extends AndroidTestCase {
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, shadows = {ShadowSystemClock.class})
+public class CrossbowImageTest {
 
     private ImageView imageView;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        imageView = new ImageView(getContext());
+    @Before
+    public void setUp() throws Exception {
+        imageView = new ImageView(RuntimeEnvironment.application);
     }
 
+    @Test
     public void testImageBitmapCenterCrop() {
-        CrossbowImage.Builder builder = new CrossbowImage.Builder(getContext(), null, null);
+        CrossbowImage.Builder builder = new CrossbowImage.Builder(RuntimeEnvironment.application, null, null);
         builder.scale(ImageView.ScaleType.CENTER);
         CrossbowImage crossbowImage = builder.into(imageView).load();
 
@@ -36,10 +47,11 @@ public class CrossbowImageTest extends AndroidTestCase {
         assertTrue(drawable.getScaleType() == ImageView.ScaleType.CENTER);
     }
 
+    @Test
     public void testImageFadeDrawable() {
         ColorDrawable defaultDrawable = new ColorDrawable(Color.BLUE);
 
-        CrossbowImage.Builder builder = new CrossbowImage.Builder(getContext(), null, null);
+        CrossbowImage.Builder builder = new CrossbowImage.Builder(RuntimeEnvironment.application, null, null);
         builder.placeholder(defaultDrawable);
         builder.scale(ImageView.ScaleType.CENTER);
         builder.fade(200);
@@ -52,9 +64,10 @@ public class CrossbowImageTest extends AndroidTestCase {
         assertTrue(drawable.getNumberOfLayers() == 2);
     }
 
+    @Test
     public void testErrorDrawable() {
         ColorDrawable errorDrawable = new ColorDrawable(Color.BLUE);
-        CrossbowImage.Builder builder = new CrossbowImage.Builder(getContext(), null, null);
+        CrossbowImage.Builder builder = new CrossbowImage.Builder(RuntimeEnvironment.application, null, null);
         builder.errorScale(ImageView.ScaleType.FIT_END);
         builder.error(errorDrawable);
         CrossbowImage crossbowImage = builder.into(imageView).load();
@@ -67,9 +80,10 @@ public class CrossbowImageTest extends AndroidTestCase {
         assertEquals(drawable.getSourceDrawable() , errorDrawable);
     }
 
+    @Test
     public void testDefaultErrorDrawable() {
         ColorDrawable defaultDrawable = new ColorDrawable(Color.BLUE);
-        CrossbowImage.Builder builder = new CrossbowImage.Builder(getContext(), null, null);
+        CrossbowImage.Builder builder = new CrossbowImage.Builder(RuntimeEnvironment.application, null, null);
         builder.placeholder(defaultDrawable);
         builder.placeholderScale(ImageView.ScaleType.FIT_END);
         CrossbowImage crossbowImage = builder.into(imageView).load();
@@ -81,11 +95,12 @@ public class CrossbowImageTest extends AndroidTestCase {
         assertEquals(drawable.getSourceDrawable() , defaultDrawable);
     }
 
+    @Test
     public void testErrorDefaultFade() {
         ColorDrawable defaultDrawable = new ColorDrawable(Color.BLUE);
         ColorDrawable errorDrawable = new ColorDrawable(Color.BLACK);
 
-        CrossbowImage.Builder builder = new CrossbowImage.Builder(getContext(), null, null);
+        CrossbowImage.Builder builder = new CrossbowImage.Builder(RuntimeEnvironment.application, null, null);
         builder.placeholder(defaultDrawable);
         builder.error(errorDrawable);
         builder.fade(200);

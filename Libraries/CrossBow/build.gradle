@@ -4,11 +4,11 @@ apply plugin: 'com.android.library'
 apply from: '../shared-code/dependencies.gradle'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
 
     sourceSets {
         defaultConfig {
+            compileSdkVersion 22
+            buildToolsVersion "22.0.1"
             testApplicationId 'com.crossbow.tests'
         }
 
@@ -20,11 +20,20 @@ android {
             renderscript.srcDirs = ['src']
             java.srcDirs         = ['src', '../shared-code/crossbow-core/main/src']
             manifest.srcFile 'AndroidManifest.xml'
-
         }
 
-        androidTest.setRoot('tests')
-        androidTest.java.srcDirs += ['tests/src']
+        test {
+            java.srcDirs += ['tests/src']
+            resources.srcDirs += ['tests/resources']
+            res.srcDirs += ['tests/res']
+        }
+
+        androidTest {
+            setRoot('androidTest')
+            java.srcDirs += ['androidTest/src']
+            assets.srcDirs += ['androidTest/assets']
+            res.srcDirs += ['androidTest/assets']
+        }
     }
     
     lintOptions {

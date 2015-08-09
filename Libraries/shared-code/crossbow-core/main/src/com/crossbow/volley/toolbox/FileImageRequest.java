@@ -37,7 +37,7 @@ public class FileImageRequest extends FileRequest<Bitmap> {
             if (isCanceled()) {
                 return null;
             }
-;
+
             Bitmap parsed = ImageDecoder.parseFile(file, config, scaleType, maxWidth, maxHeight);
 
             if (parsed != null) {
