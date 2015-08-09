@@ -16,8 +16,12 @@
 
 package com.android.volley.toolbox;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
+import com.android.volley.VolleyLog;
 
 import java.io.UnsupportedEncodingException;
 
@@ -27,9 +31,9 @@ import java.io.UnsupportedEncodingException;
  *
  * @param <T> JSON type of response expected
  */
-public abstract class JsonRequest<T> extends com.android.volley.Request<T> {
-    /** Charset for request. */
-    private static final String PROTOCOL_CHARSET = "utf-8";
+public abstract class JsonRequest<T> extends Request<T> {
+    /** Default charset for JSON request. */
+    protected static final String PROTOCOL_CHARSET = "utf-8";
 
     /** Content type for request. */
     private static final String PROTOCOL_CONTENT_TYPE =
@@ -62,7 +66,7 @@ public abstract class JsonRequest<T> extends com.android.volley.Request<T> {
     }
 
     @Override
-    abstract protected com.android.volley.Response<T> parseNetworkResponse(com.android.volley.NetworkResponse response);
+    abstract protected Response<T> parseNetworkResponse(NetworkResponse response);
 
     /**
      * @deprecated Use {@link #getBodyContentType()}.
@@ -90,7 +94,7 @@ public abstract class JsonRequest<T> extends com.android.volley.Request<T> {
         try {
             return mRequestBody == null ? null : mRequestBody.getBytes(PROTOCOL_CHARSET);
         } catch (UnsupportedEncodingException uee) {
-            com.android.volley.VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+            VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
                     mRequestBody, PROTOCOL_CHARSET);
             return null;
         }

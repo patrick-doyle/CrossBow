@@ -17,6 +17,7 @@
 package com.crossbow.volley.toolbox;
 
 import android.graphics.Bitmap;
+import android.widget.ImageView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -37,13 +38,13 @@ public class NetworkImageLoader extends ImageLoader {
     }
 
     @Override
-    protected Request<Bitmap> makeImageRequest(String requestUrl, int maxWidth, int maxHeight, final String cacheKey) {
+    protected Request<Bitmap> makeImageRequest(String requestUrl, int maxWidth, int maxHeight, ImageView.ScaleType scaleType, final String cacheKey) {
         return new RecycleImageRequest(requestUrl, new Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap response) {
                 onGetImageSuccess(cacheKey, response);
             }
-        }, maxWidth, maxHeight, Bitmap.Config.RGB_565, new Response.ErrorListener() {
+        }, maxWidth, maxHeight, Bitmap.Config.RGB_565, scaleType, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 onGetImageError(cacheKey, error);

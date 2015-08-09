@@ -35,7 +35,7 @@ import java.util.Map;
  *
  * @param <T> The type of parsed response this request expects.
  */
-public abstract class Request<T> implements Comparable<com.android.volley.Request<T>> {
+public abstract class Request<T> implements Comparable<Request<T>> {
 
     /**
      * Default encoding for POST or PUT parameters. See {@link #getParamsEncoding()}.
@@ -90,12 +90,6 @@ public abstract class Request<T> implements Comparable<com.android.volley.Reques
     /** Whether or not a response has been delivered for this request yet. */
     private boolean mResponseDelivered = false;
 
-    // A cheap variant of request tracing used to dump slow requests.
-    private long mRequestBirthTime = 0;
-
-    /** Threshold at which we should log the request (even when debug logging is not enabled). */
-    private static final long SLOW_REQUEST_THRESHOLD_MS = 3000;
-
     /** The retry policy for this request. */
     private RetryPolicy mRetryPolicy;
 
@@ -115,7 +109,7 @@ public abstract class Request<T> implements Comparable<com.android.volley.Reques
      * is provided by subclasses, who have a better idea of how to deliver an
      * already-parsed response.
      *
-     * @deprecated Use {@link #Request(int, String, Response.ErrorListener)}.
+     * @deprecated Use {@link #Request(int, String, com.android.volley.Response.ErrorListener)}.
      */
     @Deprecated
     public Request(String url, Response.ErrorListener listener) {
@@ -150,21 +144,21 @@ public abstract class Request<T> implements Comparable<com.android.volley.Reques
      *
      * @return This Request object to allow for chaining.
      */
-    public com.android.volley.Request<?> setTag(Object tag) {
+    public Request<?> setTag(Object tag) {
         mTag = tag;
         return this;
     }
 
     /**
      * Returns this request's tag.
-     * @see com.android.volley.Request#setTag(Object)
+     * @see Request#setTag(Object)
      */
     public Object getTag() {
         return mTag;
     }
 
     /**
-     * @return this request's {@link Response.ErrorListener}.
+     * @return this request's {@link com.android.volley.Response.ErrorListener}.
      */
     public Response.ErrorListener getErrorListener() {
         return mErrorListener;
@@ -198,7 +192,7 @@ public abstract class Request<T> implements Comparable<com.android.volley.Reques
      *
      * @return This Request object to allow for chaining.
      */
-    public com.android.volley.Request<?> setRetryPolicy(RetryPolicy retryPolicy) {
+    public Request<?> setRetryPolicy(RetryPolicy retryPolicy) {
         mRetryPolicy = retryPolicy;
         return this;
     }
@@ -209,8 +203,6 @@ public abstract class Request<T> implements Comparable<com.android.volley.Reques
     public void addMarker(String tag) {
         if (MarkerLog.ENABLED) {
             mEventLog.add(tag, Thread.currentThread().getId());
-        } else if (mRequestBirthTime == 0) {
-            mRequestBirthTime = SystemClock.elapsedRealtime();
         }
     }
 
@@ -241,11 +233,6 @@ public abstract class Request<T> implements Comparable<com.android.volley.Reques
 
             mEventLog.add(tag, threadId);
             mEventLog.finish(this.toString());
-        } else {
-            long requestTime = SystemClock.elapsedRealtime() - mRequestBirthTime;
-            if (requestTime >= SLOW_REQUEST_THRESHOLD_MS) {
-                VolleyLog.d("%d ms: %s", requestTime, this.toString());
-            }
         }
     }
 
@@ -255,7 +242,7 @@ public abstract class Request<T> implements Comparable<com.android.volley.Reques
      *
      * @return This Request object to allow for chaining.
      */
-    public com.android.volley.Request<?> setRequestQueue(RequestQueue requestQueue) {
+    public Request<?> setRequestQueue(RequestQueue requestQueue) {
         mRequestQueue = requestQueue;
         return this;
     }
@@ -265,7 +252,7 @@ public abstract class Request<T> implements Comparable<com.android.volley.Reques
      *
      * @return This Request object to allow for chaining.
      */
-    public final com.android.volley.Request<?> setSequence(int sequence) {
+    public final Request<?> setSequence(int sequence) {
         mSequence = sequence;
         return this;
     }
@@ -300,7 +287,7 @@ public abstract class Request<T> implements Comparable<com.android.volley.Reques
      *
      * @return This Request object to allow for chaining.
      */
-    public com.android.volley.Request<?> setCacheEntry(Cache.Entry entry) {
+    public Request<?> setCacheEntry(Cache.Entry entry) {
         mCacheEntry = entry;
         return this;
     }
@@ -388,7 +375,7 @@ public abstract class Request<T> implements Comparable<com.android.volley.Reques
      */
     @Deprecated
     public byte[] getPostBody() throws AuthFailureError {
-        // Note: For compatibility with legacy clients of com.android.com.crossbow.volley, this implementation must remain
+        // Note: For compatibility with legacy clients of volley, this implementation must remain
         // here instead of simply calling the getBody() function because this function must
         // call getPostParams() and getPostParamsEncoding() since legacy clients would have
         // overridden these two member functions for POST requests.
@@ -474,7 +461,7 @@ public abstract class Request<T> implements Comparable<com.android.volley.Reques
      *
      * @return This Request object to allow for chaining.
      */
-    public final com.android.volley.Request<?> setShouldCache(boolean shouldCache) {
+    public final Request<?> setShouldCache(boolean shouldCache) {
         mShouldCache = shouldCache;
         return this;
     }
@@ -583,7 +570,7 @@ public abstract class Request<T> implements Comparable<com.android.volley.Reques
      * sequence number to provide FIFO ordering.
      */
     @Override
-    public int compareTo(com.android.volley.Request<T> other) {
+    public int compareTo(Request<T> other) {
         Priority left = this.getPriority();
         Priority right = other.getPriority();
 

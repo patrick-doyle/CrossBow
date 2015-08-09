@@ -58,8 +58,8 @@ public class RequestFuture<T> implements Future<T>, Response.Listener<T>,
     private T mResult;
     private VolleyError mException;
 
-    public static <E> com.android.volley.toolbox.RequestFuture<E> newFuture() {
-        return new com.android.volley.toolbox.RequestFuture<E>();
+    public static <E> RequestFuture<E> newFuture() {
+        return new RequestFuture<E>();
     }
 
     private RequestFuture() {}

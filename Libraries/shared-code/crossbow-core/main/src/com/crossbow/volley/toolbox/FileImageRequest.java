@@ -1,6 +1,7 @@
 package com.crossbow.volley.toolbox;
 
 import android.graphics.Bitmap;
+import android.widget.ImageView;
 
 import com.android.volley.ParseError;
 import com.android.volley.VolleyError;
@@ -18,13 +19,15 @@ public class FileImageRequest extends FileRequest<Bitmap> {
     private final Bitmap.Config config;
     private final int maxWidth;
     private final int maxHeight;
+    private final ImageView.ScaleType scaleType;
     private final FileResponse.Listener<Bitmap> listener;
 
-    public FileImageRequest(String filePath, Bitmap.Config config, int maxWidth, int maxHeight, FileResponse.ErrorListener errorListener, FileResponse.Listener<Bitmap> listener) {
+    public FileImageRequest(String filePath, Bitmap.Config config, int maxWidth, int maxHeight, ImageView.ScaleType scaleType, FileResponse.ErrorListener errorListener, FileResponse.Listener<Bitmap> listener) {
         super(filePath, errorListener);
         this.config = config;
         this.maxWidth = maxWidth;
         this.maxHeight = maxHeight;
+        this.scaleType = scaleType;
         this.listener = listener;
     }
 
@@ -35,7 +38,7 @@ public class FileImageRequest extends FileRequest<Bitmap> {
                 return null;
             }
 ;
-            Bitmap parsed = ImageDecoder.parseFile(file, config, maxWidth, maxHeight);
+            Bitmap parsed = ImageDecoder.parseFile(file, config, scaleType, maxWidth, maxHeight);
 
             if (parsed != null) {
                 return FileResponse.success(parsed);

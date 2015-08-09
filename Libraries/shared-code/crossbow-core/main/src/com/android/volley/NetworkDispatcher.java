@@ -30,7 +30,7 @@ import java.util.concurrent.BlockingQueue;
  * Requests added to the specified queue are processed from the network via a
  * specified {@link Network} interface. Responses are committed to cache, if
  * eligible, using a specified {@link Cache} interface. Valid responses and
- * errors are posted back to the caller via a {@link com.android.volley.ResponseDelivery}.
+ * errors are posted back to the caller via a {@link ResponseDelivery}.
  */
 public class NetworkDispatcher extends Thread {
     /** The queue of requests to service. */
@@ -40,12 +40,12 @@ public class NetworkDispatcher extends Thread {
     /** The cache to write to. */
     private final Cache mCache;
     /** For posting responses and errors. */
-    private final com.android.volley.ResponseDelivery mDelivery;
+    private final ResponseDelivery mDelivery;
     /** Used for telling us to die. */
     private volatile boolean mQuit = false;
 
     /**
-     s a new network dispatcher thread.  You must call {@link #start()}
+     * Creates a new network dispatcher thread.  You must call {@link #start()}
      * in order to begin processing.
      *
      * @param queue Queue of incoming requests for triage
@@ -60,7 +60,6 @@ public class NetworkDispatcher extends Thread {
         mNetwork = network;
         mCache = cache;
         mDelivery = delivery;
-        setName("CrossBow Network Thread");
     }
 
     /**

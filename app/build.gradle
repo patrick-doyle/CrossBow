@@ -25,7 +25,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.google.code.gson:gson:2.3'
 
@@ -34,10 +34,11 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.6.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
 
+    //jcenter crossbow
     compile 'com.twistedequations.crossbow:crossbow:0.8.4'
     compile 'com.twistedequations.crossbow:crossbow-wear-receiver:0.8.4'
 
-    //crossbow code
+    //local crossbow code
     //compile project(':Libraries:crossbow')
     //compile project(':Libraries:crossbow-wear-receiver')
     wearApp project(':wear')

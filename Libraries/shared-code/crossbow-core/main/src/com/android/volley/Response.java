@@ -35,7 +35,7 @@ public class Response<T> {
          * Callback method that an error has been occurred with the
          * provided error code and optional user-readable message.
          */
-        public void onErrorResponse(com.android.volley.VolleyError error);
+        public void onErrorResponse(VolleyError error);
     }
 
     /** Returns a successful response containing the parsed result. */
@@ -47,7 +47,7 @@ public class Response<T> {
      * Returns a failed response containing the given error code and an optional
      * localized message displayed to the user.
      */
-    public static <T> Response<T> error(com.android.volley.VolleyError error) {
+    public static <T> Response<T> error(VolleyError error) {
         return new Response<T>(error);
     }
 
@@ -58,7 +58,7 @@ public class Response<T> {
     public final Cache.Entry cacheEntry;
 
     /** Detailed error information if <code>errorCode != OK</code>. */
-    public final com.android.volley.VolleyError error;
+    public final VolleyError error;
 
     /** True if this response was a soft-expired one and a second one MAY be coming. */
     public boolean intermediate = false;
@@ -77,7 +77,7 @@ public class Response<T> {
         this.error = null;
     }
 
-    private Response(com.android.volley.VolleyError error) {
+    private Response(VolleyError error) {
         this.result = null;
         this.cacheEntry = null;
         this.error = error;

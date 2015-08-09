@@ -49,7 +49,7 @@ public class CacheDispatcher extends Thread {
     private volatile boolean mQuit = false;
 
     /**
-     s a new cache triage dispatcher thread.  You must call {@link #start()}
+     * Creates a new cache triage dispatcher thread.  You must call {@link #start()}
      * in order to begin processing.
      *
      * @param cacheQueue Queue of incoming requests for triage
@@ -64,7 +64,6 @@ public class CacheDispatcher extends Thread {
         mNetworkQueue = networkQueue;
         mCache = cache;
         mDelivery = delivery;
-        setName("Crossbow-Cache-Thread");
     }
 
     /**

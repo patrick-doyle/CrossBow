@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.widget.ImageView;
 
 import com.android.volley.ParseError;
 import com.android.volley.VolleyLog;
@@ -36,17 +37,17 @@ public class ImageDecoder {
     private final static Object DECODE_LOCK = new Object();
 
     /**
-     * @see #parseImage(byte[], Bitmap.Config, int, int)
+     * @see #parseImage(byte[], Bitmap.Config, android.widget.ImageView.ScaleType, int, int)
      */
     public static Bitmap parseImage(@NonNull byte[] data) throws ParseError {
-        return parseImage(data, null, 0, 0);
+        return parseImage(data, null, ImageView.ScaleType.CENTER_CROP, 0, 0);
     }
 
     /**
-     * @see #parseImage(byte[], Bitmap.Config, int, int)
+     * @see #parseImage(byte[], Bitmap.Config, android.widget.ImageView.ScaleType, int, int)
      */
-    public static Bitmap parseImage(@NonNull byte[] data, int maxWidth, int maxHeight) throws ParseError {
-        return parseImage(data, null, maxWidth, maxHeight);
+    public static Bitmap parseImage(@NonNull byte[] data,  ImageView.ScaleType scaleType, int maxWidth, int maxHeight) throws ParseError {
+        return parseImage(data, null, scaleType,  maxWidth, maxHeight);
     }
 
     /**
@@ -58,8 +59,8 @@ public class ImageDecoder {
      * @return decoded bitmap or null if an error occured without a parse error.
      * @throws ParseError
      */
-    public static Bitmap parseFile(@NonNull File file, @Nullable Bitmap.Config config, int maxWidth, int maxHeight) throws ParseError {
-        return parseImage(file, null, config, maxWidth, maxHeight);
+    public static Bitmap parseFile(@NonNull File file, @Nullable Bitmap.Config config, ImageView.ScaleType scaleType, int maxWidth, int maxHeight) throws ParseError {
+        return parseImage(file, null, config, scaleType, maxWidth, maxHeight);
     }
 
     /**
@@ -70,8 +71,8 @@ public class ImageDecoder {
      * @return decoded bitmap or null if an error occured without a parse error.
      * @throws ParseError
      */
-    public static Bitmap parseFile(@NonNull File file,int maxWidth, int maxHeight) throws ParseError {
-        return parseImage(file, null, null, maxWidth, maxHeight);
+    public static Bitmap parseFile(@NonNull File file, ImageView.ScaleType scaleType, int maxWidth, int maxHeight) throws ParseError {
+        return parseImage(file, null, null, scaleType, maxWidth, maxHeight);
     }
 
     /**
@@ -84,12 +85,12 @@ public class ImageDecoder {
      * @return decoded bitmap or null if an error occured without a parse error.
      * @throws ParseError
      */
-    public static Bitmap parseImage(@NonNull byte[] data, @Nullable Bitmap.Config config, int maxWidth, int maxHeight) throws ParseError {
-        return parseImage(null, data, config, maxWidth, maxHeight);
+    public static Bitmap parseImage(@NonNull byte[] data, @Nullable Bitmap.Config config, ImageView.ScaleType scaleType, int maxWidth, int maxHeight) throws ParseError {
+        return parseImage(null, data, config, scaleType, maxWidth, maxHeight);
     }
 
 
-    private static Bitmap parseImage(@Nullable File file, @Nullable byte[] data, @Nullable Bitmap.Config config, int maxWidth, int maxHeight) throws ParseError {
+    private static Bitmap parseImage(@Nullable File file, @Nullable byte[] data, @Nullable Bitmap.Config config, ImageView.ScaleType scaleType, int maxWidth, int maxHeight) throws ParseError {
 
         //Decode images one at a time, helps prevent OOMs
         synchronized (DECODE_LOCK) {
@@ -117,8 +118,8 @@ public class ImageDecoder {
                 int actualHeight = decodeOptions.outHeight;
 
                 // Then compute the dimensions we would ideally like to decode to.
-                int desiredWidth = getResizedDimension(maxWidth, maxHeight,actualWidth, actualHeight);
-                int desiredHeight = getResizedDimension(maxHeight, maxWidth,actualHeight, actualWidth);
+                int desiredWidth = getResizedDimension(maxWidth, maxHeight,actualWidth, actualHeight, scaleType);
+                int desiredHeight = getResizedDimension(maxHeight, maxWidth,actualHeight, actualWidth, scaleType);
 
                 if(desiredHeight <= 0 || desiredWidth <= 0) {
                     IllegalArgumentException exception = new IllegalArgumentException(String.format(Locale.ENGLISH, "Invalid image size, desiredHeight = %s, desiredHeight = %s", desiredHeight, desiredWidth));
@@ -212,10 +213,33 @@ public class ImageDecoder {
 
     }
 
-    private static int getResizedDimension(int maxPrimary, int maxSecondary, int actualPrimary,int actualSecondary) {
+    /**
+     * Copied from the ImageRequest method
+     * Scales one side of a rectangle to fit aspect ratio.
+     *
+     * @param maxPrimary Maximum size of the primary dimension (i.e. width for
+     *        max width), or zero to maintain aspect ratio with secondary
+     *        dimension
+     * @param maxSecondary Maximum size of the secondary dimension, or zero to
+     *        maintain aspect ratio with primary dimension
+     * @param actualPrimary Actual size of the primary dimension
+     * @param actualSecondary Actual size of the secondary dimension
+     * @param scaleType The ScaleType used to calculate the needed image size.
+     */
+    private static int getResizedDimension(int maxPrimary, int maxSecondary, int actualPrimary,
+                                           int actualSecondary, ImageView.ScaleType scaleType) {
+
         // If no dominant value at all, just return the actual.
-        if (maxPrimary == 0 && maxSecondary == 0) {
+        if ((maxPrimary == 0) && (maxSecondary == 0)) {
             return actualPrimary;
+        }
+
+        // If ScaleType.FIT_XY fill the whole rectangle, ignore ratio.
+        if (scaleType == ImageView.ScaleType.FIT_XY) {
+            if (maxPrimary == 0) {
+                return actualPrimary;
+            }
+            return maxPrimary;
         }
 
         // If primary is unspecified, scale primary to match secondary's scaling ratio.
@@ -230,7 +254,16 @@ public class ImageDecoder {
 
         double ratio = (double) actualSecondary / (double) actualPrimary;
         int resized = maxPrimary;
-        if (resized * ratio > maxSecondary) {
+
+        // If ScaleType.CENTER_CROP fill the whole rectangle, preserve aspect ratio.
+        if (scaleType == ImageView.ScaleType.CENTER_CROP) {
+            if ((resized * ratio) < maxSecondary) {
+                resized = (int) (maxSecondary / ratio);
+            }
+            return resized;
+        }
+
+        if ((resized * ratio) > maxSecondary) {
             resized = (int) (maxSecondary / ratio);
         }
         return resized;

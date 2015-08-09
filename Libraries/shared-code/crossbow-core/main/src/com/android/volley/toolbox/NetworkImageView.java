@@ -64,10 +64,10 @@ public class NetworkImageView extends ImageView {
     /**
      * Sets URL of the image that should be loaded into this view. Note that calling this will
      * immediately either set the cached image (if available) or the default image specified by
-     * {@link com.android.volley.toolbox.NetworkImageView#setDefaultImageResId(int)} on the view.
+     * {@link NetworkImageView#setDefaultImageResId(int)} on the view.
      *
-     * NOTE: If applicable, {@link com.android.volley.toolbox.NetworkImageView#setDefaultImageResId(int)} and
-     * {@link com.android.volley.toolbox.NetworkImageView#setErrorImageResId(int)} should be called prior to calling
+     * NOTE: If applicable, {@link NetworkImageView#setDefaultImageResId(int)} and
+     * {@link NetworkImageView#setErrorImageResId(int)} should be called prior to calling
      * this function.
      *
      * @param url The URL that should be loaded into this ImageView.
@@ -103,6 +103,7 @@ public class NetworkImageView extends ImageView {
     void loadImageIfNecessary(final boolean isInLayoutPass) {
         int width = getWidth();
         int height = getHeight();
+        ScaleType scaleType = getScaleType();
 
         boolean wrapWidth = false, wrapHeight = false;
         if (getLayoutParams() != null) {
@@ -177,7 +178,7 @@ public class NetworkImageView extends ImageView {
                             setImageResource(mDefaultImageId);
                         }
                     }
-                }, maxWidth, maxHeight);
+                }, maxWidth, maxHeight, scaleType);
 
         // update the ImageContainer to be the new bitmap container.
         mImageContainer = newContainer;

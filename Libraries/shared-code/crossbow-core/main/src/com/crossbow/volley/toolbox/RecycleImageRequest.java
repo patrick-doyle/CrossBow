@@ -17,6 +17,7 @@
 package com.crossbow.volley.toolbox;
 
 import android.graphics.Bitmap;
+import android.widget.ImageView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -33,13 +34,16 @@ public class RecycleImageRequest extends ImageRequest {
     private final int mMaxWidth;
     private final int mMaxHeight;
     private final Bitmap.Config mDecodeConfig;
+    private final ImageView.ScaleType scaleType;
     private final static Object decodeLock = new Object();
 
-    public RecycleImageRequest(String url, Response.Listener<Bitmap> listener, int maxWidth, int maxHeight, Bitmap.Config decodeConfig, Response.ErrorListener errorListener) {
-        super(url, listener, maxWidth, maxHeight, decodeConfig, errorListener);
+    public RecycleImageRequest(String url, Response.Listener<Bitmap> listener, int maxWidth, int maxHeight,
+                               Bitmap.Config decodeConfig, ImageView.ScaleType scaleType, Response.ErrorListener errorListener) {
+        super(url, listener, maxWidth, maxHeight, scaleType, decodeConfig, errorListener);
         this.mMaxWidth = maxWidth;
         this.mMaxHeight = maxHeight;
         this.mDecodeConfig = decodeConfig;
+        this.scaleType = scaleType;
     }
 
     @Override
@@ -49,7 +53,7 @@ public class RecycleImageRequest extends ImageRequest {
                 if (isCanceled()) {
                     return Response.success(null, HttpHeaderParser.parseCacheHeaders(response));
                 }
-                Bitmap parsed = ImageDecoder.parseImage(response.data, mDecodeConfig, mMaxWidth, mMaxHeight);
+                Bitmap parsed = ImageDecoder.parseImage(response.data, mDecodeConfig, scaleType, mMaxWidth, mMaxHeight);
 
                 if (parsed != null) {
                     return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response));

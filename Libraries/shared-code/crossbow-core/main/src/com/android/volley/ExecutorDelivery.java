@@ -28,7 +28,7 @@ public class ExecutorDelivery implements ResponseDelivery {
     private final Executor mResponsePoster;
 
     /**
-     s a new response delivery interface.
+     * Creates a new response delivery interface.
      * @param handler {@link Handler} to post responses on
      */
     public ExecutorDelivery(final Handler handler) {
@@ -42,7 +42,7 @@ public class ExecutorDelivery implements ResponseDelivery {
     }
 
     /**
-     s a new response delivery interface, mockable version
+     * Creates a new response delivery interface, mockable version
      * for testing.
      * @param executor For running delivery tasks
      */

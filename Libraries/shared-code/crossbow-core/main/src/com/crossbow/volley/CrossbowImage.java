@@ -171,7 +171,7 @@ public class CrossbowImage implements ViewTreeObserver.OnPreDrawListener, ImageL
         pendingImage = new PendingImage();
 
         if(url != null && file == null && drawableID == DEFAULT) {
-            pendingImage.imageContainer = imageLoader.get(url, this, width, height);
+            pendingImage.imageContainer = imageLoader.get(url, this, width, height, scaleType);
         }
         else if(url == null && file != null && drawableID == DEFAULT) {
             pendingImage.fileImageContainer = fileImageLoader.get(file, width, height, this);
@@ -186,7 +186,7 @@ public class CrossbowImage implements ViewTreeObserver.OnPreDrawListener, ImageL
     }
 
     @VisibleForTesting
-    public void setBitmap(Bitmap bitmap, boolean fromCache) {
+    void setBitmap(Bitmap bitmap, boolean fromCache) {
         ImageView imageView = this.imageView.get();
         if (bitmap != null && imageView != null) {
 
@@ -229,7 +229,7 @@ public class CrossbowImage implements ViewTreeObserver.OnPreDrawListener, ImageL
     }
 
     @VisibleForTesting
-    public void setError(VolleyError volleyError) {
+    void setError(VolleyError volleyError) {
         ImageView imageView = this.imageView.get();
         if(imageView == null) {
             return;

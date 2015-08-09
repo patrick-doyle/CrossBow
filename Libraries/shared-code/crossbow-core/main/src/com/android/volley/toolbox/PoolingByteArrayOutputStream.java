@@ -20,23 +20,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
- * A variation of {@link ByteArrayOutputStream} that uses a pool of byte[] buffers instead
+ * A variation of {@link java.io.ByteArrayOutputStream} that uses a pool of byte[] buffers instead
  * of always allocating them fresh, saving on heap churn.
  */
 public class PoolingByteArrayOutputStream extends ByteArrayOutputStream {
     /**
-     * If the {@link #PoolingByteArrayOutputStream(com.android.volley.toolbox.ByteArrayPool)} constructor is called, this is
+     * If the {@link #PoolingByteArrayOutputStream(ByteArrayPool)} constructor is called, this is
      * the default size to which the underlying byte array is initialized.
      */
     private static final int DEFAULT_SIZE = 256;
 
-    private final com.android.volley.toolbox.ByteArrayPool mPool;
+    private final ByteArrayPool mPool;
 
     /**
      * Constructs a new PoolingByteArrayOutputStream with a default size. If more bytes are written
      * to this instance, the underlying byte array will expand.
      */
-    public PoolingByteArrayOutputStream(com.android.volley.toolbox.ByteArrayPool pool) {
+    public PoolingByteArrayOutputStream(ByteArrayPool pool) {
         this(pool, DEFAULT_SIZE);
     }
 
@@ -48,7 +48,7 @@ public class PoolingByteArrayOutputStream extends ByteArrayOutputStream {
      * @param size initial size for the underlying byte array. The value will be pinned to a default
      *        minimum size.
      */
-    public PoolingByteArrayOutputStream(com.android.volley.toolbox.ByteArrayPool pool, int size) {
+    public PoolingByteArrayOutputStream(ByteArrayPool pool, int size) {
         mPool = pool;
         buf = mPool.getBuf(Math.max(size, DEFAULT_SIZE));
     }
