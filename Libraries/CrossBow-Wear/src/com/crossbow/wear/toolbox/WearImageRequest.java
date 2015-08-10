@@ -19,6 +19,7 @@ public class WearImageRequest extends RecycleImageRequest implements WearRequest
     private final int maxWidth;
     private final int maxHeight;
     private final Bitmap.Config config;
+    private final ImageView.ScaleType scaleType;
 
     public WearImageRequest(String url, Response.Listener<Bitmap> listener, int maxWidth, int maxHeight, Bitmap.Config decodeConfig,
                             ImageView.ScaleType scaleType, Response.ErrorListener errorListener) {
@@ -26,6 +27,7 @@ public class WearImageRequest extends RecycleImageRequest implements WearRequest
         this.maxWidth = maxWidth;
         this.maxHeight = maxHeight;
         config = decodeConfig;
+        this.scaleType = scaleType;
     }
 
     @Override
@@ -34,6 +36,7 @@ public class WearImageRequest extends RecycleImageRequest implements WearRequest
         bundle.putInt("maxWidth", maxWidth);
         bundle.putInt("maxHeight", maxHeight);
         bundle.putSerializable("config", config);
+        bundle.putSerializable("scale_type", scaleType);
         return bundle;
     }
 

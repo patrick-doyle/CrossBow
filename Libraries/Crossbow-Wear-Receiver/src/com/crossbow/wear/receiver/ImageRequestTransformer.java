@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.ImageView;
 
 import com.android.volley.ParseError;
 import com.crossbow.volley.toolbox.ImageDecoder;
@@ -24,11 +25,16 @@ public class ImageRequestTransformer implements ResponseTransformer {
         int width = requestArgs.getInt("width", 500);
         int height = requestArgs.getInt("height", 500);
         Bitmap.Config config = (Bitmap.Config) requestArgs.getSerializable("config");
+        ImageView.ScaleType scaleType = (ImageView.ScaleType) requestArgs.getSerializable("scale_type");
         if(config == null) {
             config = Bitmap.Config.RGB_565;
         }
 
-        Bitmap bitmap = ImageDecoder.parseImage(data, config, width, height);
+        if(scaleType == null) {
+            scaleType = ImageView.ScaleType.CENTER_INSIDE;
+        }
+
+        Bitmap bitmap = ImageDecoder.parseImage(data, config, scaleType, width, height);
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.WEBP, 100, stream);
