@@ -9,8 +9,19 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.crossbow.wear.BuildConfig;
+import com.crossbow.wear.core.WearDataRequest;
+import com.crossbow.wear.core.RequestSerialUtil;
+import com.crossbow.wear.core.ParamsBundle;
+import com.crossbow.wear.core.WearRequest;
 
 import junit.framework.TestCase;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -22,27 +33,30 @@ import java.util.UUID;
 /**
 
  */
-public class RequestSerializationTest extends TestCase {
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 19)
+public class RequestSerializationTest {
 
+    @Test
     @SmallTest
     public void testRequestSerialization() throws AuthFailureError, IOException {
         String uuid = UUID.randomUUID().toString();
         TestRequest testRequest = new TestRequest();
-        byte[] serializedRequest = RequestSerialUtil.serializeRequest(uuid, testRequest);
+        byte[] serializedRequest = com.crossbow.wear.core.RequestSerialUtil.serializeRequest(uuid, testRequest);
 
-        WearDataRequest dataRequest = RequestSerialUtil.deSerializeRequest(serializedRequest);
+        com.crossbow.wear.core.WearDataRequest dataRequest = RequestSerialUtil.deSerializeRequest(serializedRequest);
 
-        assertTrue(Arrays.equals(testRequest.getBody(), dataRequest.getBody()));
-        assertTrue(equalBundles(testRequest.getTransformerParams(), dataRequest.getTransformerArgs()));
-        assertEquals(testRequest.getCacheKey(), dataRequest.getCacheKey());
-        assertEquals(testRequest.getUrl(), dataRequest.getUrl());
-        assertEquals(testRequest.getBodyContentType(), dataRequest.getBodyContentType());
-        assertEquals(testRequest.getPriority(), dataRequest.getPriority());
-        assertEquals(testRequest.getTransFormerKey(), dataRequest.getTransformerKey());
-        assertEquals(testRequest.getMethod(), dataRequest.getMethod());
-        assertEquals(testRequest.getHeaders(), dataRequest.getHeaders());
-        assertEquals(testRequest.getRetryPolicy().getCurrentRetryCount(), dataRequest.getRetryPolicy().getCurrentRetryCount());
-        assertEquals(testRequest.getRetryPolicy().getCurrentTimeout(), dataRequest.getRetryPolicy().getCurrentTimeout());
+        Assert.assertTrue(Arrays.equals(testRequest.getBody(), dataRequest.getBody()));
+        Assert.assertTrue(equalBundles(testRequest.getTransformerParams(), dataRequest.getTransformerArgs()));
+        Assert.assertEquals(testRequest.getCacheKey(), dataRequest.getCacheKey());
+        Assert.assertEquals(testRequest.getUrl(), dataRequest.getUrl());
+        Assert.assertEquals(testRequest.getBodyContentType(), dataRequest.getBodyContentType());
+        Assert.assertEquals(testRequest.getPriority(), dataRequest.getPriority());
+        Assert.assertEquals(testRequest.getTransFormerKey(), dataRequest.getTransformerKey());
+        Assert.assertEquals(testRequest.getMethod(), dataRequest.getMethod());
+        Assert.assertEquals(testRequest.getHeaders(), dataRequest.getHeaders());
+        Assert.assertEquals(testRequest.getRetryPolicy().getCurrentRetryCount(), dataRequest.getRetryPolicy().getCurrentRetryCount());
+        Assert.assertEquals(testRequest.getRetryPolicy().getCurrentTimeout(), dataRequest.getRetryPolicy().getCurrentTimeout());
     }
 
     public boolean equalBundles(ParamsBundle one, ParamsBundle two) {

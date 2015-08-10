@@ -22,8 +22,11 @@ android {
             manifest.srcFile 'AndroidManifest.xml'
         }
 
-        androidTest.setRoot('tests')
-        androidTest.java.srcDirs += ['tests/src']
+        test {
+            java.srcDirs += ['tests/src']
+            resources.srcDirs += ['tests/resources']
+            res.srcDirs += ['tests/res']
+        }
     }
     
     lintOptions {

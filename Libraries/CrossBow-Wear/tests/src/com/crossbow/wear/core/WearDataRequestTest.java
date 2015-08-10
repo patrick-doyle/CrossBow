@@ -8,14 +8,26 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RetryPolicy;
 
-import junit.framework.TestCase;
+import com.crossbow.wear.BuildConfig;
+import com.crossbow.wear.core.ParamsBundle;
+import com.crossbow.wear.core.WearDataRequest;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
 
-public class WearDataRequestTest extends TestCase {
+
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 19)
+public class WearDataRequestTest {
 
     private String uuid = UUID.randomUUID().toString();
 
@@ -39,9 +51,8 @@ public class WearDataRequestTest extends TestCase {
 
     private RetryPolicy retryPolicy;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         transformerArgs.putString("arg1", UUID.randomUUID().toString());
         transformerArgs.putString("arg2", UUID.randomUUID().toString());
 
@@ -50,9 +61,10 @@ public class WearDataRequestTest extends TestCase {
         retryPolicy = new DefaultRetryPolicy(3685, 7, 0.4f);
     }
 
+    @Test
     @SmallTest
     public void testDataRequestMapping() throws AuthFailureError {
-        WearDataRequest wearDataRequest = new WearDataRequest(Request.Method.GET,
+       WearDataRequest wearDataRequest = new WearDataRequest(Request.Method.GET,
                 url, uuid, transformerKey, retryPolicy.getCurrentRetryCount(),
                 retryPolicy.getCurrentTimeout(),
                 cacheKey, tag, bodyContentType, headers, body, priority, transformerArgs);

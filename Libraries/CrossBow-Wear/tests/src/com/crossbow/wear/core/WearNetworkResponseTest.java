@@ -3,6 +3,10 @@ package com.crossbow.wear.core;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import junit.framework.TestCase;
+import com.crossbow.wear.core.WearNetworkResponse;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -10,11 +14,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.junit.Assert.*;
+
 /**
 
  */
-public class WearNetworkResponseTest extends TestCase {
+public class WearNetworkResponseTest {
 
+    @Test
     @SmallTest
     public void testResponseSerialization() throws IOException {
 
@@ -41,7 +48,7 @@ public class WearNetworkResponseTest extends TestCase {
         assertTrue(recreated.notModified);
         assertTrue(recreated.success);
         assertEquals(uuid, recreated.uuid);
-        assertEquals("max-age=3600,s-max-age=60,must-revalidate",recreated.headers.get("Cache-Control"));
-        assertEquals("vbsudbjsdcjsacdhvscdbs",recreated.headers.get("Etag"));
+        assertEquals("max-age=3600,s-max-age=60,must-revalidate", recreated.headers.get("Cache-Control"));
+        assertEquals("vbsudbjsdcjsacdhvscdbs", recreated.headers.get("Etag"));
     }
 }

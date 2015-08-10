@@ -1,0 +1,1 @@
+call gradlew :Libraries:crossbow:test :Libraries:crossbow-wear:test

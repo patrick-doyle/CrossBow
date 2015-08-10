@@ -27,13 +27,6 @@ android {
             resources.srcDirs += ['tests/resources']
             res.srcDirs += ['tests/res']
         }
-
-        androidTest {
-            setRoot('androidTest')
-            java.srcDirs += ['androidTest/src']
-            assets.srcDirs += ['androidTest/assets']
-            res.srcDirs += ['androidTest/assets']
-        }
     }
     
     lintOptions {

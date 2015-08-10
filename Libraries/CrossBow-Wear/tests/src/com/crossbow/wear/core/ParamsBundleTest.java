@@ -11,9 +11,16 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
+import com.crossbow.wear.core.ParamsBundle;
 
-public class ParamsBundleTest extends TestCase {
+import org.junit.Assert;
+import org.junit.Test;
 
+import static org.junit.Assert.*;
+
+public class ParamsBundleTest {
+
+    @Test
     @SmallTest
     public void testParamsBundleTest() throws IOException {
         ParamsBundle paramsBundle = new ParamsBundle();
@@ -53,8 +60,8 @@ public class ParamsBundleTest extends TestCase {
 
         assertEquals(2, deserialzed.getInt("1", 0));
         assertEquals(4l, deserialzed.getLong("2", 0));
-        assertEquals(6d, deserialzed.getDouble("3", 0));
-        assertEquals(7f, deserialzed.getFloat("4", 0));
+        assertEquals(6d, deserialzed.getDouble("3", 0), 0.0);
+        assertEquals(7f, deserialzed.getFloat("4", 0), 0.0);
         assertEquals(true, deserialzed.getBoolean("5", false));
         assertEquals("test-serializable", deserialzed.getSerializable("6"));
         assertEquals('t', deserialzed.getChar("7", 'w'));

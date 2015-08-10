@@ -2,12 +2,17 @@ package com.crossbow.wear.core;
 
 import junit.framework.TestCase;
 
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+
 import java.io.IOException;
 
 /**
  *
  */
-public class GZipperTest extends TestCase {
+public class GZipperTest {
 
     String text = "Bacon ipsum dolor amet esse turkey consequat in, andouille frankfurter adipisicing hamburger. Meatball tempor duis t-bone, " +
             "nostrud boudin shankle shoulder turkey occaecat tail culpa. Short ribs corned beef tempor hamburger reprehenderit culpa sunt." +
@@ -17,11 +22,12 @@ public class GZipperTest extends TestCase {
             " Rump landjaeger adipisicing ea tongue pariatur picanha cow voluptate ullamco ad in boudin pig ipsum. Meatloaf in strip steak in shankle. " +
             "Sed nostrud jowl prosciutto eiusmod.";
 
+    @Test
     public void testGzipper() throws IOException {
-        byte[] compresed = Gzipper.zip(text.getBytes());
+        byte[] compresed = com.crossbow.wear.core.Gzipper.zip(text.getBytes());
 
-        byte[] decompressed = Gzipper.unzip(compresed);
+        byte[] decompressed = com.crossbow.wear.core.Gzipper.unzip(compresed);
 
-        assertEquals(text, new String(decompressed));
+        Assert.assertEquals(text, new String(decompressed));
     }
 }
