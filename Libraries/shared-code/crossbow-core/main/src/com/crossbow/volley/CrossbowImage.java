@@ -22,13 +22,14 @@ import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.crossbow.volley.toolbox.Crossbow;
 import com.crossbow.volley.toolbox.FileImageLoader;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.WeakHashMap;
 
-/**
+/*
  * Copyright (C) 2014 Patrick Doyle
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,6 +43,11 @@ import java.util.WeakHashMap;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ */
+
+/**
+ * Wraps the functionality of the image loader to provide a rich image loading api. Use a {@link com.crossbow.volley.CrossbowImage.Builder Builder} returned
+ * from {@link Crossbow#loadImage()} to create an instance of this class
  */
 public class CrossbowImage implements ViewTreeObserver.OnPreDrawListener, ImageLoader.ImageListener, FileImageLoader.Listener {
 

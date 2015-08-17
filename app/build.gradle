@@ -35,11 +35,11 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.9.0'
 
     //jcenter crossbow
-    compile 'com.twistedequations.crossbow:crossbow:0.8.4'
-    compile 'com.twistedequations.crossbow:crossbow-wear-receiver:0.8.4'
+    //compile 'com.twistedequations.crossbow:crossbow:0.8.4'
+    //compile 'com.twistedequations.crossbow:crossbow-wear-receiver:0.8.4'
 
     //local crossbow code
-    //compile project(':Libraries:crossbow')
-    //compile project(':Libraries:crossbow-wear-receiver')
+    compile project(':Libraries:crossbow')
+    compile project(':Libraries:crossbow-wear-receiver')
     wearApp project(':wear')
 }
