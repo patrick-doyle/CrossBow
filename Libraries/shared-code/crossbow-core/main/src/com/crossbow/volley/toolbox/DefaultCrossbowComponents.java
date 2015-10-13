@@ -11,16 +11,12 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HttpStack;
 import com.crossbow.volley.CrossbowImageCache;
 import com.crossbow.volley.FileQueue;
+import com.crossbow.volley.HttpStackSelector;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.io.File;
 
-/**
-
- */
 public class DefaultCrossbowComponents implements CrossbowComponents {
-
-    private OkHttpClient okHttpClient;
 
     private HttpStack httpStack;
 
@@ -29,10 +25,6 @@ public class DefaultCrossbowComponents implements CrossbowComponents {
     private Cache cache;
 
     public CrossbowImageCache crossbowImageCache;
-
-    public FileQueue fileQueue;
-
-    public FileImageLoader fileImageLoader;
 
     public RequestQueue requestQueue;
 
@@ -44,16 +36,12 @@ public class DefaultCrossbowComponents implements CrossbowComponents {
 
     public DefaultCrossbowComponents(Context context) {
         this.context = context.getApplicationContext();
-        okHttpClient = onCreateHttpClient();
-        httpStack = onCreateHttpStack(okHttpClient);
+        httpStack = onCreateHttpStack();
         network = onCreateNetwork(httpStack);
         cache = onCreateCache();
         crossbowImageCache = onCreateImageCache();
 
-        fileQueue = onCreateFileQueue();
         requestQueue = onCreateRequestQueue(cache, network);
-
-        fileImageLoader = onCreateFileImageLoader(fileQueue, crossbowImageCache);
         imageLoader = onCreateImageLoader(requestQueue, crossbowImageCache);
     }
 
@@ -70,17 +58,6 @@ public class DefaultCrossbowComponents implements CrossbowComponents {
     public CrossbowImageCache provideImageCache() {
         return crossbowImageCache;
     }
-
-    @Override
-    public FileImageLoader provideFileImageLoader() {
-        return fileImageLoader;
-    }
-
-    @Override
-    public FileQueue provideFileQueue() {
-        return fileQueue;
-    }
-
     @Override
     public NetworkImageLoader provideImageLoader() {
         return imageLoader;
@@ -102,16 +79,6 @@ public class DefaultCrossbowComponents implements CrossbowComponents {
         return new NetworkImageLoader(requestQueue, crossbowImageCache);
     }
 
-    public FileQueue onCreateFileQueue() {
-        FileQueue fileQueue = new FileQueue(getContext());
-        fileQueue.start();
-        return fileQueue;
-    }
-
-    public FileImageLoader onCreateFileImageLoader(FileQueue fileQueue, CrossbowImageCache imageCache) {
-        return new FileImageLoader(fileQueue, imageCache);
-    }
-
     public Cache onCreateCache() {
         String cacheDir = getContext().getCacheDir() + File.separator + "CrossbowCache";
         File file = new File(cacheDir);
@@ -122,12 +89,8 @@ public class DefaultCrossbowComponents implements CrossbowComponents {
         return new BasicNetwork(httpStack);
     }
 
-    public HttpStack onCreateHttpStack(OkHttpClient okHttpClient) {
-        return new OkHttpStack(okHttpClient);
-    }
-
-    public OkHttpClient onCreateHttpClient() {
-        return new OkHttpClient();
+    public HttpStack onCreateHttpStack() {
+        return HttpStackSelector.createStack();
     }
 
 }

@@ -11,9 +11,5 @@ public interface CrossbowComponents {
 
     CrossbowImageCache provideImageCache();
 
-    FileImageLoader provideFileImageLoader();
-
-    FileQueue provideFileQueue();
-
     NetworkImageLoader provideImageLoader();
 }

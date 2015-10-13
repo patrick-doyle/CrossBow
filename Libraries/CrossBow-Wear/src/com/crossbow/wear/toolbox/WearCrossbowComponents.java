@@ -22,16 +22,6 @@ public class WearCrossbowComponents extends DefaultCrossbowComponents {
     }
 
     @Override
-    public OkHttpClient onCreateHttpClient() {
-        return null;
-    }
-
-    @Override
-    public HttpStack onCreateHttpStack(OkHttpClient okHttpClient) {
-        return null;
-    }
-
-    @Override
     public Network onCreateNetwork(HttpStack httpStack) {
         return new PlayNetwork(getContext());
     }
