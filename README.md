@@ -2,6 +2,8 @@ Crossbow
 ===========
 [ ![Download](https://api.bintray.com/packages/twistedequations/maven/crossbow-wear-receiver/images/download.svg) ](https://bintray.com/twistedequations/maven/crossbow-wear-receiver/_latestVersion)
 
+[ Changelog](changes.md)
+
 Extension to the Volley library adding an easy to use wrapper around Volley. Supports android 2.3
 and up on phones and 4.3 and up for the wear module
 
@@ -11,8 +13,8 @@ system based on the ImageLoader.
 Crossbow does not modify the Volley library in any way so if you already use Volley then
 this library can replace it with no changes to your code.
 
-Crossbow also uses OkHttp by default for Http/2 and SPDY support. You can provide a different OkHttp
-client if you want.
+Crossbow will use OkHttp if it finds it in the project. You can force the use a custom OkHttpClient
+by using a custom CrossbowComponents or by extending the DefaultCrossbowComponents.
 
 Getting Started
 ------
@@ -27,7 +29,7 @@ buildscript {
 Add the Crossbow dependency to your build.gradle in your wear project
 ```groovy
 dependencies {
-    compile 'com.twistedequations.crossbow:crossbow:0.8.6'
+    compile 'com.twistedequations.crossbow:crossbow:0.8.7'
 }
 ```
 
@@ -68,7 +70,7 @@ RequestQueue requestQueue = Crossbow.from(this).getRequestQueue();
 If you wish you can write a CustomRequest by extending thr Request class to handle any custom parsing,
 headers etc that the library does not support directly.
 
-GsonRequests
+GsonRequests - (Deprecated) - due to be moved into its own library in the future
 ------
 
 Crossbow has a GsonGetRequest/GsonPostRequest built in for easy fast parsing and mapping JSON to data
@@ -197,52 +199,6 @@ imageLoader.get("https://i.imgur.com/5mObncZ.jpg", new ImageLoader.ImageListener
 
     }
 });
-```
-
-File Loading
-------
-All file loading must be used with absolute paths
-
-Crossbow supports background file operations with the FileRequest class and its subclasses. The creation and queuing
-of requests is the same as the http requests. The file loader looks in the assets first and if the file is not found
-it is attempted from the phone disk.
-
-File requests can do any read/write operation on a file. FileRequests with the same path are executed in series but FileRequests
-with different paths may be executed in parallel.
-
-```java
-FileImageRequest fileImageRequest = new FileImageRequest("/images/image.png", new FileResponse.Listener<Bitmap>() {
-    @Override
-    public void onResponse(Bitmap response) {
-        //Handle response
-    }
-}, new FileResponse.ErrorListener() {
-    @Override
-    public void onErrorResponse(VolleyError error) {
-        //Error handling
-    }
-});
-
-Crossbow.queue(this, fileImageRequest);
-```
-You can use the GsonReadFileRequest and GsonWriteFileRequest for easy reading and writing of json to files.
-
-The FileImageLoader is used in the same way as normal ImageLoader and can be used for custom file image loads
-```java
-FileImageLoader imageLoader = Crossbow.from(this).getFileImageLoader();
-
-imageLoader.get("/images/image.png", new FileImageLoader.Listener() {
-    @Override
-    public void onResponse(Bitmap response, boolean isImmediate) {
-        //Do somthing with the loaded file
-    }
-
-    @Override
-    public void onErrorResponse(VolleyError error) {
-        //Handle any errors here
-    }
-});
-```
 
 Using Custom Volley Components
 ------
@@ -297,7 +253,7 @@ Setup
 Add the CrossbowWear dependency to your build.gradle in your wear project
 ```groovy
 dependencies {
-    compile 'com.twistedequations.crossbow:crossbow-wear:0.8.6'
+    compile 'com.twistedequations.crossbow:crossbow-wear:0.8.7'
 }
 ```
 
@@ -305,8 +261,8 @@ On the Handheld app you need to have the main Crossbow and the Crossbow wear rec
 handle the in oncoming requests from the wearable
 ```groovy
 dependencies {
- compile 'com.twistedequations.crossbow:crossbow:0.8.6'
- compile 'com.twistedequations.crossbow:crossbow-wear-receiver:0.8.6'
+ compile 'com.twistedequations.crossbow:crossbow:0.8.7'
+ compile 'com.twistedequations.crossbow:crossbow-wear-receiver:0.8.7'
 }
 ```
 
