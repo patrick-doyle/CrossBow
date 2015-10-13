@@ -13,14 +13,14 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 
 /**
- * Base class for preforming request that parse data using gson. Needs to be subclassed to prevent
- * java type erasure
+ * Deprecated will be moved to its own library
  * <code>
  *    <pre>
  *        GsonRequest request = new GsonRequest(params...){}; <-- important curly braces
  *    </pre>
  * </code>
  */
+@Deprecated
 public abstract class GsonRequest<T> extends Request<T> {
 
     private final Response.Listener<T> listener;

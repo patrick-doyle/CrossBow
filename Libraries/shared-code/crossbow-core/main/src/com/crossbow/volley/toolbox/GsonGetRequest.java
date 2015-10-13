@@ -11,6 +11,7 @@ import com.android.volley.Response;
  *    </pre>
  * </code>
  */
+@Deprecated
 public abstract class GsonGetRequest<T> extends GsonRequest<T> {
 
     public GsonGetRequest(String url, Response.Listener<T> listener, Response.ErrorListener errorListener) {

@@ -31,39 +31,6 @@ import java.util.List;
 public class Files {
 
     /**
-     * Copies a file
-     * @return true if the file was copied
-     */
-    public static void copyFile(File from, File to) throws FileError {
-        try {
-            FileInputStream fileInputStream = null;
-            fileInputStream = new FileInputStream(from);
-            FileOutputStream fileOutputStream = new FileOutputStream(to);
-            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
-
-            byte[] buffer = new byte[2048];
-            int read = 0;
-            while((read = fileInputStream.read(buffer)) > 0) {
-                fileOutputStream.write(buffer, 0, read);
-            }
-            fileInputStream.close();
-            bufferedOutputStream.flush();
-            bufferedOutputStream.close();
-        } catch (IOException e) {
-            throw new FileError(e);
-        }
-
-    }
-
-    /**
-     * Copies a file then deletes the source
-     * @return true if the file was copied and deleted
-     */
-    public static boolean moveFile(File from, File to) throws IOException {
-        return from.renameTo(to);
-    }
-
-    /**
      * Reads a file to a byte arrray
      * @param  file file to read
      */
@@ -142,30 +109,6 @@ public class Files {
     }
 
     /**
-     * Reads a file from assets to a byte array
-     * @param  name file to read
-     */
-    public static boolean copyFileFromAssets(Context context, String name, File output) throws FileError {
-        try {
-            return copyFileFromStream(context.getAssets().open(name), output);
-        } catch (IOException e) {
-            throw new FileError(e);
-        }
-    }
-
-    /**
-     * Reads a file from assets to a string
-     * @param  name file to read
-     */
-    public static String readAssetString(Context context, String name) throws FileError {
-        try {
-            return new String(readInputStreamData(context.getAssets().open(name)));
-        } catch (IOException e) {
-           throw new FileError(e);
-        }
-    }
-
-    /**
      * Reads a file to a string
      * @param  file file to read
      */
@@ -193,31 +136,6 @@ public class Files {
         } catch (IOException e) {
             throw new FileError(e);
         }
-
-    }
-
-    /**
-     * Reads a file line by line to a list of Strings
-     * @param name file to read
-     */
-    public static List<String> readAssetLines(Context context, String name) throws FileError {
-        try {
-            List<String> strings = new ArrayList<>();
-            InputStream inputStream = context.getAssets().open(name);
-            InputStreamReader fileReader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            String line;
-            while((line = bufferedReader.readLine()) != null) {
-                strings.add(line);
-            }
-            fileReader.close();
-            bufferedReader.close();
-            return strings;
-        } catch (IOException e) {
-            throw new FileError(e);
-        }
-
     }
 
     /**

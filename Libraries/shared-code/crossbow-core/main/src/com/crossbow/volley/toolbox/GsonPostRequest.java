@@ -13,10 +13,10 @@ import com.google.gson.Gson;
  *    </pre>
  * </code>
  */
+@Deprecated
 public abstract class GsonPostRequest<T> extends GsonRequest<T> {
 
     private final Object postBody;
-    private static final Gson gson = new Gson();
 
     public GsonPostRequest(Object postBody, String url, Response.Listener<T> listener, Response.ErrorListener errorListener) {
         super(Method.GET, url, listener, errorListener);
