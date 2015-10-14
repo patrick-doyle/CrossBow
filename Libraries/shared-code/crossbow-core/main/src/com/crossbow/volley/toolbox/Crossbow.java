@@ -129,7 +129,7 @@ public class Crossbow {
     }
 
     /**
-     * Cancels all request in both the file and request queues that have a certain tag
+     * Cancels all requests in  request queue that have a certain tag
      */
     public void cancelAll(Object tag) {
         requestQueue.cancelAll(tag);
@@ -142,9 +142,13 @@ public class Crossbow {
         requestQueue.cancelAll(REQUEST_FILTER_CANCEL_ALL);
     }
 
+    /**
+     * Cancels all requests in the request queue that match a certain filter
+     */
     public void cancelAll(RequestQueue.RequestFilter requestFilter) {
         requestQueue.cancelAll(requestFilter);
     }
+
 
     /**
      * Listen to this list to pause the request queue when the list is flung
@@ -202,5 +206,5 @@ public class Crossbow {
                 delgateListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
             }
         }
-    };
+    }
 }
