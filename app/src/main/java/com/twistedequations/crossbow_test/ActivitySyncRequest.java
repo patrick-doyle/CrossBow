@@ -8,8 +8,8 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.SyncResponse;
 import com.android.volley.VolleyError;
+import com.crossbow.gson.GsonGetRequest;
 import com.crossbow.volley.toolbox.Crossbow;
-import com.crossbow.volley.toolbox.GsonGetRequest;
 
 import java.util.List;
 

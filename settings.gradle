@@ -1,5 +1,6 @@
 include ':app',
         ':wear',
         'Libraries:crossbow-wear',
+        'Libraries:crossbow-gson',
         'Libraries:crossbow-wear-receiver',
         'Libraries:crossbow'

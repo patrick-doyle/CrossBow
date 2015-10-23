@@ -5,8 +5,11 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.widget.AbsListView;
 
+import com.android.volley.Cache;
+import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.SyncDispatcher;
 import com.android.volley.SyncResponse;
 import com.android.volley.toolbox.ImageLoader;
 import com.crossbow.volley.BasicFileDelivery;
@@ -21,6 +24,8 @@ public class Crossbow {
     private Context context;
 
     private RequestQueue requestQueue;
+
+    private SyncDispatcher syncDispatcher;
 
     private FileQueue fileQueue;
 
@@ -62,11 +67,16 @@ public class Crossbow {
         this.imageLoader = crossbowComponents.provideImageLoader();
         this.imageCache = crossbowComponents.provideImageCache();
 
+        Cache cache = crossbowComponents.provideCache();
+        Network network = crossbowComponents.provideNetwork();
+
         FileDelivery fileDelivery = new BasicFileDelivery();
         FileStack fileStack = new BasicFileStack(context);
         fileQueue = new FileQueue(fileDelivery, fileStack);
         fileQueue.start();
         fileImageLoader = new FileImageLoader(fileQueue, imageCache);
+
+        syncDispatcher = new SyncDispatcher(cache, network);
     }
 
     /**
@@ -126,7 +136,7 @@ public class Crossbow {
      * @return the added request
      */
     public<T> SyncResponse<T> sync(Request<T> request) {
-        return requestQueue.sync(request);
+        return syncDispatcher.processRequest(request);
     }
 
     /**

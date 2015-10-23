@@ -94,9 +94,6 @@ public class RequestQueue {
     /** The cache dispatcher. */
     private CacheDispatcher mCacheDispatcher;
 
-    /** The Blocking sync dispatcher*/
-    private SyncDispatcher syncDispatcher;
-
     private List<RequestFinishedListener> mFinishedListeners =
             new ArrayList<RequestFinishedListener>();
 
@@ -114,7 +111,6 @@ public class RequestQueue {
         mNetwork = network;
         mDispatchers = new NetworkDispatcher[threadPoolSize];
         mDelivery = delivery;
-        syncDispatcher = new SyncDispatcher(cache, network);
     }
 
     /**
@@ -228,15 +224,6 @@ public class RequestQueue {
                 return request.getTag() == tag;
             }
         });
-    }
-
-    /**
-     * Executes a request blocking the current thread
-     * @param request The request to service
-     * @return The passed-in request
-     */
-    public <T> SyncResponse<T> sync(Request<T> request) {
-        return syncDispatcher.processRequest(request);
     }
 
     /**

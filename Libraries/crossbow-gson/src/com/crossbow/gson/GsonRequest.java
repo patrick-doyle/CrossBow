@@ -1,4 +1,4 @@
-package com.crossbow.volley.toolbox;
+package com.crossbow.gson;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -20,17 +20,23 @@ import java.lang.reflect.Type;
  *    </pre>
  * </code>
  */
-@Deprecated
 public abstract class GsonRequest<T> extends Request<T> {
 
+    protected static final Gson DEFAULT_GSON = new Gson();
+
     private final Response.Listener<T> listener;
-    private static final Gson gson = new Gson();
+    private final Gson gson;
     private final Type type;
 
-    public GsonRequest(int method, String url, Response.Listener<T> listener, Response.ErrorListener errorListener) {
+    public GsonRequest(int method, String url, Gson gson, Response.Listener<T> listener, Response.ErrorListener errorListener) {
         super(method, url, errorListener);
         this.listener = listener;
         this.type = new TypeToken<T>(){}.getType();
+        this.gson = gson;
+    }
+
+    public GsonRequest(int method, String url, Response.Listener<T> listener, Response.ErrorListener errorListener) {
+        this(method, url, DEFAULT_GSON, listener, errorListener);
     }
 
     @Override

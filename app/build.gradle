@@ -41,6 +41,7 @@ dependencies {
 
     //local crossbow code
     compile project(':Libraries:crossbow')
+    compile project(':Libraries:crossbow-gson')
     compile project(':Libraries:crossbow-wear-receiver')
     wearApp project(':wear')
 }

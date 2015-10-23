@@ -1,4 +1,4 @@
-package com.crossbow.volley.toolbox;
+package com.crossbow.gson;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
@@ -13,14 +13,17 @@ import com.google.gson.Gson;
  *    </pre>
  * </code>
  */
-@Deprecated
 public abstract class GsonPostRequest<T> extends GsonRequest<T> {
 
     private final Object postBody;
 
-    public GsonPostRequest(Object postBody, String url, Response.Listener<T> listener, Response.ErrorListener errorListener) {
-        super(Method.GET, url, listener, errorListener);
+    public GsonPostRequest(Object postBody, Gson gson,  String url, Response.Listener<T> listener, Response.ErrorListener errorListener) {
+        super(Method.POST, url, gson, listener, errorListener);
         this.postBody = postBody;
+    }
+
+    public GsonPostRequest(Object postBody, String url, Response.Listener<T> listener, Response.ErrorListener errorListener) {
+        this(postBody, DEFAULT_GSON, url, listener, errorListener);
     }
 
     @Override

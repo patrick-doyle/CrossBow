@@ -63,6 +63,16 @@ public class DefaultCrossbowComponents implements CrossbowComponents {
         return imageLoader;
     }
 
+    @Override
+    public Cache provideCache() {
+        return cache;
+    }
+
+    @Override
+    public Network provideNetwork() {
+        return network;
+    }
+
     public RequestQueue onCreateRequestQueue(Cache cache, Network network) {
         RequestQueue requestQueue = new RequestQueue(cache, network);
         requestQueue.start();
