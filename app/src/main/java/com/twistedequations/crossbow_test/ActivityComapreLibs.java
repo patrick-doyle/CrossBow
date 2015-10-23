@@ -137,7 +137,7 @@ public class ActivityComapreLibs extends AppCompatActivity {
                 showToast();
             }
         });
-        Crossbow.get(this).add(requestRepos);
+        Crossbow.get(this).async(requestRepos);
     }
 
     private void loadCrossBowImage() {

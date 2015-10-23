@@ -19,7 +19,8 @@ public class ActivityMain extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.asset_image_load, R.id.json_load, R.id.network_image_load, R.id.network_image_list, R.id.compare_loaders})
+    @OnClick({R.id.asset_image_load, R.id.json_load, R.id.network_image_load,
+            R.id.network_image_list, R.id.compare_loaders, R.id.sync_request})
     public void OnItemClick(View view) {
         Intent intent;
 
@@ -46,6 +47,11 @@ public class ActivityMain extends AppCompatActivity {
 
             case R.id.compare_loaders:
                 intent = new Intent(this, ActivityComapreLibs.class);
+                startActivity(intent);
+                break;
+
+            case R.id.sync_request:
+                intent = new Intent(this, ActivitySyncRequest.class);
                 startActivity(intent);
                 break;
         }

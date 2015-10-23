@@ -59,12 +59,22 @@ StringRequest request = new StringRequest("http://www.url.com", new Response.Lis
     }
 });
 
-Crossbow.queue(this,request);
+Crossbow.get(context).async(request);
+```
+
+This will execute the request asynchronously and the callbacks will be invoked when the request has finished on the main thread.
+
+If you want to execute a request synchronously then use the sync method. The callbacks will not be invoked and it is safe to pass
+null for the callbacks. 
+
+```java
+GsonGetRequest<List<Repo>> requestRepos = new  GsonGetRequest<List<Repo>>("https://api.github.com/users/twistedequations/repos", null, null){};
+SyncResponse<List<Repo>> response = Crossbow.get(context).sync(requestRepos);
 ```
 
 If you need to get a reference to the RequestQueue then simply use 
 ```java
-RequestQueue requestQueue = Crossbow.from(this).getRequestQueue();
+RequestQueue requestQueue = Crossbow.get(context).getRequestQueue();
 ```
 
 If you wish you can write a CustomRequest by extending thr Request class to handle any custom parsing,
@@ -85,7 +95,7 @@ objects using the Gson library
         public void onErrorResponse(VolleyError error) {
         }
     }){};
-    Crossbow.get(this).add(requestRepos);
+    Crossbow.get(context).add(requestRepos);
 ```
 The GsonGetRequest/GsonPostRequest is an abstract class and must be used an anonymous subclass due to java's type erasure.
 (Similar to the TypeToken used by Gson for Collections)
@@ -104,7 +114,7 @@ Crossbow sets up an ImageLoader and a Memory Cache for the decoded and scaled bi
 very easy using the Crossbow.loadImage().
 
 ```java
-Crossbow.from(context).loadImage().source("https://i.imgur.com/5mObncZ.jpg").into(imageView).load();
+Crossbow.get(context).loadImage().source("https://i.imgur.com/5mObncZ.jpg").into(imageView).load();
 ```
 
 The bitmaps are automatically scaled down to the size of the ImageView if the image is larger than
@@ -112,7 +122,7 @@ the ImageView to reduce memory usage and improve cache performance.
 
 CrossbowImage also supports placeholders
 ```java
-Crossbow.from(context)
+Crossbow.get(context)
     .loadImage()
     .placeHolder(R.drawable.placeHolder)
     .error(R.drawable.errorImage)
@@ -122,7 +132,7 @@ Crossbow.from(context)
 
 fading
 ```java
-Crossbow.from(context)
+Crossbow.get(context)
     .loadImage()
     .fade(200)
     .source("https://i.imgur.com/5mObncZ.jpg")
@@ -131,7 +141,7 @@ Crossbow.from(context)
 
 and separate scaling for placeholders drawables, error drawables and the loaded image.
 ```java
-Crossbow.from(context)
+Crossbow.get(context)
     .loadImage()
     .scale(ImageView.ScaleType.CENTER_CROP)
     .placeholderScale(ImageView.ScaleType.CENTER)
@@ -142,7 +152,7 @@ Crossbow.from(context)
 
 Crossbow can load from http/https network urls, File Uri, File paths and drawable resource ids.
 ```java
-Crossbow.from(context)
+Crossbow.get(context)
     .loadImage()
     .scale(ImageView.ScaleType.CENTER_CROP)
     .placeholderScale(ImageView.ScaleType.CENTER)

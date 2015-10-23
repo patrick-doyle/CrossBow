@@ -50,6 +50,6 @@ public class ActivityJson extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
             }
         }){};
-        Crossbow.get(this).add(requestRepos);
+        Crossbow.get(this).async(requestRepos);
     }
 }

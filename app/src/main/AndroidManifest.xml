@@ -27,7 +27,8 @@
         <activity android:name=".ActivityNetworkImageLoad"/>
         <activity android:name=".ActivityImageList"/>
         <activity android:name=".ActivityComapreLibs"/>
-        
+        <activity android:name=".ActivitySyncRequest"/>
+
         <service android:name=".wear.WearMessageService">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />

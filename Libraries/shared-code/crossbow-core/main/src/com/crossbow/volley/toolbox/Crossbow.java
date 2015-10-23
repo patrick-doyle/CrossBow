@@ -7,6 +7,7 @@ import android.widget.AbsListView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.SyncResponse;
 import com.android.volley.toolbox.ImageLoader;
 import com.crossbow.volley.BasicFileDelivery;
 import com.crossbow.volley.CrossbowImage;
@@ -105,11 +106,27 @@ public class Crossbow {
     }
 
     /**
+     * please use {@link #async(Request)} instead
+     */
+    @Deprecated
+    public<T> Request<T> add(Request<T> request) {
+        return requestQueue.add(request);
+    }
+
+    /**
      * Add a request to the network queue.
      * @return the added request
      */
-    public<T> Request<T> add(Request<T> request) {
+    public<T> Request<T> async(Request<T> request) {
         return requestQueue.add(request);
+    }
+
+    /**
+     * Process a request on the current thread, This will cause the request to block
+     * @return the added request
+     */
+    public<T> SyncResponse<T> sync(Request<T> request) {
+        return requestQueue.sync(request);
     }
 
     /**

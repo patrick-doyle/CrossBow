@@ -211,12 +211,16 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      *
      * <p>Also dumps all events from this request's event log; for debugging.</p>
      */
-    void finish(final String tag) {
+    public void finish(final String tag) {
         if (mRequestQueue != null) {
             mRequestQueue.finish(this);
         }
-        if (MarkerLog.ENABLED) {
-            final long threadId = Thread.currentThread().getId();
+        addMarker(tag);
+        logMarkers();
+    }
+
+    public void logMarkers() {
+        if (MarkerLog.ENABLED) {;
             if (Looper.myLooper() != Looper.getMainLooper()) {
                 // If we finish marking off of the main thread, we need to
                 // actually do it on the main thread to ensure correct ordering.
@@ -224,14 +228,11 @@ public abstract class Request<T> implements Comparable<Request<T>> {
                 mainThread.post(new Runnable() {
                     @Override
                     public void run() {
-                        mEventLog.add(tag, threadId);
                         mEventLog.finish(this.toString());
                     }
                 });
                 return;
             }
-
-            mEventLog.add(tag, threadId);
             mEventLog.finish(this.toString());
         }
     }
