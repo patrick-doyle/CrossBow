@@ -1,10 +1,9 @@
 
 apply plugin: 'com.android.library'
 
-android {
+apply from: '../android.gradle'
 
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+android {
 
     sourceSets {
         defaultConfig {
@@ -30,14 +29,6 @@ android {
     packagingOptions {
         exclude 'com/crossbow/volley/**'
         exclude 'com/android/volley/**'
-    }
-
-    lintOptions {
-        abortOnError false
-    }
-
-    dexOptions {
-        preDexLibraries = false
     }
 }
 

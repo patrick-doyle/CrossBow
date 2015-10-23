@@ -1,0 +1,21 @@
+android {
+
+    //only used for passing some data from the network and http client
+    //The client is only used on api 8 and below
+    useLibrary 'org.apache.http.legacy'
+
+    sourceSets {
+        defaultConfig {
+            compileSdkVersion 23
+            buildToolsVersion "23.0.1"
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    dexOptions {
+        preDexLibraries = false
+    }
+}

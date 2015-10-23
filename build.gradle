@@ -18,3 +18,19 @@ allprojects {
         }
     }
 }
+
+task copyReadme << {
+
+    Properties mavenProps = new Properties()
+    mavenProps.load(new FileInputStream("${project.rootDir}/Libraries/maven.properties"))
+
+    String version = mavenProps.getProperty("version");
+    File source = new File("${project.rootDir}/readme/readme-template.md");
+    File outPut = new File("${project.rootDir}/README.md");
+
+    outPut.withWriter { w ->
+        source.eachLine { line ->
+            w << line.replaceAll("<<latest-version-here>>", version) + "\r\n"
+        }
+    }
+}

@@ -3,11 +3,12 @@ GsonRequests
 
 To use the gson requests you need to add the dependency to your project which contains the requests 
  
+```groovy
 dependencies {
     compile 'com.twistedequations.crossbow:crossbow:<<latest-version-here>>'
     compile 'com.twistedequations.crossbow:crossbow-gson:<<latest-version-here>>'
 }
-
+```
 Crossbow has a GsonGetRequest/GsonPostRequest built in for easy fast parsing and mapping JSON to data
 objects using the Gson library
 ```java

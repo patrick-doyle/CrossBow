@@ -2,10 +2,9 @@
 
 apply plugin: 'com.android.library'
 apply from: '../shared-code/dependencies.gradle'
+apply from: '../android.gradle'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
 
     sourceSets {
         defaultConfig {
@@ -13,12 +12,12 @@ android {
         }
 
         main {
-            assets.srcDirs       = ['assets']
-            res.srcDirs          = ['res', '../shared-code/crossbow-wear-core/main/res']
-            aidl.srcDirs         = ['src']
-            resources.srcDirs    = ['src']
+            assets.srcDirs = ['assets']
+            res.srcDirs = ['res', '../shared-code/crossbow-wear-core/main/res']
+            aidl.srcDirs = ['src']
+            resources.srcDirs = ['src']
             renderscript.srcDirs = ['src']
-            java.srcDirs         = ['src', '../shared-code/crossbow-core/main/src', '../shared-code/crossbow-wear-core/main/src']
+            java.srcDirs = ['src', '../shared-code/crossbow-core/main/src', '../shared-code/crossbow-wear-core/main/src']
             manifest.srcFile 'AndroidManifest.xml'
         }
 
@@ -27,14 +26,6 @@ android {
             resources.srcDirs += ['tests/resources']
             res.srcDirs += ['tests/res']
         }
-    }
-    
-    lintOptions {
-        abortOnError false
-    }
-
-    dexOptions {
-        preDexLibraries = false
     }
 }
 

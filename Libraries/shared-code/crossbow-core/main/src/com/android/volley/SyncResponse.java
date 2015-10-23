@@ -20,7 +20,7 @@ public class SyncResponse<T> {
     }
 
     public boolean isSuccess() {
-        return volleyError != null;
+        return volleyError == null && data != null;
     }
 
 }

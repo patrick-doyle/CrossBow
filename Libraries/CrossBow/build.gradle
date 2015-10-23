@@ -2,13 +2,12 @@
 apply plugin: 'com.android.library'
 
 apply from: '../shared-code/dependencies.gradle'
+apply from: '../android.gradle'
 
 android {
 
     sourceSets {
         defaultConfig {
-            compileSdkVersion 22
-            buildToolsVersion "22.0.1"
             testApplicationId 'com.crossbow.tests'
         }
 
@@ -28,30 +27,6 @@ android {
             res.srcDirs += ['tests/res']
         }
     }
-    
-    lintOptions {
-        abortOnError false
-    }
-
-    dexOptions {
-        preDexLibraries = false
-    }
 }
 
 apply from: 'maven.gradle'
-
-task copyReadme << {
-
-    Properties mavenProps = new Properties()
-    mavenProps.load(new FileInputStream("${project.rootDir}/Libraries/maven.properties"))
-
-    String version = mavenProps.getProperty("version");
-    File source = new File("${project.rootDir}/readme-template.md");
-    File outPut = new File("${project.rootDir}/README.md");
-
-    outPut.withWriter { w ->
-        source.eachLine { line ->
-            w << line.replaceAll("<<latest-version-here>>", version) + "\r\n"
-        }
-    }
-}

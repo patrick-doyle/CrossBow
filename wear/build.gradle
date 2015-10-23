@@ -8,7 +8,7 @@ android {
     defaultConfig {
         applicationId "com.twistedequations.crossbow.test"
         minSdkVersion 20
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -28,4 +28,5 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.google.android.support:wearable:1.2.0'
     compile project(':Libraries:crossbow-wear')
+    compile project(':Libraries:crossbow-gson')
 }
