@@ -19,5 +19,6 @@ public abstract class GsonGetRequest<T> extends GsonRequest<T> {
     }
 
     public GsonGetRequest(String url, Response.Listener<T> listener, Response.ErrorListener errorListener) {
-        this(url, DEFAULT_GSON, listener, errorListener);    }
+        this(url, DEFAULT_GSON, listener, errorListener);
+    }
 }
