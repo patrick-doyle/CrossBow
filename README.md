@@ -4,9 +4,9 @@ Crossbow
 
 Contents
 --------
-[ Changelog](readme/changes.md)
-[ Crossbow Wear](readme/crossbow-wear.md)
-[ Crossbow Gson](readme/gson-requests.md)
+[ Changelog](readme/changes.md)  
+[ Crossbow Wear](readme/crossbow-wear.md)  
+[ Crossbow Gson](readme/gson-requests.md)  
 
 Current Version Number - 0.8.9
 
