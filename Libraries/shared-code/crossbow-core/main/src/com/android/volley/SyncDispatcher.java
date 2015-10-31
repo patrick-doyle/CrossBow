@@ -16,6 +16,8 @@ public class SyncDispatcher {
             request.addMarker("request-sync-start");
             request.addMarker("request-sync-thread [" + Thread.currentThread().getName() + "]");
             if (request.isCanceled() || request.hasHadResponseDelivered()) {
+                request.addMarker("request-sync-already-delivered");
+                finishRequest(request);
                 return new SyncResponse<>(new VolleyError("request canceled or already handled"));
             }
 
@@ -24,6 +26,8 @@ public class SyncDispatcher {
             Cache.Entry cacheEntry = cache.get(cacheKey);
 
             if (cacheEntry == null || cacheEntry.isExpired() || cacheEntry.refreshNeeded()) {
+                // set the cache entry to allow for handling of 304s in the network
+                request.setCacheEntry(cacheEntry);
                 request.addMarker("request-sync-cache-miss");
                 //cache miss or dead entry execute network to fill the cache
                 Response<T> response = executeNetwork(request);
@@ -33,25 +37,30 @@ public class SyncDispatcher {
                     cache.put(cacheKey, response.cacheEntry);
                     request.addMarker("request-sync-cache-written");
                 }
-                request.logMarkers();
+                finishRequest(request);
                 return new SyncResponse<>(response.result);
             } else {
                 request.addMarker("request-sync-cache-hit");
                 //cache hit, parse the cached result
                 Response<T> response = parseResponse(new NetworkResponse(cacheEntry.data, cacheEntry.responseHeaders), request);
                 request.addMarker("request-sync-cache-delivered");
-                request.logMarkers();
+                finishRequest(request);
                 return new SyncResponse<>(response.result);
             }
         } catch (VolleyError volleyError) {
             request.addMarker("request-sync-error " + volleyError.getMessage());
-            request.logMarkers();
+            finishRequest(request);
             return new SyncResponse<>(volleyError);
         } catch (Exception exception) {
             request.addMarker("request-sync-cache-delivered " + exception.getMessage());
-            request.logMarkers();
+            finishRequest(request);
             return new SyncResponse<>(new VolleyError(exception));
         }
+    }
+
+    private static void finishRequest(Request<?> request) {
+        request.markDelivered();
+        request.logMarkers();
     }
 
     private <T> Response<T> executeNetwork(Request<T> request) throws VolleyError {
@@ -61,6 +70,7 @@ public class SyncDispatcher {
     }
 
     private <T> Response<T> parseResponse(NetworkResponse networkResponse, Request<T> request) {
+        request.addMarker("request-sync-parse-response");
         return request.parseNetworkResponse(networkResponse);
     }
 }

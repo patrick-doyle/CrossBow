@@ -1,4 +1,4 @@
-call gradlew clean build copyReadme ^
+call gradlew clean build test copyReadme ^
 :Libraries:crossbow:build :Libraries:crossbow:bintrayUpload ^
 :Libraries:crossbow-wear:build :Libraries:crossbow-wear:bintrayUpload ^
 :Libraries:crossbow-gson:build :Libraries:crossbow-gson:bintrayUpload ^

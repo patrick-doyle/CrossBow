@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "22.0.1"
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         applicationId "com.twistedequations.crossbow.test"
@@ -26,7 +26,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.squareup.okhttp:okhttp:2.4.0'
-    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:appcompat-v7:23.1.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.google.code.gson:gson:2.3'
 
@@ -36,8 +36,9 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.9.0'
 
     //jcenter crossbow
-    //compile 'com.twistedequations.crossbow:crossbow:0.8.4'
-    //compile 'com.twistedequations.crossbow:crossbow-wear-receiver:0.8.4'
+    //compile 'com.twistedequations.crossbow:crossbow:0.8.9'
+    //compile 'com.twistedequations.crossbow:crossbow-wear-receiver:0.8.9'
+    //compile 'com.twistedequations.crossbow:crossbow-gson:0.8.9'
 
     //local crossbow code
     compile project(':Libraries:crossbow')

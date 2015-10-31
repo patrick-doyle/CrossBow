@@ -8,7 +8,7 @@ Contents
 [ Crossbow Wear](readme/crossbow-wear.md)  
 [ Crossbow Gson](readme/gson-requests.md)  
 
-Current Version Number - 0.8.9
+Current Version Number - 0.8.9.5
 
 Extension to the Volley library adding an easy to use wrapper around Volley. Supports android 2.3
 and up on phones and 4.3 and up for the wear module
@@ -35,7 +35,7 @@ buildscript {
 Add the Crossbow dependency to your build.gradle in your wear project
 ```groovy
 dependencies {
-    compile 'com.twistedequations.crossbow:crossbow:0.8.9'
+    compile 'com.twistedequations.crossbow:crossbow:0.8.9.5'
 }
 ```
 

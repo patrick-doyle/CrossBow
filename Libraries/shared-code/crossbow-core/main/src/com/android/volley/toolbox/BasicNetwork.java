@@ -101,6 +101,7 @@ public class BasicNetwork implements Network {
                 // Handle cache validation.
                 if (statusCode == HttpStatus.SC_NOT_MODIFIED) {
 
+                    //304 response, use the cached result and don't download the data
                     Entry entry = request.getCacheEntry();
                     if (entry == null) {
                         return new NetworkResponse(HttpStatus.SC_NOT_MODIFIED, null,
