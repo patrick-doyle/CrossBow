@@ -10,6 +10,28 @@ Contents
 
 Current Version Number - 0.8.9.5
 
+All Crossbow Libraries
+
+######Base Crossbow Library
+```groovy
+   compile 'com.twistedequations.crossbow:crossbow:0.8.9.5'
+```
+
+######Crossbow Wear
+```groovy
+   compile 'com.twistedequations.crossbow:crossbow-wear:0.8.9.5'
+```
+
+######Crossbow Wear Receiver
+```groovy
+   compile 'com.twistedequations.crossbow:crossbow-wear-receiver:0.8.9.5'
+```
+
+######Crossbow Gson
+```groovy
+   compile 'com.twistedequations.crossbow:crossbow-gson:0.8.9.5'
+```
+
 Extension to the Volley library adding an easy to use wrapper around Volley. Supports android 2.3
 and up on phones and 4.3 and up for the wear module
 
