@@ -28,6 +28,7 @@
         <activity android:name=".ActivityImageList"/>
         <activity android:name=".ActivityComapreLibs"/>
         <activity android:name=".ActivitySyncRequest"/>
+        <activity android:name="com.twistedequations.crossbow_test.ActivityRx"/>
 
         <service android:name=".wear.WearMessageService">
             <intent-filter>

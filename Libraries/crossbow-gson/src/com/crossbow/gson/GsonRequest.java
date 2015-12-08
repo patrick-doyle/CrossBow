@@ -28,6 +28,7 @@ public abstract class GsonRequest<T> extends Request<T> {
     private final Gson gson;
     private final Type type;
 
+    @Deprecated
     public GsonRequest(int method, String url, Gson gson, Response.Listener<T> listener, Response.ErrorListener errorListener) {
         super(method, url, errorListener);
         this.listener = listener;
@@ -35,8 +36,22 @@ public abstract class GsonRequest<T> extends Request<T> {
         this.gson = gson;
     }
 
+    @Deprecated
     public GsonRequest(int method, String url, Response.Listener<T> listener, Response.ErrorListener errorListener) {
         this(method, url, DEFAULT_GSON, listener, errorListener);
+    }
+
+
+    public GsonRequest(int method, String url, Gson gson, Type type, Response.Listener<T> listener, Response.ErrorListener errorListener) {
+        super(method, url, errorListener);
+        this.listener = listener;
+        this.type = type;
+        this.gson = gson;
+    }
+
+
+    public GsonRequest(int method, String url, Type type, Response.Listener<T> listener, Response.ErrorListener errorListener) {
+        this(method, url, DEFAULT_GSON, type, listener, errorListener);
     }
 
     @Override

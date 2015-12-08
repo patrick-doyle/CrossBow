@@ -1,0 +1,34 @@
+
+apply plugin: 'com.android.library'
+apply from: '../android.gradle'
+
+android {
+
+    sourceSets {
+        defaultConfig {
+            testApplicationId 'com.crossbow.tests.gson'
+        }
+
+        main {
+            assets.srcDirs       = ['assets']
+            res.srcDirs          = ['res']
+            aidl.srcDirs         = ['src']
+            resources.srcDirs    = ['src']
+            renderscript.srcDirs = ['src']
+            java.srcDirs         = ['src']
+            manifest.srcFile 'AndroidManifest.xml'
+        }
+
+        test {
+            java.srcDirs += ['tests/src']
+            resources.srcDirs += ['tests/resources']
+            res.srcDirs += ['tests/res']
+        }
+    }
+}
+
+apply from: 'maven.gradle'
+dependencies {
+    provided project(':Libraries:crossbow')
+    compile 'io.reactivex:rxjava:1.0.15'
+}

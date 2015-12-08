@@ -2,6 +2,9 @@ package com.crossbow.gson;
 
 import com.android.volley.Response;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 
 /**
  * Wrapper around the {@link GsonRequest} for get requests. Needs to be subclassed to prevent
@@ -14,10 +17,20 @@ import com.google.gson.Gson;
  */
 public abstract class GsonGetRequest<T> extends GsonRequest<T> {
 
+    public GsonGetRequest(String url, Gson gson, Type type, Response.Listener<T> listener, Response.ErrorListener errorListener) {
+        super(Method.GET, url, gson, type, listener, errorListener);
+    }
+
+    public GsonGetRequest(String url, Type type, Response.Listener<T> listener, Response.ErrorListener errorListener) {
+        this(url, DEFAULT_GSON, type, listener, errorListener);
+    }
+
+    @Deprecated
     public GsonGetRequest(String url, Gson gson, Response.Listener<T> listener, Response.ErrorListener errorListener) {
         super(Method.GET, url, gson, listener, errorListener);
     }
 
+    @Deprecated
     public GsonGetRequest(String url, Response.Listener<T> listener, Response.ErrorListener errorListener) {
         this(url, DEFAULT_GSON, listener, errorListener);
     }

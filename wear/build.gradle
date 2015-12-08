@@ -27,6 +27,7 @@ android {
 dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.google.android.support:wearable:1.2.0'
+    compile 'com.google.code.gson:gson:2.3'
     compile project(':Libraries:crossbow-wear')
     compile project(':Libraries:crossbow-gson')
 }

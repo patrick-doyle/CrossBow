@@ -1,0 +1,97 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
+    }
+}
+
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+Properties bintayProps = new Properties()
+bintayProps.load(new FileInputStream("${project.rootDir}/config/bintray.properties"))
+
+Properties mavenProps = new Properties()
+mavenProps.load(new FileInputStream("${project.rootDir}/Libraries/maven.properties"))
+
+version = mavenProps.getProperty("version")
+group = mavenProps.getProperty("group")
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+
+                // Add your description here
+                name 'crossbow'
+                description = mavenProps.getProperty("desc")
+                url = mavenProps.getProperty("siteUrl")
+
+                // Set your license
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = mavenProps.getProperty("devID")
+                        name = mavenProps.getProperty("devName")
+                        email = mavenProps.getProperty("devEmail")
+                    }
+                }
+                scm {
+                    connection = mavenProps.getProperty("gitUrl")
+                    developerConnection = mavenProps.getProperty("gitUrl")
+                    url = mavenProps.getProperty("siteUrl")
+
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = fileTree("${project.rootDir}/Libraries")
+    include( "**/*.java" )
+    exclude "**/build/**","**/tests/**", "**/org/apache/http/**", "**/org.apache.http/**"
+    classpath += project.files(android.getBootClasspath())
+    failOnError false
+    options.links("http://docs.oracle.com/javase/7/docs/api/");
+    options.links("http://d.android.com/reference/");
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+bintray {
+    user = bintayProps.getProperty("user")
+    key = bintayProps.getProperty("key")
+    configurations = ['archives']
+
+    pkg {
+        repo = 'maven'
+        name = 'crossbow-gson'
+        userOrg = mavenProps.getProperty("devID")
+        licenses = ['Apache-2.0']
+        vcsUrl = mavenProps.getProperty("gitUrl")
+        publish = true
+    }
+}
